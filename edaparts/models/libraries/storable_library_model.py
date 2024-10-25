@@ -24,11 +24,11 @@
 
 
 from sqlalchemy import Column, String
-from app import db
-from models.internal.internal_models import StorageStatus
+from edaparts.models.internal.internal_models import StorageStatus
+from edaparts.services.database import Base
 
 
-class StorableLibraryModel(db.Model):
+class StorableLibraryModel(Base):
     __abstract__ = True
 
     storage_status = Column(String(30))

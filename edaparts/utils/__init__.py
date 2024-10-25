@@ -23,4 +23,4 @@
 #
 
 
-from utils.altium_olefile_parser import parse_olefile_library, Library, LibType, SchComponent, PcbComponent
+from edaparts.utils.altium_olefile_parser import parse_olefile_library, Library, LibType, SchComponent, PcbComponent

@@ -26,7 +26,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from models.inventory.inventory_identificable_item_model import InventoryIdentificableItemModel
+from edaparts.models.inventory.inventory_identificable_item_model import (
+    InventoryIdentificableItemModel,
+)
 
 
 class InventoryItemModel(InventoryIdentificableItemModel):
@@ -40,12 +42,22 @@ class InventoryItemModel(InventoryIdentificableItemModel):
     dici = Column(String(70), nullable=False, index=True)
 
     # relationships
-    component_id = Column(Integer, ForeignKey('component.id'))
-    component = relationship("ComponentModel", back_populates="inventory_item")
-    category_id = Column(Integer, ForeignKey('inventory_category.id'))
-    category = relationship('InventoryCategoryModel', back_populates="category_items", lazy='subquery')
-    stock_items = relationship("InventoryItemLocationStockModel", back_populates="item")
-    item_properties = relationship("InventoryItemPropertyModel", back_populates="item")
+    component_id = Column(Integer, ForeignKey("component.id"))
+    component = relationship(
+        "ComponentModel", back_populates="inventory_item", lazy="select"
+    )
+    category_id = Column(Integer, ForeignKey("inventory_category.id"))
+    category = relationship(
+        "InventoryCategoryModel", back_populates="category_items", lazy="select"
+    )
+    stock_items = relationship(
+        "InventoryItemLocationStockModel", back_populates="item", lazy="select"
+    )
+    item_properties = relationship(
+        "InventoryItemPropertyModel", back_populates="item", lazy="select"
+    )
 
     # Set a constraint that enforces Part Number - Manufacturer uniqueness for Iventory Item
-    __table_args__ = (UniqueConstraint('mpn', 'manufacturer', name='_mpn_manufacturer_item_uc'),)
+    __table_args__ = (
+        UniqueConstraint("mpn", "manufacturer", name="_mpn_manufacturer_item_uc"),
+    )

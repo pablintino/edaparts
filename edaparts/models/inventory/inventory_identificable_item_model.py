@@ -23,10 +23,10 @@
 #
 
 
-from app import db
+from edaparts.services.database import Base
 
 
-class InventoryIdentificableItemModel(db.Model):
+class InventoryIdentificableItemModel(Base):
     __abstract__ = True
     __id_prefix__ = 'ITEM'
 

@@ -28,7 +28,7 @@ from enum import Enum
 import olefile
 import logging
 
-from utils.helpers import CaseInsensitiveDict
+from edaparts.utils.helpers import CaseInsensitiveDict
 
 __logger = logging.getLogger(__name__)
 

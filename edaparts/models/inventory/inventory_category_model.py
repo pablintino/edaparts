@@ -26,17 +26,19 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
-from app import db
+from edaparts.services.database import Base
 
 
-class InventoryCategoryModel(db.Model):
+class InventoryCategoryModel(Base):
     __tablename__ = "inventory_category"
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), unique=True)
-    description = Column(String(100))
+    name = Column(String(100), unique=True, nullable=False)
+    description = Column(String(300))
 
     # relationships
-    parent_id = Column(Integer, ForeignKey('inventory_category.id'))
-    children = relationship('InventoryCategoryModel')
+    parent_id = Column(Integer, ForeignKey("inventory_category.id"))
+    children = relationship("InventoryCategoryModel", lazy="select")
 
-    category_items = relationship("InventoryItemModel", back_populates='category', lazy=True)
+    category_items = relationship(
+        "InventoryItemModel", back_populates="category", lazy="select"
+    )

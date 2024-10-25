@@ -21,7 +21,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-
-from .library_reference_model import LibraryReference
-from .footprint_reference_model import FootprintReference

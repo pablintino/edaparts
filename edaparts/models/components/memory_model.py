@@ -24,7 +24,7 @@
 
 
 from sqlalchemy import Column, String, ForeignKey
-from models.components.component_model import ComponentModel
+from edaparts.models.components.component_model import ComponentModel
 
 
 class MemoryModel(ComponentModel):

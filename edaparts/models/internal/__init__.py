@@ -22,4 +22,4 @@
 #  SOFTWARE.
 #
 
-from models.internal import internal_models
+from edaparts.models.internal import internal_models

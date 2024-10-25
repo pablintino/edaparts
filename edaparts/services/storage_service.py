@@ -29,10 +29,10 @@ import os
 import subprocess
 import git
 
-from app import Config
-from models.internal.internal_models import StorageStatus
-from services.exceptions import FileNotFoundStorageError, InvalidStorageStateError
-from utils.helpers import BraceMessage as __l
+from edaparts.app.config import Config
+from edaparts.models.internal.internal_models import StorageStatus
+from edaparts.services.exceptions import FileNotFoundStorageError, InvalidStorageStateError
+from edaparts.utils.helpers import BraceMessage as __l
 
 __logger = logging.getLogger(__name__)
 

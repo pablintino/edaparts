@@ -26,7 +26,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from models.inventory.inventory_identificable_item_model import InventoryIdentificableItemModel
+from edaparts.models.inventory.inventory_identificable_item_model import InventoryIdentificableItemModel
 
 
 class InventoryLocationModel(InventoryIdentificableItemModel):
@@ -39,7 +39,7 @@ class InventoryLocationModel(InventoryIdentificableItemModel):
     dici = Column(String(70), nullable=False, index=True)
 
     # relationships
-    stock_items = relationship("InventoryItemLocationStockModel", back_populates="location")
+    stock_items = relationship("InventoryItemLocationStockModel", back_populates="location", lazy="selectin")
 
     def __repr__(self):
         return '%s(%s)' % (

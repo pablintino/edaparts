@@ -26,18 +26,18 @@
 from sqlalchemy import inspect
 from sqlalchemy.orm import ColumnProperty
 
-from app import db
-from models import ModelDescriptor
-from services.exceptions import GenericIntenalApiError
-from utils.helpers import BraceMessage
+from edaparts.services.database import Base
+from edaparts.models import ModelDescriptor
+from edaparts.services.exceptions import GenericIntenalApiError
+from edaparts.utils.helpers import BraceMessage
 
 
 class MetadataParser:
 
     @staticmethod
     def __get_all_alquemy_models():
-        return [cls for cls in db.Model.registry._class_registry.values() if
-                isinstance(cls, type) and issubclass(cls, db.Model)]
+        return [cls for cls in Base.registry._class_registry.values() if
+                isinstance(cls, type) and issubclass(cls, Base)]
 
     @staticmethod
     def model_exists_by_name(model_name):
@@ -89,13 +89,13 @@ class MetadataParser:
 
     @staticmethod
     def get_model_metadata_by_model(model):
-        if not issubclass(model, db.Model):
+        if not issubclass(model, Base):
             raise GenericIntenalApiError('The given model is not a SQLAlquemy one')
 
         return MetadataParser.__get_alquemy_model_metadata(model)
 
     def get_model_children_by_parent_model(self, model):
-        if not issubclass(model, db.Model):
+        if not issubclass(model, Base):
             raise GenericIntenalApiError('The given model is not a SQLAlquemy one')
 
         return self.get_model_children_by_parent_name(model.__tablename__)

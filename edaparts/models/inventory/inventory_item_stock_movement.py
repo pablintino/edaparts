@@ -23,21 +23,24 @@
 #
 
 
-from datetime import datetime
-from sqlalchemy import Column, Integer, ForeignKey, Float, String, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, Float, String, DateTime, func
 from sqlalchemy.orm import relationship
 
-from app import db
+from edaparts.services.database import Base
 
 
-class InventoryItemLocationStockMovementModel(db.Model):
+class InventoryItemLocationStockMovementModel(Base):
     __tablename__ = "inventory_item_location_stock_movement"
     id = Column(Integer, primary_key=True)
 
     stock_change = Column(Float, nullable=False)
     reason = Column(String(100), nullable=False)
-    created_on = Column(DateTime(), default=datetime.now)
+    created_on = Column(DateTime(), server_default=func.now())
 
     # relationships
-    stock_item_id = Column(Integer, ForeignKey('inventory_item_location_stock.id'), nullable=False)
-    stock_item = relationship("InventoryItemLocationStockModel", back_populates="stock_movements")
+    stock_item_id = Column(
+        Integer, ForeignKey("inventory_item_location_stock.id"), nullable=False
+    )
+    stock_item = relationship(
+        "InventoryItemLocationStockModel", back_populates="stock_movements"
+    )

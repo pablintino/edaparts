@@ -35,15 +35,15 @@ class ApiError(Exception):
         self.http_code = http_code
 
     def format_api_data(self):
-        data = {'message': self.msg, 'timestamp': datetime.now().isoformat()}
+        data = {"message": self.msg, "timestamp": datetime.now().isoformat()}
         if self.details:
-            data['details'] = self.details
+            data["details"] = self.details
         return data, self.http_code
 
     def __str__(self):
-        return '%s[%s]' % (
+        return "%s[%s]" % (
             type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
+            ", ".join("%s=%s" % item for item in vars(self).items()),
         )
 
 
@@ -57,9 +57,9 @@ class ResourceNotFoundApiError(ApiError):
     def format_api_data(self):
         data, code = super(ResourceNotFoundApiError, self).format_api_data()
         if self.missing_id:
-            data['missing_id'] = self.missing_id
+            data["missing_id"] = self.missing_id
         if self.missing_dici:
-            data['missing_dici'] = self.missing_dici
+            data["missing_dici"] = self.missing_dici
         return data, code
 
 
@@ -71,7 +71,7 @@ class ResourceAlreadyExistsApiError(ApiError):
     def format_api_data(self):
         data, code = super(ResourceAlreadyExistsApiError, self).format_api_data()
         if self.conflicting_id:
-            data['conflicting_id'] = self.conflicting_id
+            data["conflicting_id"] = self.conflicting_id
         return data, code
 
 
@@ -83,7 +83,7 @@ class ResourceInvalidQuery(ApiError):
     def format_api_data(self):
         data, code = super(ResourceInvalidQuery, self).format_api_data()
         if self.invalid_fields:
-            data['invalid_fields'] = self.invalid_fields
+            data["invalid_fields"] = self.invalid_fields
         return data, code
 
 
@@ -93,8 +93,15 @@ class InvalidComponentTypeError(ApiError):
 
 
 class InvalidComponentFieldsError(ApiError):
-    def __init__(self, msg=None, details=None, unrecognised_fields=None, mandatory_missing=None, unexpected_types=None,
-                 reserved_fields=None):
+    def __init__(
+        self,
+        msg=None,
+        details=None,
+        unrecognised_fields=None,
+        mandatory_missing=None,
+        unexpected_types=None,
+        reserved_fields=None,
+    ):
         super(InvalidComponentFieldsError, self).__init__(msg, details, 400)
         self.unrecognised_fields = unrecognised_fields
         self.mandatory_missing = mandatory_missing
@@ -104,13 +111,13 @@ class InvalidComponentFieldsError(ApiError):
     def format_api_data(self):
         data, code = super(InvalidComponentFieldsError, self).format_api_data()
         if self.unrecognised_fields:
-            data['unrecognised_fields'] = self.unrecognised_fields
+            data["unrecognised_fields"] = self.unrecognised_fields
         if self.mandatory_missing:
-            data['mandatory_missing'] = self.mandatory_missing
+            data["mandatory_missing"] = self.mandatory_missing
         if self.unexpected_types:
-            data['unexpected_types'] = self.unexpected_types
+            data["unexpected_types"] = self.unexpected_types
         if self.reserved_fields:
-            data['reserved_fields'] = self.reserved_fields
+            data["reserved_fields"] = self.reserved_fields
         return data, code
 
 
@@ -138,9 +145,9 @@ class InvalidStorageStateError(ApiError):
     def format_api_data(self):
         data, code = super(InvalidStorageStateError, self).format_api_data()
         if self.entity_id:
-            data['entity_id'] = self.entity_id
+            data["entity_id"] = self.entity_id
         if self.current_state:
-            data['current_state'] = self.current_state
+            data["current_state"] = self.current_state
         return data, code
 
 
@@ -162,6 +169,11 @@ class InvalidRequestError(ApiError):
 class RelationAlreadyExistsError(ApiError):
     def __init__(self, msg=None, details=None):
         super(RelationAlreadyExistsError, self).__init__(msg, details, 400)
+
+
+class RelationExistsError(ApiError):
+    def __init__(self, msg=None, details=None):
+        super(RelationExistsError, self).__init__(msg, details, 400)
 
 
 class SchemaNotAvailableError(ApiError):

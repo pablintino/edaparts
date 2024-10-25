@@ -23,16 +23,27 @@
 #
 
 
-from sqlalchemy import Column, String, Integer, DateTime, UniqueConstraint, ForeignKey, Boolean
-from models.inventory.inventory_identificable_item_model import InventoryIdentificableItemModel
-from models.libraries.join_tables import component_footprint_asc_table
+from sqlalchemy import (
+    Column,
+    String,
+    Integer,
+    DateTime,
+    UniqueConstraint,
+    ForeignKey,
+    Boolean,
+    func,
+)
 from sqlalchemy.orm import relationship
-from datetime import datetime
+
+from edaparts.models.inventory.inventory_identificable_item_model import (
+    InventoryIdentificableItemModel,
+)
+from edaparts.models.libraries.join_tables import component_footprint_asc_table
 
 
 class ComponentModel(InventoryIdentificableItemModel):
-    __tablename__ = 'component'
-    __id_prefix__ = 'COMP'
+    __tablename__ = "component"
+    __id_prefix__ = "COMP"
 
     # Primary key
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -43,8 +54,8 @@ class ComponentModel(InventoryIdentificableItemModel):
     # General component properties
     mpn = Column(String(100), nullable=False, index=True)
     manufacturer = Column(String(100), nullable=False, index=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    created_on = Column(DateTime(), server_default=func.now())
+    updated_on = Column(DateTime(), server_default=func.now(), onupdate=func.now())
     value = Column(String(100))
     package = Column(String(100))
     description = Column(String(200))
@@ -54,22 +65,27 @@ class ComponentModel(InventoryIdentificableItemModel):
     operating_temperature_max = Column(String(30))
 
     # Relationships
-    library_ref_id = Column(Integer, ForeignKey('library_ref.id'))
-    library_ref = relationship('LibraryReference', back_populates="library_components", lazy='subquery')
-    footprint_refs = relationship('FootprintReference', secondary=component_footprint_asc_table, lazy='subquery',
-                                  back_populates='components_f')
-    inventory_item = relationship("InventoryItemModel", back_populates="component", uselist=False)
+    library_ref_id = Column(Integer, ForeignKey("library_ref.id"))
+    library_ref = relationship(
+        "LibraryReference", back_populates="library_components", lazy="select"
+    )
+    footprint_refs = relationship(
+        "FootprintReference",
+        secondary=component_footprint_asc_table,
+        lazy="select",
+        back_populates="components_f",
+    )
+    inventory_item = relationship(
+        "InventoryItemModel", back_populates="component", uselist=False, lazy="select"
+    )
 
     __mapper_args__ = {
-        'polymorphic_identity': 'component',
-        'polymorphic_on': type,
-        'with_polymorphic': '*'
+        "polymorphic_identity": "component",
+        "polymorphic_on": type,
+        "with_polymorphic": "*",
     }
 
     # Set a constraint that enforces Part Number - Manufacturer uniqueness
-    __table_args__ = (UniqueConstraint('mpn', 'manufacturer', name='_mpn_manufacturer_uc'),
-                      )
-
-    def update_from_raw(self, raw_data):
-        for key, value in raw_data.items():
-            setattr(self, key, value)
+    __table_args__ = (
+        UniqueConstraint("mpn", "manufacturer", name="_mpn_manufacturer_uc"),
+    )

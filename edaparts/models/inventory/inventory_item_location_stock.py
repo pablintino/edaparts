@@ -26,22 +26,26 @@
 from sqlalchemy import Column, Integer, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
-from app import db
+from edaparts.services.database import Base
 
 
-class InventoryItemLocationStockModel(db.Model):
+class InventoryItemLocationStockModel(Base):
     __tablename__ = "inventory_item_location_stock"
 
     id = Column(Integer, primary_key=True)
-    actual_stock = Column(Float, nullable=False)
+    actual_stock = Column(Float, nullable=False)  # todo: name typo
     stock_min_level = Column(Float)
     stock_notify_min_level = Column(Float)
 
     # relationships
-    location_id = Column(Integer, ForeignKey('inventory_location.id'), nullable=False)
+    location_id = Column(Integer, ForeignKey("inventory_location.id"), nullable=False)
     location = relationship("InventoryLocationModel", back_populates="stock_items")
 
-    item_id = Column(Integer, ForeignKey('inventory_item.id'), nullable=False)
+    item_id = Column(Integer, ForeignKey("inventory_item.id"), nullable=False)
     item = relationship("InventoryItemModel", back_populates="stock_items")
 
-    stock_movements = relationship("InventoryItemLocationStockMovementModel", back_populates="stock_item", cascade="delete")
+    stock_movements = relationship(
+        "InventoryItemLocationStockMovementModel",
+        back_populates="stock_item",
+        cascade="delete",
+    )

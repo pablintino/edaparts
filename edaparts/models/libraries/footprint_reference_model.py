@@ -24,9 +24,9 @@
 
 
 from sqlalchemy import Column, String, Integer
-from models.components.component_model import component_footprint_asc_table
 from sqlalchemy.orm import relationship
-from models.libraries.storable_library_model import StorableLibraryModel
+from edaparts.models.components.component_model import component_footprint_asc_table
+from edaparts.models.libraries.storable_library_model import StorableLibraryModel
 
 
 class FootprintReference(StorableLibraryModel):

@@ -26,10 +26,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from app import db
+from edaparts.services.database import Base
 
 
-class InventoryItemPropertyModel(db.Model):
+class InventoryItemPropertyModel(Base):
     __tablename__ = "inventory_item_property"
     id = Column(Integer, primary_key=True)
     property_name = Column(String(100), index=True)

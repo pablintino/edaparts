@@ -23,8 +23,7 @@
  *
  **/
 
-create
-or replace view "Capacitors Ceramic 0603" as
+create or replace view "Capacitors Ceramic 0603" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",
@@ -55,10 +54,12 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, f
              inner join component_footprint_asc cf
                         on c.id = cf.component_id
              inner join footprint_ref f
-                        on cf.footprint_ref_id = f.id'
-    ) as ct(cid int, ftp1 footprint_ref, ftp2 footprint_ref, ftp3 footprint_ref, ftp4 footprint_ref)
-    right outer join component c
-on c.id = cid
-    inner join capacitor_ceramic ca on ca.id = c.id
-    left outer join library_ref l on c.library_ref_id = l.id
+                        on cf.footprint_ref_id = f.id
+             where f.cad_type = ''ALTIUM''::cadtype'
+     ) as ct(cid int, ftp1 footprint_ref, ftp2 footprint_ref, ftp3 footprint_ref, ftp4 footprint_ref)
+         right outer join component c
+                          on c.id = cid
+         inner join capacitor_ceramic ca on ca.id = c.id
+         left outer join library_ref l on c.library_ref_id = l.id
 where c.package = '0603 (1608 Metric)'
+  and l.cad_type = 'ALTIUM'::cadtype

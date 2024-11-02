@@ -17,7 +17,7 @@ import edaparts.services.storable_objects_service
 from edaparts.utils.files import TempCopiedFile
 from edaparts.services.exceptions import ApiError
 
-router = APIRouter(prefix="/footprints", tags=["components", "footprints"])
+router = APIRouter(prefix="/footprints", tags=["footprints"])
 
 
 @router.post("/uploads/create")

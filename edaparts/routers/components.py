@@ -19,7 +19,7 @@ from edaparts.services.exceptions import ApiError
 router = APIRouter(prefix="/components", tags=["components"])
 
 
-@router.post("", tags=["components"])
+@router.post("")
 async def create_component(
     body: ComponentCreateRequestDto, db: AsyncSession = Depends(get_db)
 ) -> ComponentSpecificQueryDto:
@@ -36,7 +36,7 @@ async def create_component(
         )
 
 
-@router.put("/{component_id}", tags=["components"])
+@router.put("/{component_id}")
 async def update_component(
     component_id: int,
     body: ComponentUpdateRequestDto,
@@ -55,7 +55,7 @@ async def update_component(
         )
 
 
-@router.get("", tags=["components"])
+@router.get("")
 async def list_components(
     page_n: Annotated[int | None, Query(gt=0)] = 1,
     page_size: Annotated[int | None, Query(gt=0)] = 20,
@@ -80,7 +80,7 @@ async def list_components(
         )
 
 
-@router.get("/{component_id}", tags=["component"])
+@router.get("/{component_id}")
 async def get_component(
     component_id: int, db: AsyncSession = Depends(get_db)
 ) -> ComponentSpecificQueryDto:
@@ -96,9 +96,7 @@ async def get_component(
         )
 
 
-@router.delete(
-    "/{component_id}", tags=["component"], status_code=204, response_class=Response
-)
+@router.delete("/{component_id}", status_code=204, response_class=Response)
 async def delete_component(
     component_id: int, db: AsyncSession = Depends(get_db)
 ) -> None:

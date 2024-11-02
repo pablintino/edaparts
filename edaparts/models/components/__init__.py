@@ -61,6 +61,9 @@ from edaparts.models.components.voltage_regulator_dcdc_model import (
 from edaparts.models.components.voltage_regulator_linear_model import (
     VoltageRegulatorLinearModel,
 )
+from edaparts.models.components.oscillator_oscillator_model import (
+    OscillatorOscillatorModel,
+)
 
 ComponentModelType = (
     CapacitorCeramicModel
@@ -81,6 +84,7 @@ ComponentModelType = (
     | OpAmpModel
     | OptocouplerDigitalModel
     | OptocouplerLinearModel
+    | OscillatorOscillatorModel
     | PotentiometerModel
     | PowerInductorModel
     | ResistorModel

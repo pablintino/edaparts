@@ -1,8 +1,10 @@
+import typing
 from enum import Enum
 
 from pydantic import BaseModel
 
 from edaparts.models.internal.internal_models import CadType, StorageStatus
+from models import FootprintReference, LibraryReference
 
 
 class LibraryTypeEnum(Enum):
@@ -55,3 +57,29 @@ class StorageStatusEnum(Enum):
         if data == StorageStatus.STORAGE_FAILED:
             return StorageStatusEnum.STORAGE_FAILED
         raise ValueError(data)
+
+
+class BaseLibraryQueryDto(BaseModel):
+    id: int
+    path: str
+    reference: str
+    cad_type: LibraryTypeEnum
+    storage_status: StorageStatusEnum
+    storage_error: typing.Optional[str] = None
+    description: typing.Optional[str] = None
+    alias: typing.Optional[str] = None
+
+    @staticmethod
+    def from_model[
+        T
+    ](data: LibraryReference | FootprintReference,) -> T:
+        return BaseLibraryQueryDto(
+            id=data.id,
+            path=data.path,
+            reference=data.reference,
+            cad_type=LibraryTypeEnum.from_model(data.cad_type),
+            storage_status=StorageStatusEnum.from_model(data.storage_status),
+            storage_error=data.storage_error,
+            description=data.description,
+            alias=data.alias,
+        )

@@ -21,36 +21,14 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-import typing
 
 from pydantic import BaseModel
 
-from edaparts.dtos.libraries_dtos import LibraryTypeEnum, StorageStatusEnum
-from edaparts.models import LibraryReference
+from edaparts.dtos.libraries_dtos import BaseLibraryQueryDto
 
 
-class SymbolQueryDto(BaseModel):
-    id: int
-    path: str
-    reference: str
-    cad_type: LibraryTypeEnum
-    storage_status: StorageStatusEnum
-    storage_error: typing.Optional[str] = None
-    description: typing.Optional[str] = None
-    alias: typing.Optional[str] = None
-
-    @staticmethod
-    def from_model(data: LibraryReference) -> "SymbolQueryDto":
-        return SymbolQueryDto(
-            id=data.id,
-            path=data.path,
-            reference=data.reference,
-            cad_type=LibraryTypeEnum.from_model(data.cad_type),
-            storage_status=StorageStatusEnum.from_model(data.storage_status),
-            storage_error=data.storage_error,
-            description=data.description,
-            alias=data.alias,
-        )
+class SymbolQueryDto(BaseLibraryQueryDto):
+    pass
 
 
 class SymbolListResultDto(BaseModel):

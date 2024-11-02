@@ -141,7 +141,7 @@ async def __validate_kicad_footprint_duplication(
     existing_footprint = (await db.scalars(query)).first()
     if existing_footprint:
         raise ResourceAlreadyExistsApiError(
-            f"the given footprint duplicated the already existing one",
+            f"the given footprint duplicates the already existing one",
             conflicting_id=existing_footprint.id,
         )
 
@@ -456,7 +456,13 @@ async def __store_file(
         await __store_file_validate(session, storable_task)
 
         model_type = __get_model_for_storable_type(storable_task.file_type)
-        current_reference = (await session.scalars(select(model_type.reference))).one()
+        current_reference = (
+            await session.scalars(
+                select(model_type.reference).filter(
+                    model_type.id == storable_task.model_id
+                )
+            )
+        ).one()
         if current_reference != storable_task.reference:
             await __validate_storable_not_exists(
                 session,

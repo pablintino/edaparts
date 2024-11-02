@@ -26,53 +26,17 @@
 from models import FootprintReference
 
 
-class FootprintDto:
+from pydantic import BaseModel
 
-    def __init__(self, **kwargs):
-        self.id = kwargs.get('id', None)
-        self.path = kwargs.get('path', '')
-        self.reference = kwargs.get('reference', '')
-        self.encoded_data = kwargs.get('encoded_data', '')
-        self.description = kwargs.get('description', '')
-
-    @staticmethod
-    def to_model(data):
-        return FootprintReference(
-            footprint_path=data.path,
-            footprint_ref=data.reference,
-            description=data.description)
-
-    @staticmethod
-    def from_model(data, encoded_footprint):
-        return FootprintDto(
-            id=data.id,
-            path=data.footprint_path,
-            reference=data.footprint_ref,
-            description=data.description,
-            encoded_data=encoded_footprint)
+from edaparts.dtos.libraries_dtos import BaseLibraryQueryDto
 
 
-class FootprintComponentReferenceDto:
-
-    def __init__(self, **kwargs):
-        self.footprint_id = kwargs.get('footprint_id', None)
+class FootprintQueryDto(BaseLibraryQueryDto):
+    pass
 
 
-class FootprintIdsComponentReferencesDto:
-
-    def __init__(self, footprint_ids):
-        self.footprint_ids = footprint_ids
-
-    @staticmethod
-    def from_model(footprint_ids):
-        return FootprintIdsComponentReferencesDto(footprint_ids=footprint_ids)
-
-
-class FootprintComponentReferencesDto:
-
-    def __init__(self, footprints):
-        self.footprints = footprints
-
-    @staticmethod
-    def from_model(footprints):
-        return FootprintComponentReferencesDto(footprints=footprints)
+class FootprintListResultDto(BaseModel):
+    page_size: int
+    page_number: int
+    total_elements: int
+    elements: list[FootprintQueryDto]

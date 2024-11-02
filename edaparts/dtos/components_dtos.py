@@ -36,25 +36,33 @@ from edaparts.models.components.capacitor_electrolytic_model import (
 )
 from edaparts.models.components.capacitor_tantalum_model import CapacitorTantalumModel
 from edaparts.models.components.resistor_model import ResistorModel
+from edaparts.models.components.component_model import ComponentModel
+
+
+class ComponentCommentToolFields(BaseModel):
+    kicad: str | None = Field(default=None, max_length=100)
+    altium: str | None = Field(default=None, max_length=100)
+
+    @staticmethod
+    def from_model(model: ComponentModel) -> "ComponentCommentToolFields":
+        return ComponentCommentToolFields(
+            kicad=model.comment_kicad, altium=model.comment_altium
+        )
 
 
 class ComponentCommonBaseFields:
     value: str | None = Field(default=None, max_length=100)
     package: str | None = Field(default=None, max_length=100)
     description: str | None = Field(default=None, max_length=100)
-    comment: str | None = Field(default=None, max_length=100)
     is_through_hole: bool | None = Field(default=None)
     operating_temperature_min: str | None = Field(default=None, max_length=30)
     operating_temperature_max: str | None = Field(default=None, max_length=30)
 
-    def _to_model[T](self, model_t: [typing.Type[T]]) -> T:
-        return model_t(
-            **{
-                k: v
-                for k, v in vars(self).items()
-                if k in inspect(model_t).attrs.keys()
-            }
-        )
+    def _fill_model[T](self, model: T):
+        for k, v in vars(self).items():
+            if k in inspect(type(model)).attrs.keys():
+                setattr(model, k, v)
+        return model
 
 
 class ComponentProtectedBaseFields:
@@ -71,7 +79,17 @@ class ComponentGeneratedBaseFields:
 class ComponentCreateRequestBaseDto(
     ComponentCommonBaseFields, ComponentProtectedBaseFields, BaseModel
 ):
-    pass
+    comment: str | ComponentCommentToolFields | None = Field(default=None)
+
+    def _fill_model[T](self, model: T) -> T:
+        super()._fill_model(model)
+        if isinstance(self.comment, str):
+            model.comment_altium = self.comment
+            model.comment_kicad = self.comment
+        elif isinstance(self.comment, ComponentCommentToolFields):
+            model.comment_altium = self.comment.altium
+            model.comment_kicad = self.comment.kicad
+        return model
 
 
 class ComponentUpdateRequestBaseDto(ComponentCommonBaseFields, BaseModel):
@@ -84,7 +102,11 @@ class ComponentQueryRequestBaseDto(
     ComponentGeneratedBaseFields,
     BaseModel,
 ):
-    pass
+    comment: ComponentCommentToolFields | None = Field(default=None)
+
+    def _fill_dto[T](self, model: ComponentModel) -> T:
+        self.comment = ComponentCommentToolFields.from_model(model)
+        return self
 
 
 # Resistor DTOs
@@ -94,7 +116,7 @@ class ResistorBaseFieldsDto(BaseModel):
     tolerance: str | None = Field(default=None, max_length=30)
 
     def to_model(self) -> ResistorModel:
-        return self._to_model(ResistorModel)
+        return self._fill_model(ResistorModel())
 
 
 class ResistorQueryDto(ResistorBaseFieldsDto, ComponentQueryRequestBaseDto):
@@ -117,7 +139,7 @@ class CapacitorCeramicBaseDto(ComponentCommonBaseFields):
     composition: str | None = Field(default=None, max_length=30)
 
     def to_model(self) -> CapacitorCeramicModel:
-        return self._to_model(CapacitorCeramicModel)
+        return self._fill_model(CapacitorCeramicModel())
 
 
 class CapacitorCeramicQueryDto(CapacitorCeramicBaseDto, ComponentQueryRequestBaseDto):
@@ -147,7 +169,7 @@ class CapacitorElectrolyticBaseDto(ComponentCommonBaseFields):
     lifetime_temperature: str | None = Field(default=None, max_length=30)
 
     def to_model(self) -> CapacitorElectrolyticModel:
-        return self._to_model(CapacitorElectrolyticModel)
+        return self._fill_model(CapacitorElectrolyticModel())
 
 
 class CapacitorElectrolyticQueryDto(
@@ -177,7 +199,7 @@ class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
     lifetime_temperature: str | None = Field(default=None, max_length=30)
 
     def to_model(self) -> CapacitorTantalumModel:
-        return self._to_model(CapacitorTantalumModel)
+        return self._fill_model(CapacitorTantalumModel())
 
 
 class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
@@ -244,7 +266,8 @@ def map_component_model_to_query_dto(
         for c in inspect(model).mapper.column_attrs
         if c.key in dto_t.model_fields
     }
-    return dto_t(**dto_data)
+    mapped_dto = dto_t(**dto_data)
+    return mapped_dto._fill_dto(model)
 
 
 # todo: try to use a generic schema for list operations

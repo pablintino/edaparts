@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2020 Pablo Rodriguez Nava, @pablintino
+# Copyright (c) 2024 Pablo Rodriguez Nava, @pablintino
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class PowerInductorModel(ComponentModel):
-    __tablename__ = 'power_inductor'
-    __id_prefix__ = 'PIND'
+    __tablename__ = "power_inductor"
+    __id_prefix__ = "PIND"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -44,5 +44,5 @@ class PowerInductorModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

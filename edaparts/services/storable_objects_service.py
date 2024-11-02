@@ -1,7 +1,7 @@
 #
 # MIT License
 #
-# Copyright (c) 2020 Pablo Rodriguez Nava, @pablintino
+# Copyright (c) 2024 Pablo Rodriguez Nava, @pablintino
 #
 #  Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 #
 
 
-import binascii
 import dataclasses
 import logging
 import os.path
@@ -33,9 +32,8 @@ import shutil
 import typing
 
 import filelock
-from black import sanitized_lines
 from fastapi import BackgroundTasks
-from sqlalchemy import select, update, func, alias
+from sqlalchemy import select, update, func
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 

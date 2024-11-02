@@ -39,10 +39,14 @@ class InventoryItemLocationStockModel(Base):
 
     # relationships
     location_id = Column(Integer, ForeignKey("inventory_location.id"), nullable=False)
-    location = relationship("InventoryLocationModel", back_populates="stock_items")
+    location = relationship(
+        "InventoryLocationModel", back_populates="stock_items", lazy="select"
+    )
 
     item_id = Column(Integer, ForeignKey("inventory_item.id"), nullable=False)
-    item = relationship("InventoryItemModel", back_populates="stock_items")
+    item = relationship(
+        "InventoryItemModel", back_populates="stock_items", lazy="select"
+    )
 
     stock_movements = relationship(
         "InventoryItemLocationStockMovementModel",

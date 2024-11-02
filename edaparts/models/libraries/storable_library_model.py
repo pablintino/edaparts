@@ -23,24 +23,19 @@
 #
 
 
-from sqlalchemy import Column, String
-from edaparts.models.internal.internal_models import StorageStatus
+from sqlalchemy import Column, Enum, String
+
+from edaparts.models.internal.internal_models import StorageStatus, CadType
 from edaparts.services.database import Base
 
 
 class StorableLibraryModel(Base):
     __abstract__ = True
+    path = Column(String(400), nullable=False)
+    reference = Column(String(150), nullable=False)
+    alias = Column(String(150))
+    description = Column(String(300))
 
-    storage_status = Column(String(30))
-
-    def get_file_path(self):
-        return None
-
-    def get_reference(self):
-        return None
-
-    def get_storage_status(self):
-        return StorageStatus[self.storage_status] if self.storage_status else None
-
-    def set_storage_status(self, status):
-        self.storage_status = status.name if isinstance(status, StorageStatus) else status
+    storage_status = Column(Enum(StorageStatus, validate_strings=True), nullable=False)
+    storage_error = Column(String(1024), nullable=True)
+    cad_type = Column(Enum(CadType, validate_strings=True), nullable=False)

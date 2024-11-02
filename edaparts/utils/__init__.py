@@ -21,6 +21,3 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-
-from edaparts.utils.altium_olefile_parser import parse_olefile_library, Library, LibType, SchComponent, PcbComponent

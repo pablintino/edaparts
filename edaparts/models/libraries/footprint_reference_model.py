@@ -23,7 +23,7 @@
 #
 
 
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
 from edaparts.models.components.component_model import component_footprint_asc_table
 from edaparts.models.libraries.storable_library_model import StorableLibraryModel
@@ -32,32 +32,11 @@ from edaparts.models.libraries.storable_library_model import StorableLibraryMode
 class FootprintReference(StorableLibraryModel):
     __tablename__ = "footprint_ref"
     id = Column(Integer, primary_key=True)
-    footprint_path = Column(String(400))
-    footprint_ref = Column(String(150))
-    alias = Column(String(150))
-    description = Column(String(300))
 
     # relationships
-    components_f = relationship("ComponentModel",
-                                secondary=component_footprint_asc_table,
-                                back_populates="footprint_refs",
-                                lazy=True)
-
-    def get_file_path(self):
-        return self.footprint_path
-
-    def get_reference(self):
-        return self.footprint_ref
-
-    def set_file_path(self, path):
-        self.footprint_path = path
-
-    def set_reference(self, reference):
-        self.footprint_ref = reference
-
-    def __repr__(self):
-        return "FootprintReference %s %s %s" % (
-            self.footprint_path,
-            self.footprint_ref,
-            self.alias,
-        )
+    components_f = relationship(
+        "ComponentModel",
+        secondary=component_footprint_asc_table,
+        back_populates="footprint_refs",
+        lazy=True,
+    )

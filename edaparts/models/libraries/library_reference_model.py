@@ -31,29 +31,8 @@ from edaparts.models.libraries.storable_library_model import StorableLibraryMode
 class LibraryReference(StorableLibraryModel):
     __tablename__ = "library_ref"
     id = Column(Integer, primary_key=True)
-    symbol_path = Column(String(400))
-    symbol_ref = Column(String(150))
-    alias = Column(String(150))
-    description = Column(String(300))
-
-    def get_file_path(self):
-        return self.symbol_path
-
-    def get_reference(self):
-        return self.symbol_ref
-
-    def set_file_path(self, path):
-        self.symbol_path = path
-
-    def set_reference(self, reference):
-        self.symbol_ref = reference
 
     # relationships
-    library_components = relationship("ComponentModel", back_populates='library_ref', lazy=True)
-
-    def __repr__(self):
-        return "LibraryReference %s %s %s" % (
-            self.symbol_path,
-            self.symbol_ref,
-            self.alias
-        )
+    library_components = relationship(
+        "ComponentModel", back_populates="library_ref", lazy=True
+    )

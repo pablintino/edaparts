@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
 
 import edaparts.services.inventory_service
+from dtos.inventory_dtos import InventoryItemLocationStockQueryDto
 
 from edaparts.dtos.inventory_dtos import (
     InventoryItemQueryDto,
@@ -16,6 +17,8 @@ from edaparts.dtos.inventory_dtos import (
     InventoryItemPropertyCreateRequestDto,
     InventoryItemCreateRequestDto,
     InventoryCategoryReferenceCreationUpdateDto,
+    InventoryItemLocationReferenceDto,
+    InventoryItemLocationStockUpdateResourceDto,
 )
 from edaparts.dtos.components_dtos import map_component_model_to_query_dto
 from edaparts.services.database import get_db
@@ -237,6 +240,77 @@ async def delete_item_category(
 ) -> None:
     try:
         await edaparts.services.inventory_service.delete_item_category(db, item_id)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.post("/{item_id}/locations", tags=["inventory", "items", "locations"])
+async def set_item_locations(
+    item_id: int,
+    body: InventoryItemLocationReferenceDto,
+    db: AsyncSession = Depends(get_db),
+) -> InventoryItemLocationReferenceDto:
+    try:
+        location_ids = (
+            await edaparts.services.inventory_service.create_item_stocks_for_locations(
+                db, item_id, body.location_ids
+            )
+        )
+        return InventoryItemLocationReferenceDto(location_ids=location_ids)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.put(
+    "/{item_id}/locations/{location_id}/stock", tags=["inventory", "items", "locations"]
+)
+async def update_stock_item_location(
+    item_id: int,
+    location_id: int,
+    body: InventoryItemLocationStockUpdateResourceDto,
+    db: AsyncSession = Depends(get_db),
+) -> InventoryItemLocationStockQueryDto:
+    try:
+        item_location_stock = (
+            await edaparts.services.inventory_service.update_item_location_stock_levels(
+                db,
+                item_id,
+                location_id,
+                min_stock_level=body.stock_min_level,
+                min_notify_level=body.stock_notify_min_level,
+            )
+        )
+        return InventoryItemLocationStockQueryDto.from_model(item_location_stock)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.get(
+    "/{item_id}/locations/{location_id}/stock", tags=["inventory", "items", "locations"]
+)
+async def get_stock_item_location(
+    item_id: int,
+    location_id: int,
+    db: AsyncSession = Depends(get_db),
+) -> InventoryItemLocationStockQueryDto:
+    try:
+        item_location_stock = (
+            await edaparts.services.inventory_service.get_item_stock_for_location(
+                db,
+                item_id,
+                location_id,
+            )
+        )
+        return InventoryItemLocationStockQueryDto.from_model(item_location_stock)
     except ApiError as error:
         # todo temporal simple handling of the exceptions
         raise HTTPException(

@@ -21,18 +21,51 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-
+import pathlib
+from dataclasses import dataclass
 from enum import Enum
 
 
 class StorableLibraryResourceType(Enum):
-    FOOTPRINT = 'footprint'
-    SYMBOL = 'symbol'
+    FOOTPRINT = "footprint"
+    SYMBOL = "symbol"
+
+
+class CadType(Enum):
+    ALTIUM = "altium"
+    KICAD = "kicad"
 
 
 class StorageStatus(Enum):
-    NOT_STORED = 1
-    STORING = 2
-    STORED = 3
-    STORAGE_FAILED = 4
+    NOT_STORED = "NOT_STORED"
+    STORING = "STORING"
+    STORED = "STORED"
+    STORAGE_FAILED = "STORAGE_FAILED"
+
+
+@dataclass(frozen=True)
+class StorableObjectRequest:
+    filename: pathlib.Path
+    path: str
+    file_type: StorableLibraryResourceType
+    cad_type: CadType
+    reference: str = None
+    description: str = None
+
+
+@dataclass(frozen=True)
+class StorableObjectDataUpdateRequest:
+    model_id: int
+    filename: pathlib.Path
+    file_type: StorableLibraryResourceType
+    reference: str = None
+
+
+@dataclass(frozen=True)
+class StorableTask:
+    model_id: int
+    filename: pathlib.Path
+    path: str
+    file_type: StorableLibraryResourceType
+    cad_type: CadType
+    reference: str

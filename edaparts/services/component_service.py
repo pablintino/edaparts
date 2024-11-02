@@ -28,7 +28,7 @@ import typing
 
 from sqlalchemy import select, func, inspect
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, selectinload
 
 from edaparts.models.components import ComponentModelType
 from edaparts.models.components.component_model import ComponentModel
@@ -287,7 +287,14 @@ async def get_component_list(
 
 async def delete_component(db: AsyncSession, component_id: int):
     __logger.debug(__l("Deleting component [component_id={0}]", component_id))
-    component = await db.get(ComponentModel, component_id)
+    component = (
+        await db.scalars(
+            select(ComponentModel)
+            .filter_by(id=component_id)
+            .options(selectinload(ComponentModel.inventory_item))
+            .limit(1)
+        )
+    ).first()
     if component:
         if component.inventory_item:
             # todo: Improve exception details
@@ -306,7 +313,7 @@ def delete_component_symbol_relation(component_id):
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
     symbol_id = component.library_ref_id
-    component.library_ref_id = None
+    component.library_ref_id = Nones
     component.library_ref = None
     db.session.add(component)
     db.session.commit()

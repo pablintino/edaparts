@@ -37,7 +37,7 @@ from sqlalchemy.sql.functions import func
 from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.internal.internal_inventory_models import (
     InventoryItemStockStatus,
-    InventoryMassStockMovementResult,
+    MassStockMovement,
 )
 from edaparts.models.inventory.inventory_category_model import InventoryCategoryModel
 from edaparts.models.inventory.inventory_identificable_item_model import (
@@ -59,7 +59,6 @@ from edaparts.services.exceptions import (
     RemainingStocksExistError,
     InvalidMassStockUpdateError,
     CyclicCategoryDependecy,
-    ResourceInvalidQuery,
     InvalidCategoryRelationError,
 )
 from edaparts.utils.helpers import BraceMessage as __l
@@ -67,52 +66,52 @@ from edaparts.utils.helpers import BraceMessage as __l
 __logger = logging.getLogger(__name__)
 
 
-def __search_item_location_stock_by_ids_dicis(
-    item_id=None, item_dici=None, location_id=None, location_dici=None
-):
-    if not item_id and not item_dici:
-        raise InvalidMassStockUpdateError(
-            "Inventory item should contain at least ID or DICI"
-        )
-    if not location_id and not location_dici:
-        raise InvalidMassStockUpdateError(
-            "Inventory location should contain at least ID or DICI"
-        )
-
+async def __search_item_location_stock_by_ids_dicis(
+    db: AsyncSession, item_id: int | str, location_id: str | int
+) -> InventoryItemLocationStockModel:
     item_filters = []
     location_filters = []
-    if location_id:
+    if isinstance(location_id, int):
         location_filters.append(InventoryLocationModel.id == location_id)
     else:
-        location_filters.append(InventoryLocationModel.dici == location_dici)
+        location_filters.append(InventoryLocationModel.dici == location_id)
 
-    if item_id:
+    if isinstance(item_id, int):
         item_filters.append(InventoryItemModel.id == item_id)
     else:
-        item_filters.append(InventoryItemModel.dici == item_dici)
+        item_filters.append(InventoryItemModel.dici == item_id)
 
     try:
-
         return (
-            InventoryItemLocationStockModel.query.join(InventoryItemModel)
-            .join(InventoryLocationModel)
-            .filter(*(item_filters + location_filters))
-            .one()
-        )
+            await db.scalars(
+                select(InventoryItemLocationStockModel)
+                .join(InventoryItemModel)
+                .join(InventoryLocationModel)
+                .filter(*(item_filters + location_filters))
+                .options(joinedload(InventoryItemLocationStockModel.item))
+                .options(joinedload(InventoryItemLocationStockModel.location))
+            )
+        ).one()
 
     except NoResultFound:
-        if InventoryItemModel.query.filter(*item_filters).count() == 0:
+        if not (
+            await db.scalars(select(InventoryItemModel).filter(*item_filters))
+        ).first():
             # Item not exist
             raise ResourceNotFoundApiError(
-                "Item doesn't exist", missing_dici=item_dici, missing_id=item_id
+                "Item doesn't exist",
+                missing_dici=(item_id if isinstance(item_id, str) else None),
+                missing_id=(item_id if isinstance(item_id, int) else None),
             )
 
-        if InventoryLocationModel.query.filter(*location_filters).count() == 0:
+        if not (
+            await db.scalars(select(InventoryLocationModel).filter(*location_filters))
+        ).first():
             # Location not exist
             raise ResourceNotFoundApiError(
                 "Location doesn't exist",
-                missing_dici=location_dici,
-                missing_id=location_id,
+                missing_dici=(location_id if isinstance(location_id, str) else None),
+                missing_id=(location_id if isinstance(location_id, int) else None),
             )
 
         raise ResourceNotFoundApiError(
@@ -123,10 +122,11 @@ def __search_item_location_stock_by_ids_dicis(
         raise InvalidMassStockUpdateError("Internal integrity error")
 
 
-def __update_item_location_stock(stock_item, quantity, reason):
+def __update_item_location_stock(
+    stock_item: InventoryItemLocationStockModel, quantity: float, reason: str
+) -> InventoryItemLocationStockMovementModel:
     if stock_item.stock_min_level <= (stock_item.actual_stock + quantity):
         stock_item.actual_stock = stock_item.actual_stock + quantity
-
         stock_item_movement = InventoryItemLocationStockMovementModel(
             stock_change=quantity, reason=reason, stock_item_id=stock_item.id
         )
@@ -141,20 +141,26 @@ def __update_item_location_stock(stock_item, quantity, reason):
     )
 
 
-def __get_item_location_stock(item_id, location_id):
-    item_stock = InventoryItemLocationStockModel.query.filter_by(
-        item_id=item_id, location_id=location_id
+async def __get_item_location_stock(
+    db: AsyncSession, item_id: int, location_id: int
+) -> InventoryItemLocationStockModel:
+    item_stock = (
+        await db.scalars(
+            select(InventoryItemLocationStockModel).filter_by(
+                item_id=item_id, location_id=location_id
+            )
+        )
     ).first()
 
     # Verify that the given item exists before trying anything else
     if not item_stock:
 
         # Try to raise a fine grade exception instead of the simplest one
-        if not InventoryItemModel.query.get(item_id):
+        if not await db.get(InventoryItemModel, item_id):
             raise ResourceNotFoundApiError(
                 "Inventory item not found", missing_id=item_id
             )
-        if not InventoryItemModel.query.get(item_id):
+        if not await db.get(InventoryLocationModel, location_id):
             raise ResourceNotFoundApiError(
                 "Inventory location not found", missing_id=location_id
             )
@@ -373,53 +379,71 @@ async def get_category_items(
     return results, total
 
 
-def create_item_stocks_for_locations(item_id, location_ids):
+async def create_item_stocks_for_locations(
+    db: AsyncSession, item_id: int, location_ids: list[int | str]
+) -> list[int]:
     __logger.debug(
         __l(
-            "Creating new item-location relations [item_id={0}, footprint_ids={1}]",
+            "Creating new item-location relations [item_id={0}, location_ids={1}]",
             item_id,
             location_ids,
         )
     )
 
+    item = (
+        await db.scalars(
+            select(InventoryItemModel)
+            .filter_by(id=item_id)
+            .limit(1)
+            .options(joinedload(InventoryItemModel.stock_items))
+        )
+    ).first()
+    if not item:
+        raise ResourceNotFoundApiError("Item not found", missing_id=item_id)
+
     item_stocks = []
-    item = get_item(item_id)
-
-    # Add only the locations that are not already associated
-    locations_to_add = [
-        location_id
-        for location_id in location_ids
-        if location_id not in [cfr.location_id for cfr in item.stock_items]
-    ]
-
+    item_stock_per_location = {
+        item_stock.location_id: item_stock for item_stock in item.stock_items
+    }
     try:
-
-        for location_id in locations_to_add:
-            location_model = InventoryLocationModel.query.get(location_id)
-            if location_model:
-                # Create a freshly new stock item for the location
-                item_stock = InventoryItemLocationStockModel(
-                    actual_stock=0,
-                    stock_min_level=0,
-                    stock_notify_min_level=-1.0,
-                    location_id=location_model.id,
-                    location=location_model,
-                    item_id=item.id,
-                    item=item,
+        for location_id in location_ids:
+            db_location_id = (
+                await db.scalars(
+                    select(InventoryLocationModel.id)
+                    .filter_by(
+                        **{
+                            (
+                                "dici" if isinstance(location_id, str) else "id"
+                            ): location_id
+                        }
+                    )
+                    .limit(1)
                 )
-                item_stocks.append(item_stock)
-                db.session.add(item_stock)
-            else:
+            ).first()
+            if not db_location_id:
                 raise ResourceNotFoundApiError(
                     "Inventory location not found", missing_id=location_id
                 )
 
-        item.stock_items.extend(item_stocks)
-        db.session.add(item)
-        db.session.commit()
+            if db_location_id in item_stock_per_location:
+                # skip, it already exists
+                continue
 
+            # Create a freshly new stock item for the location
+            item_stock = InventoryItemLocationStockModel(
+                actual_stock=0,
+                stock_min_level=0,
+                stock_notify_min_level=-1.0,
+                location_id=db_location_id,
+                item_id=item.id,
+            )
+            item_stocks.append(item_stock)
+            item_stock_per_location[db_location_id] = item_stock
+            db.add(item_stock)
+
+        await db.commit()
     except:
-        db.session.rollback()
+        await db.rollback()
         raise
 
     __logger.debug(
@@ -429,7 +453,7 @@ def create_item_stocks_for_locations(item_id, location_ids):
             location_ids,
         )
     )
-    return [cfr.location_id for cfr in item.stock_items]
+    return [cfr.location_id for cfr in item_stocks]
 
 
 async def delete_stock_location(db: AsyncSession, location_id: int):
@@ -475,7 +499,7 @@ async def delete_item(db: AsyncSession, item_id: int):
         __logger.debug(__l("Removed item [item_id={0}]", item_id))
 
 
-def get_item_stock_for_location(item_id, location_id):
+async def get_item_stock_for_location(db: AsyncSession, item_id: int, location_id: int):
     __logger.debug(
         __l(
             "Retrieving item stock for location [item_id={0}, location_id={1}]",
@@ -484,12 +508,16 @@ def get_item_stock_for_location(item_id, location_id):
         )
     )
 
-    return __get_item_location_stock(item_id, location_id)
+    return await __get_item_location_stock(db, item_id, location_id)
 
 
-def update_item_location_stock_levels(
-    item_id, location_id, min_stock_level=None, min_notify_level=None
-):
+async def update_item_location_stock_levels(
+    db: AsyncSession,
+    item_id: int,
+    location_id: int,
+    min_stock_level=None,
+    min_notify_level=None,
+) -> InventoryItemLocationStockModel:
     __logger.debug(
         __l(
             "Updating item stock for location [item_id={0}, location_id={1}, min_stock_level={2}, min_notify_level={3}]",
@@ -500,28 +528,28 @@ def update_item_location_stock_levels(
         )
     )
 
-    item_stock = __get_item_location_stock(item_id, location_id)
+    item_stock = await __get_item_location_stock(db, item_id, location_id)
     if (min_stock_level is not None) and min_stock_level >= -1.0:
         item_stock.stock_min_level = min_stock_level
     if (min_notify_level is not None) and min_notify_level > -1.0:
         item_stock.stock_notify_min_level = min_notify_level
 
-    db.session.add(item_stock)
-    db.session.commit()
-
+    db.add(item_stock)
+    await db.commit()
     return item_stock
 
 
-def stock_mass_update(mass_stock_update):
+async def stock_mass_update(
+    db: AsyncSession, mass_stock_update: MassStockMovement
+) -> list[InventoryItemStockStatus]:
     stock_status_lines = []
     try:
         for itm in mass_stock_update.movements:
             # Search the stock item location model by item/location id or dici
-            stock_item = __search_item_location_stock_by_ids_dicis(
-                item_id=itm.item_id,
-                item_dici=itm.item_dici,
-                location_id=itm.location_id,
-                location_dici=itm.location_dici,
+            stock_item = await __search_item_location_stock_by_ids_dicis(
+                db,
+                item_id=itm.item_identifier,
+                location_id=itm.location_identifier,
             )
 
             # Annotate the stock movement
@@ -530,8 +558,8 @@ def stock_mass_update(mass_stock_update):
             )
 
             # Add DB changes to be persisted
-            db.session.add(movement_entry)
-            db.session.add(stock_item)
+            db.add(movement_entry)
+            db.add(stock_item)
 
             # Append the change to a list to return the actual stock level to caller
             stock_status_lines.append(
@@ -543,7 +571,7 @@ def stock_mass_update(mass_stock_update):
             )
 
         # Persist all the changes
-        db.session.commit()
+        await db.commit()
 
         __logger.debug(
             __l(
@@ -552,13 +580,12 @@ def stock_mass_update(mass_stock_update):
             )
         )
 
-        return InventoryMassStockMovementResult(stock_status_lines)
-
+        return stock_status_lines
     except Exception as err:
         __logger.debug(__l("Mass stock aborted by {0}", err.__class__.__name__))
 
         # If a single operation goes wrong just rollback all changes
-        db.session.rollback()
+        await db.rollback()
         raise
 
 

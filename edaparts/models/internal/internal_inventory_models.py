@@ -21,35 +21,24 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+from dataclasses import dataclass
 
 
-class MassStockMovement:
-
-    def __init__(self, reason, comment, movements):
-        self.reason = reason
-        self.comment = comment
-        self.movements = movements
-
-
+@dataclass(frozen=True)
 class SingleStockMovement:
-
-    def __init__(self, quantity, item_dici=None, item_id=None, location_dici=None, location_id=None):
-        self.item_dici = item_dici
-        self.item_id = item_id
-        self.location_dici = location_dici
-        self.location_id = location_id
-        self.quantity = quantity
+    item_identifier: int | str
+    location_identifier: int | str
+    quantity: float
 
 
-class InventoryMassStockMovementResult:
+@dataclass(frozen=True)
+class MassStockMovement:
+    reason: str
+    movements: list[SingleStockMovement]
 
-    def __init__(self, stock_levels):
-        self.stock_levels = stock_levels
 
-
+@dataclass(frozen=True)
 class InventoryItemStockStatus:
-
-    def __init__(self, stock_level, item_dici, location_dici):
-        self.stock_level = stock_level
-        self.item_dici = item_dici
-        self.location_dici = location_dici
+    stock_level: float
+    item_dici: str
+    location_dici: str

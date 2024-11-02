@@ -21,56 +21,40 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
+
+from pydantic import BaseModel
+
+from edaparts.dtos.libraries_dtos import LibraryTypeEnum, StorageStatusEnum
+from edaparts.models import LibraryReference
 
 
-from models import LibraryReference
-
-
-class SymbolDto:
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get('id', None)
-        self.path = kwargs.get('path', '')
-        self.reference = kwargs.get('reference', '')
-        self.encoded_data = kwargs.get('encoded_data', '')
-        self.description = kwargs.get('description', '')
-
-    def __repr__(self):
-        return '%s(%s)' % (
-            type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
-        )
+class SymbolQueryDto(BaseModel):
+    id: int
+    path: str
+    reference: str
+    cad_type: LibraryTypeEnum
+    storage_status: StorageStatusEnum
+    storage_error: typing.Optional[str] = None
+    description: typing.Optional[str] = None
+    alias: typing.Optional[str] = None
 
     @staticmethod
-    def to_model(data):
-        return LibraryReference(
-            symbol_path=data.path,
-            symbol_ref=data.reference,
-            description=data.description)
-
-    @staticmethod
-    def from_model(data, encoded_symbol):
-        return SymbolDto(
+    def from_model(data: LibraryReference) -> "SymbolQueryDto":
+        return SymbolQueryDto(
             id=data.id,
-            path=data.symbol_path,
-            reference=data.symbol_ref,
+            path=data.path,
+            reference=data.reference,
+            cad_type=LibraryTypeEnum.from_model(data.cad_type),
+            storage_status=StorageStatusEnum.from_model(data.storage_status),
+            storage_error=data.storage_error,
             description=data.description,
-            encoded_data=encoded_symbol)
-
-
-class SymbolComponentReferenceWrapperDto:
-
-    def __init__(self, data):
-        self.data = data
-
-
-class SymbolComponentReferenceDto:
-
-    def __init__(self, **kwargs):
-        self.symbol_id = kwargs.get('symbol_id', None)
-
-    def __repr__(self):
-        return '%s(%s)' % (
-            type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
+            alias=data.alias,
         )
+
+
+class SymbolListResultDto(BaseModel):
+    page_size: int
+    page_number: int
+    total_elements: int
+    elements: list[SymbolQueryDto]

@@ -12,5 +12,7 @@ class Config:
         ),
     )
 
+    MODELS_BASE_DIR = os.getenv("MODELS_BASE_DIR", "/var/lib/edaparts/library")
+
 
 config = Config

@@ -30,11 +30,15 @@ from edaparts.dtos.components_dtos import ComponentSpecificQueryDto
 from edaparts.models.internal.internal_inventory_models import (
     MassStockMovement,
     SingleStockMovement,
+    InventoryItemStockStatus,
 )
 from edaparts.models.inventory.inventory_category_model import InventoryCategoryModel
 from edaparts.models.inventory.inventory_item_model import InventoryItemModel
 from edaparts.models.inventory.inventory_item_property import InventoryItemPropertyModel
 from edaparts.models.inventory.inventory_location import InventoryLocationModel
+from edaparts.models.inventory.inventory_item_location_stock import (
+    InventoryItemLocationStockModel,
+)
 
 
 class InventoryItemCreateRequestDto(BaseModel):
@@ -106,33 +110,24 @@ class InventoryLocationsQueryDto(BaseModel):
     elements: list[InventoryLocationQueryDto]
 
 
-class InventoryItemLocationRelationDto:
-
-    def __init__(self, location_ids):
-        self.location_ids = location_ids
-
-    @staticmethod
-    def from_model(location_ids):
-        return InventoryItemLocationRelationDto(location_ids=location_ids)
+class InventoryItemLocationReferenceDto(BaseModel):
+    location_ids: list[int | str]
 
 
-class InventoryItemLocationStockDto:
+class InventoryItemLocationStockUpdateResourceDto(BaseModel):
+    stock_min_level: Optional[float] = None
+    stock_notify_min_level: Optional[float] = None
 
-    def __init__(
-        self,
-        id=None,
-        actual_stock=None,
-        stock_min_level=None,
-        stock_notify_min_level=None,
-    ):
-        self.id = id
-        self.actual_stock = actual_stock
-        self.stock_min_level = stock_min_level
-        self.stock_notify_min_level = stock_notify_min_level
+
+class InventoryItemLocationStockQueryDto(InventoryItemLocationStockUpdateResourceDto):
+    id: int
+    actual_stock: float
 
     @staticmethod
-    def from_model(data):
-        return InventoryItemLocationStockDto(
+    def from_model(
+        data: InventoryItemLocationStockModel,
+    ) -> "InventoryItemLocationStockQueryDto":
+        return InventoryItemLocationStockQueryDto(
             id=data.id,
             actual_stock=data.actual_stock,
             stock_min_level=data.stock_min_level,
@@ -140,74 +135,61 @@ class InventoryItemLocationStockDto:
         )
 
 
-class InventorySingleStockMovementDto:
-    def __init__(
-        self,
-        quantity,
-        location_dici=None,
-        location_id=None,
-        item_dici=None,
-        item_id=None,
-    ):
-        self.location_dici = location_dici
-        self.location_id = location_id
-        self.item_id = item_id
-        self.item_dici = item_dici
-        self.quantity = quantity
+class InventorySingleStockMovementRequestDto(BaseModel):
+    quantity: float
+    location_id: str | int
+    item_id: str | int
 
     @staticmethod
-    def to_model(data):
+    def to_model(data: "InventorySingleStockMovementRequestDto") -> SingleStockMovement:
         return SingleStockMovement(
-            item_dici=data.item_dici,
-            item_id=data.item_id,
-            location_id=data.location_id,
-            location_dici=data.location_dici,
+            item_identifier=data.item_id,
+            location_identifier=data.location_id,
             quantity=data.quantity,
         )
 
 
-class InventoryMassStockMovementDto:
-    def __init__(self, reason, comment=None, movements=None):
-        self.reason = reason
-        self.comment = comment
-        self.movements = movements
+class InventoryMassStockMovementDto(BaseModel):
+    reason: str
+    movements: list[InventorySingleStockMovementRequestDto]
 
     @staticmethod
-    def to_model(data):
+    def to_model(data: "InventoryMassStockMovementDto") -> MassStockMovement:
         return MassStockMovement(
             reason=data.reason,
-            comment=data.comment,
             movements=[
-                InventorySingleStockMovementDto.to_model(ent) for ent in data.movements
+                InventorySingleStockMovementRequestDto.to_model(ent)
+                for ent in data.movements
             ],
         )
 
 
-class InventoryItemStockStatusDto:
-    def __init__(self, stock_level, item_dici, location_dici):
-        self.stock_level = stock_level
-        self.item_dici = item_dici
-        self.location_dici = location_dici
+class InventoryItemStockStatusQueryDto(BaseModel):
+    stock_level: float
+    item_dici: str
+    location_dici: str
 
     @staticmethod
-    def from_model(data):
-        return InventoryItemStockStatusDto(
+    def from_model(
+        data: InventoryItemStockStatus,
+    ) -> "InventoryItemStockStatusQueryDto":
+        return InventoryItemStockStatusQueryDto(
             stock_level=data.stock_level,
             item_dici=data.item_dici,
             location_dici=data.location_dici,
         )
 
 
-class InventoryMassStockMovementResultDto:
-
-    def __init__(self, stock_levels):
-        self.stock_levels = stock_levels
+class InventoryMassStockMovementQueryDto(BaseModel):
+    stock_levels: list[InventoryItemStockStatusQueryDto]
 
     @staticmethod
-    def from_model(data):
-        return InventoryMassStockMovementResultDto(
+    def from_model(
+        data: list[InventoryItemStockStatus],
+    ) -> "InventoryMassStockMovementQueryDto":
+        return InventoryMassStockMovementQueryDto(
             stock_levels=[
-                InventoryItemStockStatusDto.from_model(ent) for ent in data.stock_levels
+                InventoryItemStockStatusQueryDto.from_model(ent) for ent in data
             ]
         )
 

@@ -26,8 +26,15 @@
 from flask import request
 from marshmallow import ValidationError
 
-from dtos.schemas.symbol_schemas import SymbolComponentReferenceSchema, SymbolComponentReferenceQueryWrapperSchema
-from dtos.symbols_dtos import SymbolComponentReferenceDto, SymbolDto, SymbolComponentReferenceWrapperDto
+from dtos.schemas.symbol_schemas import (
+    SymbolComponentReferenceSchema,
+    SymbolComponentReferenceQueryWrapperSchema,
+)
+from dtos.symbols_dtos import (
+    SymbolComponentReferenceDto,
+    SymbolQueryDto,
+    SymbolComponentReferenceWrapperDto,
+)
 from rest_layer import rest_layer_utils
 from rest_layer.base_api_resource import BaseApiResource
 from services import component_service, storage_service
@@ -39,7 +46,9 @@ class SymbolComponentReferenceResource(BaseApiResource):
     def __create_update_symbol(self, id, is_update):
         try:
             reference_dto = SymbolComponentReferenceSchema().load(data=request.json)
-            component_service.update_create_symbol_relation(id, reference_dto.symbol_id, is_update)
+            component_service.update_create_symbol_relation(
+                id, reference_dto.symbol_id, is_update
+            )
             return SymbolComponentReferenceSchema().dump(reference_dto), 200
         except ValidationError as error:
             return {"errors": error.messages}, 400
@@ -60,7 +69,9 @@ class SymbolComponentReferenceResource(BaseApiResource):
 
             # Protection against full requests requested as an "id only" request
             if retrieve_encoded_data and not retrieve_all:
-                raise InvalidRequestError('Cannot retrieve encoded metadata for a non full request')
+                raise InvalidRequestError(
+                    "Cannot retrieve encoded metadata for a non full request"
+                )
 
             symbol_data = component_service.get_component_symbol_relation(id)
 
@@ -70,11 +81,19 @@ class SymbolComponentReferenceResource(BaseApiResource):
             elif not retrieve_all:
                 resp_data = SymbolComponentReferenceDto(symbol_id=symbol_data.id)
             else:
-                encoded_data = storage_service.get_encoded_file_from_repo(
-                    symbol_data) if retrieve_encoded_data else None
-                resp_data = SymbolDto.from_model(symbol_data, encoded_data)
+                encoded_data = (
+                    storage_service.get_encoded_file_from_repo(symbol_data)
+                    if retrieve_encoded_data
+                    else None
+                )
+                resp_data = SymbolQueryDto.from_model(symbol_data, encoded_data)
 
-            return SymbolComponentReferenceQueryWrapperSchema().dump(SymbolComponentReferenceWrapperDto(resp_data)), 200
+            return (
+                SymbolComponentReferenceQueryWrapperSchema().dump(
+                    SymbolComponentReferenceWrapperDto(resp_data)
+                ),
+                200,
+            )
         except ApiError as error:
             self.logger().debug(error)
             return error.format_api_data()

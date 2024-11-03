@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiodeZenerModel(ComponentModel):
-    __tablename__ = 'diode_zener'
-    __id_prefix__ = 'DZEN'
+    __tablename__ = "diode_zener"
+    __id_prefix__ = "DZEN"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -42,5 +42,5 @@ class DiodeZenerModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

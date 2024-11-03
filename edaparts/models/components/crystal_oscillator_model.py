@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class CrystalOscillatorModel(ComponentModel):
-    __tablename__ = 'crystal_oscillator'
-    __id_prefix__ = 'XTAL'
+    __tablename__ = "crystal_oscillator"
+    __id_prefix__ = "XTAL"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -41,5 +41,5 @@ class CrystalOscillatorModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

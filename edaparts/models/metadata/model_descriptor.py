@@ -6,9 +6,9 @@ class FieldModelDescriptor:
         self.data_type = data_type
 
     def __repr__(self):
-        return '%s(%s)' % (
+        return "%s(%s)" % (
             type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
+            ", ".join("%s=%s" % item for item in vars(self).items()),
         )
 
 
@@ -20,13 +20,15 @@ class ModelDescriptor:
 
     def add_field(self, name, is_mandatory, is_pk, data_type):
         if name not in self.fields:
-            self.fields[name] = FieldModelDescriptor(name, is_mandatory, is_pk, data_type)
+            self.fields[name] = FieldModelDescriptor(
+                name, is_mandatory, is_pk, data_type
+            )
 
     def get_field(self, name):
         return self.fields.get(name, None)
 
     def __repr__(self):
-        return '%s(%s)' % (
+        return "%s(%s)" % (
             type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
+            ", ".join("%s=%s" % item for item in vars(self).items()),
         )

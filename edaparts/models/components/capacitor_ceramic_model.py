@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class CapacitorCeramicModel(ComponentModel):
-    __tablename__ = 'capacitor_ceramic'
-    __id_prefix__ = 'CAPC'
+    __tablename__ = "capacitor_ceramic"
+    __id_prefix__ = "CAPC"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -41,5 +41,5 @@ class CapacitorCeramicModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

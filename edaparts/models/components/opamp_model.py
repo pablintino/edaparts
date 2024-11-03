@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OpAmpModel(ComponentModel):
-    __tablename__ = 'opamp'
-    __id_prefix__ = 'OAMP'
+    __tablename__ = "opamp"
+    __id_prefix__ = "OAMP"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -47,5 +47,5 @@ class OpAmpModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

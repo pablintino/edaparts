@@ -38,12 +38,13 @@ class InventoryItemPropertyModel(Base):
     property_f_value = Column(Float)
 
     # relationships
-    item_id = Column(Integer, ForeignKey('inventory_item.id'))
+    item_id = Column(Integer, ForeignKey("inventory_item.id"))
     item = relationship("InventoryItemModel", back_populates="item_properties")
 
     # Set a constraint that enforces Item - Property Name
-    __table_args__ = (UniqueConstraint('item_id', 'property_name', name='_item_prop_uc'),
-                      )
+    __table_args__ = (
+        UniqueConstraint("item_id", "property_name", name="_item_prop_uc"),
+    )
 
     def get_value(self):
         if self.property_i_value:

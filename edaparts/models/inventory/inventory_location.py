@@ -26,12 +26,14 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from edaparts.models.inventory.inventory_identificable_item_model import InventoryIdentificableItemModel
+from edaparts.models.inventory.inventory_identificable_item_model import (
+    InventoryIdentificableItemModel,
+)
 
 
 class InventoryLocationModel(InventoryIdentificableItemModel):
     __tablename__ = "inventory_location"
-    __id_prefix__ = 'LOC'
+    __id_prefix__ = "LOC"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False, unique=True)
@@ -39,10 +41,12 @@ class InventoryLocationModel(InventoryIdentificableItemModel):
     dici = Column(String(70), nullable=False, index=True)
 
     # relationships
-    stock_items = relationship("InventoryItemLocationStockModel", back_populates="location", lazy="selectin")
+    stock_items = relationship(
+        "InventoryItemLocationStockModel", back_populates="location", lazy="selectin"
+    )
 
     def __repr__(self):
-        return '%s(%s)' % (
+        return "%s(%s)" % (
             type(self).__name__,
-            ', '.join('%s=%s' % item for item in vars(self).items())
+            ", ".join("%s=%s" % item for item in vars(self).items()),
         )

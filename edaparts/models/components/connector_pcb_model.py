@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class ConnectorPcbModel(ComponentModel):
-    __tablename__ = 'connector_pcb'
-    __id_prefix__ = 'CONP'
+    __tablename__ = "connector_pcb"
+    __id_prefix__ = "CONP"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -44,5 +44,5 @@ class ConnectorPcbModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

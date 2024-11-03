@@ -25,6 +25,9 @@
 
 from edaparts.models.libraries.library_reference_model import LibraryReference
 from edaparts.models.libraries.footprint_reference_model import FootprintReference
-from edaparts.models.metadata.model_descriptor import ModelDescriptor, FieldModelDescriptor
+from edaparts.models.metadata.model_descriptor import (
+    ModelDescriptor,
+    FieldModelDescriptor,
+)
 import edaparts.models.components
 import edaparts.models.inventory

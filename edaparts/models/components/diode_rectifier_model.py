@@ -27,8 +27,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiodeRectifierModel(ComponentModel):
-    __tablename__ = 'diode_rectifier'
-    __id_prefix__ = 'DREC'
+    __tablename__ = "diode_rectifier"
+    __id_prefix__ = "DREC"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -42,5 +42,5 @@ class DiodeRectifierModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

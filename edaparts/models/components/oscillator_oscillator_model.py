@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OscillatorOscillatorModel(ComponentModel):
-    __tablename__ = 'oscillator_oscillator'
-    __id_prefix__ = 'XOSC'
+    __tablename__ = "oscillator_oscillator"
+    __id_prefix__ = "XOSC"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -44,5 +44,5 @@ class OscillatorOscillatorModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

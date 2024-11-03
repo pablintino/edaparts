@@ -38,5 +38,5 @@ class FootprintReference(StorableLibraryModel):
         "ComponentModel",
         secondary=component_footprint_asc_table,
         back_populates="footprint_refs",
-        lazy=True,
+        lazy="select",
     )

@@ -28,7 +28,7 @@ from edaparts.services.database import Base
 
 class InventoryIdentificableItemModel(Base):
     __abstract__ = True
-    __id_prefix__ = 'ITEM'
+    __id_prefix__ = "ITEM"
 
     def get_id_prefix(self):
         return self.__id_prefix__

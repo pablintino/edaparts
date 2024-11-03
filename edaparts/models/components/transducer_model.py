@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransducerModel(ComponentModel):
-    __tablename__ = 'transducer'
-    __id_prefix__ = 'XDCR'
+    __tablename__ = "transducer"
+    __id_prefix__ = "XDCR"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -42,5 +42,5 @@ class TransducerModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

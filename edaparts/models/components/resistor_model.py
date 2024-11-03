@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class ResistorModel(ComponentModel):
-    __tablename__ = 'resistor'
-    __id_prefix__ = 'RFIX'
+    __tablename__ = "resistor"
+    __id_prefix__ = "RFIX"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -40,5 +40,5 @@ class ResistorModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

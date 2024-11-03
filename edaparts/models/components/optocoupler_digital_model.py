@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OptocouplerDigitalModel(ComponentModel):
-    __tablename__ = 'optocoupler_digital'
-    __id_prefix__ = 'OPTD'
+    __tablename__ = "optocoupler_digital"
+    __id_prefix__ = "OPTD"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -45,5 +45,5 @@ class OptocouplerDigitalModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

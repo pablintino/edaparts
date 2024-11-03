@@ -36,22 +36,36 @@ class MetadataParser:
 
     @staticmethod
     def __get_all_alquemy_models():
-        return [cls for cls in Base.registry._class_registry.values() if
-                isinstance(cls, type) and issubclass(cls, Base)]
+        return [
+            cls
+            for cls in Base.registry._class_registry.values()
+            if isinstance(cls, type) and issubclass(cls, Base)
+        ]
 
     @staticmethod
     def model_exists_by_name(model_name):
-        return any(cls.__tablename__ == model_name for cls in MetadataParser.__get_all_alquemy_models())
+        return any(
+            cls.__tablename__ == model_name
+            for cls in MetadataParser.__get_all_alquemy_models()
+        )
 
     @staticmethod
     def __get_model_from_alquemy(name, raise_ex=True):
         if not name:
-            raise GenericIntenalApiError('SQLAlchemy model name cannot be empty')
+            raise GenericIntenalApiError("SQLAlchemy model name cannot be empty")
 
-        models = [cls for cls in MetadataParser.__get_all_alquemy_models() if cls.__tablename__ == name]
+        models = [
+            cls
+            for cls in MetadataParser.__get_all_alquemy_models()
+            if cls.__tablename__ == name
+        ]
         if (not MetadataParser.model_exists_by_name(name)) and raise_ex:
             raise GenericIntenalApiError(
-                BraceMessage('SQLAlquemy model parse has failed cause model {0} cannot be found', name))
+                BraceMessage(
+                    "SQLAlquemy model parse has failed cause model {0} cannot be found",
+                    name,
+                )
+            )
         return models[0]
 
     @staticmethod
@@ -60,10 +74,14 @@ class MetadataParser:
         descriptor = ModelDescriptor(model.__name__)
         for attr in mapper.attrs:
             if type(attr) is ColumnProperty:
-                descriptor.add_field(attr.key,
-                                     attr.expression.unique or attr.expression.primary_key or
-                                     attr.expression.nullable is False, attr.expression.primary_key,
-                                     attr.expression.type.python_type)
+                descriptor.add_field(
+                    attr.key,
+                    attr.expression.unique
+                    or attr.expression.primary_key
+                    or attr.expression.nullable is False,
+                    attr.expression.primary_key,
+                    attr.expression.type.python_type,
+                )
         return descriptor
 
     def __init__(self):
@@ -80,23 +98,29 @@ class MetadataParser:
 
     def get_model_children_by_parent_name(self, parent_name):
         parent_mapper = inspect(self.get_model_by_name(parent_name))
-        children_mappers = {k: v for k, v in parent_mapper.polymorphic_map.items() if parent_mapper.polymorphic_map[
-            k].polymorphic_identity != parent_mapper.polymorphic_identity}.values()
+        children_mappers = {
+            k: v
+            for k, v in parent_mapper.polymorphic_map.items()
+            if parent_mapper.polymorphic_map[k].polymorphic_identity
+            != parent_mapper.polymorphic_identity
+        }.values()
         return [mapper.entity for mapper in children_mappers]
 
     def get_model_metadata_by_name(self, model_name):
-        return MetadataParser.__get_alquemy_model_metadata(self.get_model_by_name(model_name))
+        return MetadataParser.__get_alquemy_model_metadata(
+            self.get_model_by_name(model_name)
+        )
 
     @staticmethod
     def get_model_metadata_by_model(model):
         if not issubclass(model, Base):
-            raise GenericIntenalApiError('The given model is not a SQLAlquemy one')
+            raise GenericIntenalApiError("The given model is not a SQLAlquemy one")
 
         return MetadataParser.__get_alquemy_model_metadata(model)
 
     def get_model_children_by_parent_model(self, model):
         if not issubclass(model, Base):
-            raise GenericIntenalApiError('The given model is not a SQLAlquemy one')
+            raise GenericIntenalApiError("The given model is not a SQLAlquemy one")
 
         return self.get_model_children_by_parent_name(model.__tablename__)
 

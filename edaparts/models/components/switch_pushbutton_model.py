@@ -28,8 +28,8 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class SwitchPushButtonModel(ComponentModel):
-    __tablename__ = 'switch_push_button'
-    __id_prefix__ = 'SBUT'
+    __tablename__ = "switch_push_button"
+    __id_prefix__ = "SBUT"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)
@@ -43,5 +43,5 @@ class SwitchPushButtonModel(ComponentModel):
 
     # Tells the ORM the type of a specific component by the distinguish column
     __mapper_args__ = {
-        'polymorphic_identity': __tablename__,
+        "polymorphic_identity": __tablename__,
     }

@@ -28,6 +28,7 @@ import typing
 from fastapi import APIRouter, UploadFile, Form, BackgroundTasks, HTTPException
 from fastapi.params import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import FileResponse
 
 from dtos.footprints_dtos import FootprintListResultDto, FootprintQueryDto
 from dtos.symbols_dtos import SymbolQueryDto, SymbolListResultDto
@@ -100,6 +101,23 @@ async def update_upload_file(
                 )
             )
             return FootprintQueryDto.from_model(library_model)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.get("/{model_id}/data")
+async def get_footprint_data(
+    model_id: int,
+    db: AsyncSession = Depends(get_db),
+) -> FileResponse:
+    try:
+        path = await edaparts.services.storable_objects_service.get_storable_model_data_path(
+            db, StorableLibraryResourceType.FOOTPRINT, model_id
+        )
+        return FileResponse(path=path)
     except ApiError as error:
         # todo temporal simple handling of the exceptions
         raise HTTPException(

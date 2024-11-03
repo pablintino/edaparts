@@ -619,6 +619,23 @@ async def get_storable_model(
     return model
 
 
+async def get_storable_model_data_path(
+    session: AsyncSession, storable_type: StorableLibraryResourceType, model_id: int
+) -> pathlib.Path:
+    __logger.debug(
+        __l(
+            "Retrieving a storable object path [storable_type={0}, model_id={1}]",
+            storable_type.value,
+            model_id,
+        )
+    )
+    model = await session.get(__get_model_for_storable_type(storable_type), model_id)
+    if not model:
+        raise ResourceNotFoundApiError("Storable object not found", missing_id=model_id)
+
+    return __get_target_object_path(model.cad_type, storable_type, model.path)
+
+
 async def get_storable_objects(
     db: AsyncSession, storable_type: StorableLibraryResourceType, page_number, page_size
 ) -> typing.Tuple[list[FootprintReference | LibraryReference], int]:

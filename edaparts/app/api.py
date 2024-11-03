@@ -22,6 +22,7 @@
 #  SOFTWARE.
 #
 import os
+import shutil
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
@@ -39,7 +40,7 @@ def init_app(init_db=True):
         async def lifespan(app: FastAPI):
             # Remove the existing locks
             if os.path.exists(config.LOCKS_DIR):
-                os.unlink(config.LOCKS_DIR)
+                shutil.rmtree(config.LOCKS_DIR)
 
             await sessionmanager.init_models()
             yield

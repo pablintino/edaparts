@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Inductors Power" as
+create or replace view "Altium Inductors Power" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

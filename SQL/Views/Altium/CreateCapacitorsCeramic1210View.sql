@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Capacitors Ceramic 1210" as
+create or replace view "Altium Capacitors Ceramic 1210" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

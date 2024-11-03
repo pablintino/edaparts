@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Triacs" as
+create or replace view "Altium Triacs" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

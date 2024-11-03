@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Potentiometers" as
+create or replace view "Altium Potentiometers" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

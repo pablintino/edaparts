@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Transceivers" as
+create or replace view "Altium Transceivers" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

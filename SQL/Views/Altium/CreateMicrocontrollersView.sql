@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Microcontrollers" as
+create or replace view "Altium Microcontrollers" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

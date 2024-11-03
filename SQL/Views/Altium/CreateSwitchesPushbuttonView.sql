@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Switches Pushbuttons" as
+create or replace view "Altium Switches Pushbuttons" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

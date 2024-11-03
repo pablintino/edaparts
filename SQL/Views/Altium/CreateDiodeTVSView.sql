@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Diodes TVS" as
+create or replace view "Altium Diodes TVS" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

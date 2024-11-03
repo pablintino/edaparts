@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Connectors PCB" as
+create or replace view "Altium Connectors PCB" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

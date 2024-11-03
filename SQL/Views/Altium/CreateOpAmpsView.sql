@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "OpAmps" as
+create or replace view "Altium OpAmps" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

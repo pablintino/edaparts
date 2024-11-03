@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Memories" as
+create or replace view "Altium Memories" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

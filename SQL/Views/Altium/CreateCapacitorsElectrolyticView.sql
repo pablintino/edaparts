@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Capacitors Electrolytic" as
+create or replace view "Altium Capacitors Electrolytic" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

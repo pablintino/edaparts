@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Capacitors Tantalum" as
+create or replace view "Altium Capacitors Tantalum" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

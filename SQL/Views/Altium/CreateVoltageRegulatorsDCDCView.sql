@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Regulators DCDC" as
+create or replace view "Altium Regulators DCDC" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Discrete Logics" as
+create or replace view "Altium Discrete Logics" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

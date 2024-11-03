@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Regulators Linear" as
+create or replace view "Altium Regulators Linear" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

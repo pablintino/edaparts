@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Optocouplers Digital" as
+create or replace view "Altium Optocouplers Digital" as
 select c.mpn                        "Part Number",
        c.value                      "Value",
        c.manufacturer               "Manufacturer",

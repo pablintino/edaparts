@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Transistors Mosfet" as
+create or replace view "Altium Transistors Mosfet" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

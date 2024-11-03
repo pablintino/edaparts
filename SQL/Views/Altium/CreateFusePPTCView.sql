@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "PPTC Fuses" as
+create or replace view "Altium PPTC Fuses" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

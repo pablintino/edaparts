@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Oscillator Oscillators" as
+create or replace view "Altium Oscillator Oscillators" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

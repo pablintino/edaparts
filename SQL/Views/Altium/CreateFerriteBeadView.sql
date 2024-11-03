@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Ferrite Beads" as
+create or replace view "Altium Ferrite Beads" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

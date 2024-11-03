@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Transformers" as
+create or replace view "Altium Transformers" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Inductors Chokes" as
+create or replace view "Altium Inductors Chokes" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Transistors BJT" as
+create or replace view "Altium Transistors BJT" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Diodes Zener" as
+create or replace view "Altium Diodes Zener" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

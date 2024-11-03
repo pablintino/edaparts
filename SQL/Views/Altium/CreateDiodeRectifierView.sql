@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Diodes Rectifier" as
+create or replace view "Altium Diodes Rectifier" as
 select c.mpn                         "Part Number",
        c.value                       "Value",
        c.manufacturer                "Manufacturer",

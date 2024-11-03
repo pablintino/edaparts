@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Crystal Oscillators" as
+create or replace view "Altium Crystal Oscillators" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

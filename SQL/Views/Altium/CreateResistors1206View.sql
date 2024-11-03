@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Resistors 1206" as
+create or replace view "Altium Resistors 1206" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

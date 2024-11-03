@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "LED Indicators" as
+create or replace view "Altium LED Indicators" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

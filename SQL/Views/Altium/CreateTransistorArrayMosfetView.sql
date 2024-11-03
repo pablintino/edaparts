@@ -23,7 +23,7 @@
  *
  **/
 
-create or replace view "Transistors Arrays Mosfet" as
+create or replace view "Altium Transistors Arrays Mosfet" as
 select c.mpn                       "Part Number",
        c.value                     "Value",
        c.manufacturer              "Manufacturer",

@@ -26,19 +26,19 @@
 import logging
 import typing
 
-from sqlalchemy import select, func, inspect
+from sqlalchemy import select, func, inspect, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import relationship, selectinload
+from sqlalchemy.orm import selectinload, joinedload
 
 from edaparts.models.components import ComponentModelType
 from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.libraries.footprint_reference_model import FootprintReference
+from edaparts.models.libraries.join_tables import component_footprint_asc_table
 from edaparts.models.libraries.library_reference_model import LibraryReference
 from edaparts.services import inventory_service
 from edaparts.services.exceptions import (
     ResourceAlreadyExistsApiError,
     ResourceNotFoundApiError,
-    RelationAlreadyExistsError,
     InvalidComponentFieldsError,
     RelationExistsError,
 )
@@ -142,7 +142,7 @@ async def update_component(
     return current_model
 
 
-def update_create_symbol_relation(component_id, symbol_id, is_update=False):
+async def create_symbol_relation(db: AsyncSession, component_id: int, symbol_id: int):
     __logger.debug(
         __l(
             "Creating new component-symbol relation [component_id={0}, symbol_id={1}]",
@@ -150,36 +150,23 @@ def update_create_symbol_relation(component_id, symbol_id, is_update=False):
             symbol_id,
         )
     )
-    component = ComponentModel.query.get(component_id)
-    if component:
-        library_ref = LibraryReference.query.get(symbol_id)
-        if library_ref is not None:
-            #  Just protect against false updates from bad POST usage
-            if not is_update and component.library_ref_id:
-                raise RelationAlreadyExistsError(
-                    __l(
-                        "Cannot create relation. Component already has a relation [component_id={0}, library_ref_id={1}]",
-                        component_id,
-                        component.library_ref_id,
-                    )
-                )
 
-            component.library_ref = library_ref
-            component.library_ref_id = symbol_id
-            db.session.add(component)
-            db.session.commit()
-            __logger.debug(
-                f'Component symbol {"updated" if is_update else "created"}.'
-                f" Component {component_id} symbol {symbol_id}"
-            )
-            return component
+    component = await db.get(ComponentModel, component_id)
+    if not component:
+        raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
+    library_ref = await db.get(LibraryReference, symbol_id)
+    if not library_ref:
         raise ResourceNotFoundApiError("Symbol not found", missing_id=symbol_id)
 
-    raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
+    component.library_ref_id = symbol_id
+    db.add(component)
+    await db.commit()
 
 
-def create_footprints_relation(component_id, footprint_ids):
+async def create_footprints_relation(
+    db: AsyncSession, component_id: int, footprint_ids: list[int]
+) -> list[int]:
     __logger.debug(
         __l(
             "Creating new component-footprint relation [component_id={0}, footprint_ids={1}]",
@@ -187,33 +174,43 @@ def create_footprints_relation(component_id, footprint_ids):
             footprint_ids,
         )
     )
-    component = ComponentModel.query.get(component_id)
-    footprint_refs = []
 
-    # Verify that the component exists before trying anything else
+    component = await db.get(ComponentModel, component_id)
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
+    # Use the many-to-many table directly instead of ORM relation to avoid
+    # the slow load of the SQL query that joins all component tables
+    existing_footprints_ids = list(
+        (
+            await db.scalars(
+                select(component_footprint_asc_table.c.footprint_ref_id).filter(
+                    component_footprint_asc_table.c.component_id == component_id
+                )
+            )
+        ).fetchall()
+    )
+
     # Add only the footprints that are not already associated
     footprints_to_add = [
-        foot_id
-        for foot_id in footprint_ids
-        if foot_id not in [cfr.id for cfr in component.footprint_refs]
+        foot_id for foot_id in footprint_ids if foot_id not in existing_footprints_ids
     ]
+    if not footprints_to_add:
+        return sorted(existing_footprints_ids)
 
+    footprint_refs = []
     for footprint_id in footprints_to_add:
-        footprint_ref = FootprintReference.query.get(footprint_id)
-        if footprint_ref:
-            footprint_refs.append(footprint_ref)
-            db.session.add(footprint_ref)
-        else:
+        footprint_ref = await db.get(FootprintReference, footprint_id)
+        if not footprint_ref:
             raise ResourceNotFoundApiError(
                 "Footprint not found", missing_id=footprint_id
             )
+        footprint_refs.append(
+            {"footprint_ref_id": footprint_ref.id, "component_id": component_id}
+        )
 
-    component.footprint_refs.extend(footprint_refs)
-    db.session.add(component)
-    db.session.commit()
+    await db.execute(insert(component_footprint_asc_table), footprint_refs)
+    await db.commit()
     __logger.debug(
         __l(
             "Component footprints updated [component_id={0}, footprint_ids={1}",
@@ -221,38 +218,46 @@ def create_footprints_relation(component_id, footprint_ids):
             footprint_ids,
         )
     )
-    return [ref.id for ref in component.footprint_refs]
+    return list(sorted(dict.fromkeys(existing_footprints_ids + footprints_to_add)))
 
 
-def get_component_symbol_relation(component_id):
+async def get_component_symbol_relation(
+    db: AsyncSession, component_id
+) -> LibraryReference:
     __logger.debug(
         __l("Querying symbol relation for component [component_id={0}]", component_id)
     )
-    component = ComponentModel.query.get(component_id)
+    component = await db.get(ComponentModel, component_id)
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
+    if not component.library_ref_id:
+        raise ResourceNotFoundApiError(
+            "Component has no symbol", missing_id=component_id
+        )
 
-    return component.library_ref
+    return await db.get(LibraryReference, component.library_ref_id)
 
 
-def get_component_footprint_relations(component_id, complete_footprints=False):
+async def get_component_footprint_relations(
+    db: AsyncSession, component_id: int
+) -> typing.Sequence[FootprintReference]:
     __logger.debug(
         __l(
             "Querying footprint relations for component [component_id={0}]",
             component_id,
         )
     )
-    component = ComponentModel.query.get(component_id)
-    if component:
-        result_list = []
-        if complete_footprints:
-            result_list = list(component.footprint_refs)
-        else:
-            for footprint in component.footprint_refs:
-                result_list.append(footprint.id)
-        return result_list
+    component = await db.get(ComponentModel, component_id)
+    if not component:
+        raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
-    raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
+    return (
+        await db.scalars(
+            select(FootprintReference)
+            .join(FootprintReference.components_f)
+            .filter_by(id=component_id)
+        )
+    ).all()
 
 
 async def get_component(db: AsyncSession, component_id: int) -> ComponentModel:
@@ -305,18 +310,17 @@ async def delete_component(db: AsyncSession, component_id: int):
         __logger.debug(__l("Deleted component [component_id={0}]", component_id))
 
 
-def delete_component_symbol_relation(component_id):
+async def delete_component_symbol_relation(db: AsyncSession, component_id: int):
     __logger.debug(
         __l("Deleting component symbol relation[component_id={0}]", component_id)
     )
-    component = ComponentModel.query.get(component_id)
+    component = await db.get(ComponentModel, component_id)
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
     symbol_id = component.library_ref_id
-    component.library_ref_id = Nones
-    component.library_ref = None
-    db.session.add(component)
-    db.session.commit()
+    component.library_ref_id = None
+    db.add(component)
+    await db.commit()
     __logger.debug(
         __l(
             "Deleted component symbol relation [component_id={0}, symbol_id={1}]",
@@ -326,7 +330,9 @@ def delete_component_symbol_relation(component_id):
     )
 
 
-def delete_component_footprint_relation(component_id, footprint_id):
+async def delete_component_footprint_relation(
+    db: AsyncSession, component_id: int, footprint_id: int
+):
     __logger.debug(
         __l(
             "Deleting component footprint relation[component_id={0}, footprint_id={1}]",
@@ -334,15 +340,14 @@ def delete_component_footprint_relation(component_id, footprint_id):
             footprint_id,
         )
     )
-    component = ComponentModel.query.get(component_id)
-    if not component:
-        raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
-    component.footprint_refs = [
-        x for x in component.footprint_refs if x.id != footprint_id
-    ]
-    db.session.add(component)
-    db.session.commit()
+    await db.execute(
+        delete(component_footprint_asc_table).where(
+            component_footprint_asc_table.c.component_id == component_id,
+            component_footprint_asc_table.c.footprint_ref_id == footprint_id,
+        )
+    )
+    await db.commit()
     __logger.debug(
         __l(
             "Deleted component footprint relation [component_id={0}, footprint_id={1}]",

@@ -4,7 +4,6 @@ from kiutils.symbol import SymbolLib
 from kiutils.footprint import Footprint
 from kiutils.utils import sexpr
 
-
 expression = sexpr.parse_sexp(
     pathlib.Path("/home/pablintino/Downloads/SparkFun-Aesthetic.kicad_sym").read_text(
         encoding="utf-8"

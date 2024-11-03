@@ -23,6 +23,7 @@
 #
 
 import os
+import pathlib
 
 
 class Config:
@@ -37,6 +38,9 @@ class Config:
     )
 
     MODELS_BASE_DIR = os.getenv("MODELS_BASE_DIR", "/var/lib/edaparts/library")
+    LOCKS_DIR = os.getenv(
+        "LOCKS_DIR", str(pathlib.Path(MODELS_BASE_DIR).parent.joinpath("locks"))
+    )
 
 
 config = Config

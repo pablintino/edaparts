@@ -192,7 +192,6 @@ def __recursive_parent_search(
 async def create_item_for_component(
     db: AsyncSession, component_model: ComponentModel
 ) -> InventoryItemModel:
-
     exists_id = (
         await db.scalars(
             select(InventoryItemModel.id)

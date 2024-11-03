@@ -261,7 +261,6 @@ _model_to_query_dto = {
 def map_component_model_to_query_dto(
     model: ComponentModelType,
 ) -> ComponentSpecificQueryDto:
-
     dto_t = _model_to_query_dto[type(model)]
     dto_data = {
         c.key: getattr(model, c.key)

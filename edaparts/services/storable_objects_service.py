@@ -66,19 +66,19 @@ __STORABLE_DIR_PATH_SYMBOLS = "symbols"
 __storable_base_dirs: dict[CadType, dict[StorableLibraryResourceType, pathlib.Path]] = {
     CadType.KICAD: {
         StorableLibraryResourceType.FOOTPRINT: pathlib.Path(
-            Config.MODELS_BASE_DIR
-        ).joinpath(__STORABLE_DIR_PATH_FOOTPRINTS, str(CadType.KICAD.value)),
+            __STORABLE_DIR_PATH_FOOTPRINTS
+        ).joinpath(str(CadType.KICAD.value)),
         StorableLibraryResourceType.SYMBOL: pathlib.Path(
-            Config.MODELS_BASE_DIR
-        ).joinpath(__STORABLE_DIR_PATH_SYMBOLS, str(CadType.KICAD.value)),
+            __STORABLE_DIR_PATH_SYMBOLS
+        ).joinpath(str(CadType.KICAD.value)),
     },
     CadType.ALTIUM: {
         StorableLibraryResourceType.FOOTPRINT: pathlib.Path(
-            Config.MODELS_BASE_DIR
-        ).joinpath(__STORABLE_DIR_PATH_FOOTPRINTS, str(CadType.ALTIUM.value)),
+            __STORABLE_DIR_PATH_FOOTPRINTS
+        ).joinpath(str(CadType.ALTIUM.value)),
         StorableLibraryResourceType.SYMBOL: pathlib.Path(
-            Config.MODELS_BASE_DIR
-        ).joinpath(__STORABLE_DIR_PATH_SYMBOLS, str(CadType.ALTIUM.value)),
+            __STORABLE_DIR_PATH_SYMBOLS
+        ).joinpath(str(CadType.ALTIUM.value)),
     },
 }
 
@@ -402,13 +402,7 @@ async def _object_store_task(storable_task: StorableTask):
             StorageStatus.STORING,
         )
         try:
-            target_file = __get_target_object_path(
-                storable_task.cad_type, storable_task.file_type, storable_task.path
-            )
-            if not target_file.parent.exists():
-                target_file.parent.mkdir(parents=True)
-
-            await __store_file(session, storable_task, target_file)
+            await __store_file(session, storable_task)
         except SQLAlchemyError as err:
             error = err
             __logger.critical(
@@ -442,15 +436,22 @@ async def _object_store_task(storable_task: StorableTask):
 def __get_target_object_path(
     cad_type: CadType, file_type: StorableLibraryResourceType, path: str
 ) -> pathlib.Path:
-    return __storable_base_dirs[cad_type][file_type].joinpath(path)
+    return pathlib.Path(Config.MODELS_BASE_DIR).joinpath(
+        __storable_base_dirs[cad_type][file_type], path
+    )
 
 
 async def __store_file(
     session: AsyncSession,
     storable_task: StorableTask,
-    target_file: pathlib.Path,
 ):
-    with filelock.FileLock(target_file.with_suffix(".lock"), timeout=30):
+    target_file = __get_target_object_path(
+        storable_task.cad_type, storable_task.file_type, storable_task.path
+    )
+    if not target_file.parent.exists():
+        target_file.parent.mkdir(parents=True)
+
+    with __get_file_lock(storable_task):
         await __store_file_validate(session, storable_task)
 
         model_type = __get_model_for_storable_type(storable_task.file_type)
@@ -486,6 +487,17 @@ async def __store_file(
             storable_task.file_type,
             StorageStatus.STORED,
         )
+
+
+def __get_file_lock(storable_task: StorableTask) -> filelock.BaseFileLock:
+    lock_path = pathlib.Path(Config.LOCKS_DIR).joinpath(
+        __storable_base_dirs[storable_task.cad_type][storable_task.file_type],
+        storable_task.path + ".lock",
+    )
+    lock_path_dir = lock_path.parent
+    if not lock_path_dir.exists():
+        lock_path_dir.mkdir(parents=True)
+    return filelock.FileLock(lock_path, timeout=30)
 
 
 async def __store_file_validate(session: AsyncSession, storable_task: StorableTask):

@@ -29,7 +29,7 @@ from enum import Enum
 from pydantic import BaseModel
 
 from edaparts.models.internal.internal_models import CadType, StorageStatus
-from models import FootprintReference, LibraryReference
+from edaparts.models import FootprintReference, LibraryReference
 
 
 class LibraryTypeEnum(Enum):
@@ -97,8 +97,8 @@ class BaseLibraryQueryDto(BaseModel):
     @staticmethod
     def from_model[
         T
-    ](data: LibraryReference | FootprintReference,) -> T:
-        return BaseLibraryQueryDto(
+    ](model_type: typing.Type[T], data: LibraryReference | FootprintReference) -> T:
+        return model_type(
             id=data.id,
             path=data.path,
             reference=data.reference,

@@ -25,10 +25,13 @@
 from pydantic import BaseModel
 
 from edaparts.dtos.libraries_dtos import BaseLibraryQueryDto
+from models import LibraryReference
 
 
 class SymbolQueryDto(BaseLibraryQueryDto):
-    pass
+    @classmethod
+    def from_model(cls, data: LibraryReference) -> "SymbolQueryDto":
+        return super().from_model(SymbolQueryDto, data)
 
 
 class SymbolListResultDto(BaseModel):

@@ -22,14 +22,16 @@
 #  SOFTWARE.
 #
 
-
 from pydantic import BaseModel
 
 from edaparts.dtos.libraries_dtos import BaseLibraryQueryDto
+from models import FootprintReference
 
 
 class FootprintQueryDto(BaseLibraryQueryDto):
-    pass
+    @classmethod
+    def from_model(cls, data: FootprintReference) -> "FootprintQueryDto":
+        return super().from_model(FootprintQueryDto, data)
 
 
 class FootprintListResultDto(BaseModel):
@@ -37,3 +39,7 @@ class FootprintListResultDto(BaseModel):
     page_number: int
     total_elements: int
     elements: list[FootprintQueryDto]
+
+
+class FootprintsComponentReferenceDto(BaseModel):
+    footprint_ids: list[int]

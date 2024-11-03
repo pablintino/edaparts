@@ -21,8 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
-
+import os
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
@@ -38,6 +37,10 @@ def init_app(init_db=True):
 
         @asynccontextmanager
         async def lifespan(app: FastAPI):
+            # Remove the existing locks
+            if os.path.exists(config.LOCKS_DIR):
+                os.unlink(config.LOCKS_DIR)
+
             await sessionmanager.init_models()
             yield
             if sessionmanager._engine is not None:

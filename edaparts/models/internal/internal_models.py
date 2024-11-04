@@ -41,6 +41,7 @@ class StorageStatus(Enum):
     STORING = "STORING"
     STORED = "STORED"
     STORAGE_FAILED = "STORAGE_FAILED"
+    DELETING = "DELETING"
 
 
 @dataclass(frozen=True)
@@ -62,10 +63,19 @@ class StorableObjectDataUpdateRequest:
 
 
 @dataclass(frozen=True)
-class StorableTask:
+class BaseStorableTask:
     model_id: int
-    filename: pathlib.Path
     path: str
     file_type: StorableLibraryResourceType
     cad_type: CadType
+
+
+@dataclass(frozen=True)
+class CreateUpdateDataStorableTask(BaseStorableTask):
+    filename: pathlib.Path
     reference: str
+
+
+@dataclass(frozen=True)
+class DeleteStorableTask(BaseStorableTask):
+    pass

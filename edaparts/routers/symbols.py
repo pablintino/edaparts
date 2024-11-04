@@ -28,7 +28,7 @@ import typing
 from fastapi import APIRouter, UploadFile, Form, BackgroundTasks, HTTPException
 from fastapi.params import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import FileResponse
+from starlette.responses import FileResponse, Response
 
 from dtos.symbols_dtos import SymbolQueryDto, SymbolListResultDto
 from edaparts.dtos.libraries_dtos import LibraryTypeEnum
@@ -117,6 +117,23 @@ async def get_symbol(
             db, StorableLibraryResourceType.SYMBOL, model_id
         )
         return SymbolQueryDto.from_model(symbol)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.delete("/{model_id}", status_code=204, response_class=Response)
+async def delete_symbol(
+    background_tasks: BackgroundTasks,
+    model_id: int,
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    try:
+        await edaparts.services.storable_objects_service.delete_object(
+            db, background_tasks, StorableLibraryResourceType.SYMBOL, model_id
+        )
     except ApiError as error:
         # todo temporal simple handling of the exceptions
         raise HTTPException(

@@ -33,14 +33,18 @@ import typing
 
 import filelock
 from fastapi import BackgroundTasks
-from sqlalchemy import select, update, func
+from sqlalchemy import select, update, func, delete
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import edaparts.utils.models_parser
 from edaparts.app.config import Config
 from edaparts.models import FootprintReference, LibraryReference
-from edaparts.models.internal.internal_models import CadType, StorableTask
+from edaparts.models.internal.internal_models import (
+    CadType,
+    CreateUpdateDataStorableTask,
+    BaseStorableTask,
+)
 from edaparts.models.internal.internal_models import (
     StorableLibraryResourceType,
     StorageStatus,
@@ -58,6 +62,7 @@ from edaparts.services.exceptions import (
 )
 from edaparts.utils.files import hash_sha256
 from edaparts.utils.helpers import BraceMessage as __l
+from models.internal.internal_models import DeleteStorableTask
 
 __logger = logging.getLogger(__name__)
 
@@ -66,19 +71,19 @@ __STORABLE_DIR_PATH_SYMBOLS = "symbols"
 __storable_base_dirs: dict[CadType, dict[StorableLibraryResourceType, pathlib.Path]] = {
     CadType.KICAD: {
         StorableLibraryResourceType.FOOTPRINT: pathlib.Path(
-            __STORABLE_DIR_PATH_FOOTPRINTS
-        ).joinpath(str(CadType.KICAD.value)),
+            str(CadType.KICAD.value)
+        ).joinpath(__STORABLE_DIR_PATH_FOOTPRINTS),
         StorableLibraryResourceType.SYMBOL: pathlib.Path(
-            __STORABLE_DIR_PATH_SYMBOLS
-        ).joinpath(str(CadType.KICAD.value)),
+            str(CadType.KICAD.value)
+        ).joinpath(__STORABLE_DIR_PATH_SYMBOLS),
     },
     CadType.ALTIUM: {
         StorableLibraryResourceType.FOOTPRINT: pathlib.Path(
-            __STORABLE_DIR_PATH_FOOTPRINTS
-        ).joinpath(str(CadType.ALTIUM.value)),
+            str(CadType.ALTIUM.value)
+        ).joinpath(__STORABLE_DIR_PATH_FOOTPRINTS),
         StorableLibraryResourceType.SYMBOL: pathlib.Path(
-            __STORABLE_DIR_PATH_SYMBOLS
-        ).joinpath(str(CadType.ALTIUM.value)),
+            str(CadType.ALTIUM.value)
+        ).joinpath(__STORABLE_DIR_PATH_SYMBOLS),
     },
 }
 
@@ -271,7 +276,7 @@ async def update_object_data(
     # Signal background process to store the storable object
     background_tasks.add_task(
         _object_store_task,
-        StorableTask(
+        CreateUpdateDataStorableTask(
             model_id=model.id,
             filename=storable_request.filename,
             path=model.path,
@@ -362,7 +367,7 @@ async def create_storable_library_object(
     # Signal background process to store the object
     background_tasks.add_task(
         _object_store_task,
-        StorableTask(
+        CreateUpdateDataStorableTask(
             model_id=model.id,
             filename=storable_request.filename,
             path=model.path,
@@ -373,6 +378,28 @@ async def create_storable_library_object(
     )
 
     return model
+
+
+async def delete_object(
+    db: AsyncSession,
+    background_tasks: BackgroundTasks,
+    storable_type: StorableLibraryResourceType,
+    model_id: int,
+):
+    model = await db.get(
+        __get_model_for_storable_type(storable_type),
+        model_id,
+    )
+    if model:
+        background_tasks.add_task(
+            _object_store_task,
+            DeleteStorableTask(
+                model_id=model.id,
+                path=model.path,
+                file_type=storable_type,
+                cad_type=model.cad_type,
+            ),
+        )
 
 
 def __get_model_alias(storable_request: StorableObjectRequest) -> typing.Optional[str]:
@@ -392,17 +419,14 @@ def __get_model_alias(storable_request: StorableObjectRequest) -> typing.Optiona
     return f"EDAPARTS_{sanitized_name}"
 
 
-async def _object_store_task(storable_task: StorableTask):
+async def _object_store_task(storable_task: BaseStorableTask):
     async with database.sessionmanager.session() as session:
         error = None
-        await __store_file_set_state(
-            session,
-            storable_task.model_id,
-            storable_task.file_type,
-            StorageStatus.STORING,
-        )
         try:
-            await __store_file(session, storable_task)
+            if isinstance(storable_task, CreateUpdateDataStorableTask):
+                await __task_store_file(session, storable_task)
+            elif isinstance(storable_task, DeleteStorableTask):
+                await __task_delete_model(session, storable_task)
         except SQLAlchemyError as err:
             error = err
             __logger.critical(
@@ -420,7 +444,8 @@ async def _object_store_task(storable_task: StorableTask):
             __logger.debug(err.msg)
         finally:
             # Remove the temporal file
-            os.remove(storable_task.filename)
+            if isinstance(storable_task, CreateUpdateDataStorableTask):
+                os.remove(storable_task.filename)
 
         if error:
             # Update the state to signal something failed
@@ -441,9 +466,33 @@ def __get_target_object_path(
     )
 
 
-async def __store_file(
+async def __task_delete_model(
     session: AsyncSession,
-    storable_task: StorableTask,
+    storable_task: DeleteStorableTask,
+):
+    await __store_file_set_state(
+        session,
+        storable_task.model_id,
+        storable_task.file_type,
+        StorageStatus.DELETING,
+    )
+    with __get_file_lock(storable_task):
+        target_file = __get_target_object_path(
+            storable_task.cad_type, storable_task.file_type, storable_task.path
+        )
+        if target_file.exists():
+            target_file.unlink()
+
+        model_type = __get_model_for_storable_type(storable_task.file_type)
+        await session.execute(
+            delete(model_type).where(model_type.id == storable_task.model_id)
+        )
+        await session.commit()
+
+
+async def __task_store_file(
+    session: AsyncSession,
+    storable_task: CreateUpdateDataStorableTask,
 ):
     target_file = __get_target_object_path(
         storable_task.cad_type, storable_task.file_type, storable_task.path
@@ -451,6 +500,12 @@ async def __store_file(
     if not target_file.parent.exists():
         target_file.parent.mkdir(parents=True)
 
+    await __store_file_set_state(
+        session,
+        storable_task.model_id,
+        storable_task.file_type,
+        StorageStatus.STORING,
+    )
     with __get_file_lock(storable_task):
         await __store_file_validate(session, storable_task)
 
@@ -489,7 +544,9 @@ async def __store_file(
         )
 
 
-def __get_file_lock(storable_task: StorableTask) -> filelock.BaseFileLock:
+def __get_file_lock(
+    storable_task: BaseStorableTask,
+) -> filelock.BaseFileLock:
     lock_path = pathlib.Path(Config.LOCKS_DIR).joinpath(
         __storable_base_dirs[storable_task.cad_type][storable_task.file_type],
         storable_task.path + ".lock",
@@ -500,7 +557,9 @@ def __get_file_lock(storable_task: StorableTask) -> filelock.BaseFileLock:
     return filelock.FileLock(lock_path, timeout=30)
 
 
-async def __store_file_validate(session: AsyncSession, storable_task: StorableTask):
+async def __store_file_validate(
+    session: AsyncSession, storable_task: CreateUpdateDataStorableTask
+):
     if (
         storable_task.cad_type == CadType.KICAD
         and storable_task.file_type == StorableLibraryResourceType.FOOTPRINT
@@ -528,7 +587,7 @@ async def __store_file_validate(session: AsyncSession, storable_task: StorableTa
 
 
 async def __get_stored_references_for_id(
-    db: AsyncSession, storable_task: StorableTask
+    db: AsyncSession, storable_task: CreateUpdateDataStorableTask
 ) -> [str]:
     # Get all stored references but the one we are creating
     model_type = __get_model_for_storable_type(storable_task.file_type)

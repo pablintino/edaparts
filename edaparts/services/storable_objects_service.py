@@ -480,7 +480,10 @@ async def __task_delete_model(
         target_file = __get_target_object_path(
             storable_task.cad_type, storable_task.file_type, storable_task.path
         )
-        if target_file.exists():
+
+        # Delete the file only if we are deleting the last reference to it
+        other_references = await __get_stored_references_for_id(session, storable_task)
+        if not other_references and target_file.exists():
             target_file.unlink()
 
         model_type = __get_model_for_storable_type(storable_task.file_type)
@@ -587,7 +590,7 @@ async def __store_file_validate(
 
 
 async def __get_stored_references_for_id(
-    db: AsyncSession, storable_task: CreateUpdateDataStorableTask
+    db: AsyncSession, storable_task: BaseStorableTask
 ) -> [str]:
     # Get all stored references but the one we are creating
     model_type = __get_model_for_storable_type(storable_task.file_type)

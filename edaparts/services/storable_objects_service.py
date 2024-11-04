@@ -431,7 +431,7 @@ async def _object_store_task(storable_task: BaseStorableTask):
             error = err
             __logger.critical(
                 __l(
-                    "SQLAlchemyError error persisting [model_id={0}, storable_task={1}]",
+                    "SQLAlchemyError error [model_id={0}, storable_task={1}]",
                     storable_task.model_id,
                     storable_task,
                 ),

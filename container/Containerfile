@@ -1,0 +1,11 @@
+FROM python:3.12.3
+
+COPY dist/*.whl /opt/edaparts/
+COPY container/entrypoint.sh /opt/edaparts/entrypoint.sh
+
+ENV PYENV_DEST=/opt/edaparts/.venv
+
+RUN python3 -m venv $PYENV_DEST && \
+    $PYENV_DEST/bin/pip3 install `find /opt/edaparts -type f -name "*.whl"`
+
+CMD ["/opt/edaparts/entrypoint.sh"]

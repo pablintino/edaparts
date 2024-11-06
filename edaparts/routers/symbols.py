@@ -25,26 +25,25 @@
 
 import typing
 
-from fastapi import APIRouter, UploadFile, Form, BackgroundTasks, HTTPException
+from fastapi import APIRouter, UploadFile, Form, BackgroundTasks
 from fastapi.params import Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import FileResponse, Response
+from starlette.responses import FileResponse
 
-from dtos.symbols_dtos import SymbolQueryDto, SymbolListResultDto
+import edaparts.services.storable_objects_service
 from edaparts.dtos.libraries_dtos import (
     LibraryTypeEnum,
     CommonObjectFromExistingCreateDto,
     CommonObjectUpdateDto,
 )
+from edaparts.dtos.symbols_dtos import SymbolQueryDto, SymbolListResultDto
 from edaparts.models.internal.internal_models import (
     StorableLibraryResourceType,
     StorableObjectRequest,
     StorableObjectDataUpdateRequest,
 )
 from edaparts.services.database import get_db
-import edaparts.services.storable_objects_service
 from edaparts.utils.files import TempCopiedFile
-from edaparts.services.exceptions import ApiError
 
 router = APIRouter(prefix="/symbols", tags=["symbols"])
 

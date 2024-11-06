@@ -31,11 +31,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
 
 import edaparts.services.inventory_service
-from dtos.inventory_dtos import InventoryItemLocationStockQueryDto
 from edaparts.dtos.components_dtos import map_component_model_to_query_dto
 from edaparts.dtos.inventory_dtos import (
     InventoryItemQueryDto,
     InventoryItemsQueryDto,
+    InventoryItemLocationStockQueryDto,
     InventoryItemPropertyQueryDto,
     InventoryItemPropertyUpdateDto,
     InventoryItemPropertyCreateRequestDto,

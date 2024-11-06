@@ -25,7 +25,7 @@
 from pydantic import BaseModel
 
 from edaparts.dtos.libraries_dtos import BaseLibraryQueryDto
-from models import FootprintReference
+from edaparts.models import FootprintReference
 
 
 class FootprintQueryDto(BaseLibraryQueryDto):

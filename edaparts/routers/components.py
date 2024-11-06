@@ -27,15 +27,13 @@ from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import edaparts.services.component_service
-from dtos.components_dtos import (
-    map_component_model_to_query_dto,
-    ComponentsListResultDto,
-    ComponentUpdateRequestDto,
-)
-from dtos.symbols_dtos import SymbolQueryDto
+from edaparts.dtos.symbols_dtos import SymbolQueryDto
 from edaparts.dtos.components_dtos import (
     ComponentCreateRequestDto,
     ComponentSpecificQueryDto,
+    ComponentsListResultDto,
+    ComponentUpdateRequestDto,
+    map_component_model_to_query_dto,
 )
 from edaparts.dtos.footprints_dtos import (
     FootprintsComponentReferenceDto,

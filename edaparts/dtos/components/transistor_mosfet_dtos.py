@@ -32,35 +32,38 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import TransistorMosfetModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class TransistorMosfetBaseDto(ComponentCommonBaseFields):
+    type: Literal["transistor_mosfet"]
+    rds_on: str | None = Field(default=None, max_length=30)
+    vgs_max: str | None = Field(default=None, max_length=30)
+    vgs_th: str | None = Field(default=None, max_length=30)
+    vds_max: str | None = Field(default=None, max_length=30)
+    ids_max: str | None = Field(default=None, max_length=30)
+    power_max: str | None = Field(default=None, max_length=30)
+    channel_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> TransistorMosfetModel:
+        return self._fill_model(TransistorMosfetModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return TransistorMosfetModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class TransistorMosfetQueryDto(TransistorMosfetBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class TransistorMosfetCreateRequestDto(
+    TransistorMosfetBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class TransistorMosfetUpdateRequestDto(
+    TransistorMosfetBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

@@ -32,35 +32,36 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import PotentiometerModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
+class PotentiometerBaseDto(ComponentCommonBaseFields):
+    type: Literal["potentiometer"]
+    power_max: str | None = Field(default=None, max_length=30)
     tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+    resistance_min: str | None = Field(default=None, max_length=30)
+    resistance_max: str | None = Field(default=None, max_length=30)
+    number_of_turns: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> PotentiometerModel:
+        return self._fill_model(PotentiometerModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return PotentiometerModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class PotentiometerQueryDto(PotentiometerBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class PotentiometerCreateRequestDto(
+    PotentiometerBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class PotentiometerUpdateRequestDto(
+    PotentiometerBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
 from typing import Literal
 
 from pydantic import Field
@@ -45,6 +46,10 @@ class CapacitorElectrolyticBaseDto(ComponentCommonBaseFields):
 
     def to_model(self) -> CapacitorElectrolyticModel:
         return self._fill_model(CapacitorElectrolyticModel())
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        return CapacitorElectrolyticModel
 
 
 class CapacitorElectrolyticQueryDto(

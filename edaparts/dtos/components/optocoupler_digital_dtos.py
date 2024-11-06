@@ -32,35 +32,40 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import OptocouplerDigitalModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class OptocouplerDigitalBaseDto(ComponentCommonBaseFields):
+    type: Literal["optocoupler_digital"]
+    voltage_isolation: str | None = Field(default=None, max_length=30)
+    voltage_saturation_max: str | None = Field(default=None, max_length=30)
+    current_transfer_ratio_max: str | None = Field(default=None, max_length=30)
+    current_transfer_ratio_min: str | None = Field(default=None, max_length=30)
+    voltage_forward_typical: str | None = Field(default=None, max_length=30)
+    voltage_output_max: str | None = Field(default=None, max_length=30)
+    number_of_channels: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> OptocouplerDigitalModel:
+        return self._fill_model(OptocouplerDigitalModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return OptocouplerDigitalModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
-    pass
-
-
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class OptocouplerDigitalQueryDto(
+    OptocouplerDigitalBaseDto, ComponentQueryRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class OptocouplerDigitalCreateRequestDto(
+    OptocouplerDigitalBaseDto, ComponentCreateRequestBaseDto
+):
+    pass
+
+
+class OptocouplerDigitalUpdateRequestDto(
+    OptocouplerDigitalBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

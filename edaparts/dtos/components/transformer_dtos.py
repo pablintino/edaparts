@@ -32,35 +32,40 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import TransformerModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class TransformerBaseDto(ComponentCommonBaseFields):
+    type: Literal["transformer"]
+    number_of_windings: str | None = Field(default=None, max_length=30)
+    primary_dc_resistance: str | None = Field(default=None, max_length=30)
+    secondary_dc_resistance: str | None = Field(default=None, max_length=30)
+    tertiary_dc_resistance: str | None = Field(default=None, max_length=30)
+    leakage_inductance: str | None = Field(default=None, max_length=30)
+    primary_inductance: str | None = Field(default=None, max_length=30)
+    secondary_current_rating: str | None = Field(default=None, max_length=30)
+    tertiary_current_rating: str | None = Field(default=None, max_length=30)
+    primary_voltage_rating: str | None = Field(default=None, max_length=30)
+    secondary_voltage_rating: str | None = Field(default=None, max_length=30)
+    tertiary_voltage_rating: str | None = Field(default=None, max_length=30)
+    nps_turns_ratio: str | None = Field(default=None, max_length=30)
+    npt_turns_ratio: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> TransformerModel:
+        return self._fill_model(TransformerModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return TransformerModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class TransformerQueryDto(TransformerBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
-):
+class TransformerCreateRequestDto(TransformerBaseDto, ComponentCreateRequestBaseDto):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
-):
+class TransformerUpdateRequestDto(TransformerBaseDto, ComponentUpdateRequestBaseDto):
     pass

@@ -21,43 +21,20 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-
+import typing
 
 from pydantic import BaseModel, Field
 from sqlalchemy import inspect
 from typing_extensions import Annotated
 
+
 from edaparts.dtos.components import (
     ComponentCreateRequestDtoUnionAlias,
     ComponentUpdateRequestDtoUnionAlias,
     ComponentQueryDtoUnionAlias,
-    CapacitorCeramicQueryDto,
-    CapacitorElectrolyticQueryDto,
-    CapacitorTantalumQueryDto,
-    ConnectorPcbQueryDto,
-    CrystalOscillatorQueryDto,
-    DiodeRectifierQueryDto,
-    DiodeTvsQueryDto,
-    DiodeZenerQueryDto,
-    DiscreteLogicQueryDto,
-    FerriteBeadQueryDto,
-    FusePPTCQueryDto,
-    ResistorQueryDto,
 )
 from edaparts.models.components import (
     ComponentModelType,
-    CapacitorCeramicModel,
-    CapacitorElectrolyticModel,
-    CapacitorTantalumModel,
-    ConnectorPcbModel,
-    CrystalOscillatorModel,
-    DiodeRectifierModel,
-    DiodeTVSModel,
-    DiodeZenerModel,
-    DiscreteLogicModel,
-    FerriteBeadModel,
-    FusePPTCModel,
-    ResistorModel,
 )
 
 
@@ -75,18 +52,8 @@ ComponentSpecificQueryDto = Annotated[
 ]
 
 _model_to_query_dto = {
-    CapacitorCeramicModel: CapacitorCeramicQueryDto,
-    CapacitorElectrolyticModel: CapacitorElectrolyticQueryDto,
-    CapacitorTantalumModel: CapacitorTantalumQueryDto,
-    ConnectorPcbModel: ConnectorPcbQueryDto,
-    CrystalOscillatorModel: CrystalOscillatorQueryDto,
-    DiodeRectifierModel: DiodeRectifierQueryDto,
-    DiodeTVSModel: DiodeTvsQueryDto,
-    DiodeZenerModel: DiodeZenerQueryDto,
-    DiscreteLogicModel: DiscreteLogicQueryDto,
-    FerriteBeadModel: FerriteBeadQueryDto,
-    FusePPTCModel: FusePPTCQueryDto,
-    ResistorModel: ResistorQueryDto,
+    dto_type.model_type(): dto_type
+    for dto_type in typing.get_args(ComponentQueryDtoUnionAlias)
 }
 
 

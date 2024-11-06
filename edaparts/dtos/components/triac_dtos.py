@@ -32,35 +32,38 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import TriacModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class TriacBaseDto(ComponentCommonBaseFields):
+    type: Literal["triac"]
+    power_max: str | None = Field(default=None, max_length=30)
+    vdrm: str | None = Field(default=None, max_length=30)
+    current_rating: str | None = Field(default=None, max_length=30)
+    dl_dt: str | None = Field(default=None, max_length=30)
+    trigger_current: str | None = Field(default=None, max_length=30)
+    latching_current: str | None = Field(default=None, max_length=30)
+    holding_current: str | None = Field(default=None, max_length=30)
+    gate_trigger_voltage: str | None = Field(default=None, max_length=30)
+    emitter_forward_current: str | None = Field(default=None, max_length=30)
+    emitter_forward_voltage: str | None = Field(default=None, max_length=30)
+    triac_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> TriacModel:
+        return self._fill_model(TriacModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return TriacModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class TriacQueryDto(TriacBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
-):
+class TriacCreateRequestDto(TriacBaseDto, ComponentCreateRequestBaseDto):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
-):
+class TriacUpdateRequestDto(TriacBaseDto, ComponentUpdateRequestBaseDto):
     pass

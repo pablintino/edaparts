@@ -32,35 +32,39 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import MicrocontrollerModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class MicrocontrollerBaseDto(ComponentCommonBaseFields):
+    type: Literal["microcontroller"]
+    core: str | None = Field(default=None, max_length=50)
+    core_size: str | None = Field(default=None, max_length=30)
+    speed: str | None = Field(default=None, max_length=30)
+    flash_size: str | None = Field(default=None, max_length=30)
+    ram_size: str | None = Field(default=None, max_length=30)
+    peripherals: str | None = Field(default=None, max_length=250)
+    connectivity: str | None = Field(default=None, max_length=250)
+    voltage_supply: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> MicrocontrollerModel:
+        return self._fill_model(MicrocontrollerModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return MicrocontrollerModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class MicrocontrollerQueryDto(MicrocontrollerBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class MicrocontrollerCreateRequestDto(
+    MicrocontrollerBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class MicrocontrollerUpdateRequestDto(
+    MicrocontrollerBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

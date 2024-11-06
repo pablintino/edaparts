@@ -22,6 +22,7 @@
 #  SOFTWARE.
 #
 import pathlib
+import typing
 from dataclasses import dataclass
 from enum import Enum
 
@@ -55,6 +56,31 @@ class StorableObjectRequest:
 
 
 @dataclass(frozen=True)
+class StorableObjectCreateReuseRequest:
+    """
+    Request to create a new object based on an already existing file.
+    """
+
+    path: str
+    file_type: StorableLibraryResourceType
+    cad_type: CadType
+    reference: str = None
+    description: str = None
+
+
+@dataclass(frozen=True)
+class StorableObjectUpdateRequest:
+    """
+    Request to update an existing object without touching its associated file.
+    """
+
+    file_type: StorableLibraryResourceType
+    cad_type: CadType = None
+    reference: str = None
+    description: str = None
+
+
+@dataclass(frozen=True)
 class StorableObjectDataUpdateRequest:
     model_id: int
     filename: pathlib.Path
@@ -72,8 +98,8 @@ class BaseStorableTask:
 
 @dataclass(frozen=True)
 class CreateUpdateDataStorableTask(BaseStorableTask):
-    filename: pathlib.Path
     reference: str
+    filename: typing.Optional[pathlib.Path] = None
 
 
 @dataclass(frozen=True)

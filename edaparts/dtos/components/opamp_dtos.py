@@ -32,35 +32,36 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import OpAmpModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class OpAmpBaseDto(ComponentCommonBaseFields):
+    type: Literal["opamp"]
+    gain_bandwith: str | None = Field(default=None, max_length=30)
+    output_type: str | None = Field(default=None, max_length=50)
+    input_type: str | None = Field(default=None, max_length=50)
+    amplifier_type: str | None = Field(default=None, max_length=50)
+    slew_rate: str | None = Field(default=None, max_length=30)
+    voltage_supplies: str | None = Field(default=None, max_length=250)
+    voltage_input_offset: str | None = Field(default=None, max_length=250)
+    current_output: str | None = Field(default=None, max_length=50)
+    number_of_channels: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> OpAmpModel:
+        return self._fill_model(OpAmpModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return OpAmpModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class OpAmpQueryDto(OpAmpBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
-):
+class OpAmpCreateRequestDto(OpAmpBaseDto, ComponentCreateRequestBaseDto):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
-):
+class OpAmpUpdateRequestDto(OpAmpBaseDto, ComponentUpdateRequestBaseDto):
     pass

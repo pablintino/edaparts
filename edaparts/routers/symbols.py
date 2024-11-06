@@ -31,7 +31,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.responses import FileResponse, Response
 
 from dtos.symbols_dtos import SymbolQueryDto, SymbolListResultDto
-from edaparts.dtos.libraries_dtos import LibraryTypeEnum
+from edaparts.dtos.libraries_dtos import (
+    LibraryTypeEnum,
+    CommonObjectFromExistingCreateDto,
+    CommonObjectUpdateDto,
+)
 from edaparts.models.internal.internal_models import (
     StorableLibraryResourceType,
     StorableObjectRequest,
@@ -70,6 +74,27 @@ async def create_upload_file(
                 ),
             )
             return SymbolQueryDto.from_model(library_model)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.post("")
+async def create_from_existing_path(
+    background_tasks: BackgroundTasks,
+    body: CommonObjectFromExistingCreateDto,
+    db: AsyncSession = Depends(get_db),
+) -> SymbolQueryDto:
+    try:
+
+        library_model = await edaparts.services.storable_objects_service.create_storable_library_object_from_existing_file(
+            db,
+            background_tasks,
+            body.to_model(StorableLibraryResourceType.SYMBOL),
+        )
+        return SymbolQueryDto.from_model(library_model)
     except ApiError as error:
         # todo temporal simple handling of the exceptions
         raise HTTPException(
@@ -124,16 +149,40 @@ async def get_symbol(
         )
 
 
-@router.delete("/{model_id}", status_code=204, response_class=Response)
-async def delete_symbol(
-    background_tasks: BackgroundTasks,
+@router.get("/{model_id}")
+async def update_symbol(
     model_id: int,
     db: AsyncSession = Depends(get_db),
-) -> None:
+) -> SymbolQueryDto:
     try:
-        await edaparts.services.storable_objects_service.delete_object(
-            db, background_tasks, StorableLibraryResourceType.SYMBOL, model_id
+        symbol = await edaparts.services.storable_objects_service.get_storable_model(
+            db, StorableLibraryResourceType.SYMBOL, model_id
         )
+        return SymbolQueryDto.from_model(symbol)
+    except ApiError as error:
+        # todo temporal simple handling of the exceptions
+        raise HTTPException(
+            status_code=error.http_code, detail=error.details or error.msg
+        )
+
+
+@router.put("/{model_id}")
+async def update_symbol(
+    background_tasks: BackgroundTasks,
+    model_id: int,
+    body: CommonObjectUpdateDto,
+    db: AsyncSession = Depends(get_db),
+) -> SymbolQueryDto:
+    try:
+        result = (
+            await edaparts.services.storable_objects_service.update_object_metadata(
+                db,
+                background_tasks,
+                model_id,
+                body.to_model(StorableLibraryResourceType.SYMBOL),
+            )
+        )
+        return SymbolQueryDto.from_model(result)
     except ApiError as error:
         # todo temporal simple handling of the exceptions
         raise HTTPException(

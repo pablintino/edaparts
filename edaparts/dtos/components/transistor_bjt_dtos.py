@@ -32,35 +32,37 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import TransistorBjtModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class TransistorBjtBaseDto(ComponentCommonBaseFields):
+    type: Literal["transistor_bjt"]
+    vce_sat_max: str | None = Field(default=None, max_length=30)
+    hfe: str | None = Field(default=None, max_length=30)
+    vce_max: str | None = Field(default=None, max_length=30)
+    ic_max: str | None = Field(default=None, max_length=30)
+    power_max: str | None = Field(default=None, max_length=30)
+    bjt_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> TransistorBjtModel:
+        return self._fill_model(TransistorBjtModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return TransistorBjtModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class TransistorBjtQueryDto(TransistorBjtBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class TransistorBjtCreateRequestDto(
+    TransistorBjtBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class TransistorBjtUpdateRequestDto(
+    TransistorBjtBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
 from typing import Literal
 
 from pydantic import Field
@@ -44,6 +45,10 @@ class DiodeRectifierBaseDto(ComponentCommonBaseFields):
 
     def to_model(self) -> DiodeRectifierModel:
         return self._fill_model(DiodeRectifierModel())
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        return DiodeRectifierModel
 
 
 class DiodeRectifierQueryDto(DiodeRectifierBaseDto, ComponentQueryRequestBaseDto):

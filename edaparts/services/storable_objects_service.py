@@ -44,6 +44,9 @@ from edaparts.models.internal.internal_models import (
     CadType,
     CreateUpdateDataStorableTask,
     BaseStorableTask,
+    DeleteStorableTask,
+    StorableObjectCreateReuseRequest,
+    StorableObjectUpdateRequest,
 )
 from edaparts.models.internal.internal_models import (
     StorableLibraryResourceType,
@@ -62,7 +65,6 @@ from edaparts.services.exceptions import (
 )
 from edaparts.utils.files import hash_sha256
 from edaparts.utils.helpers import BraceMessage as __l
-from models.internal.internal_models import DeleteStorableTask
 
 __logger = logging.getLogger(__name__)
 
@@ -289,6 +291,95 @@ async def update_object_data(
     return model
 
 
+async def update_object_metadata(
+    db: AsyncSession,
+    background_tasks: BackgroundTasks,
+    model_id: int,
+    storable_request: StorableObjectUpdateRequest,
+):
+    model = await db.get(
+        __get_model_for_storable_type(storable_request.file_type),
+        model_id,
+    )
+    if not model:
+        raise ResourceNotFoundApiError("Storable object not found", missing_id=model_id)
+
+    # No changes
+    if (not storable_request.reference and not storable_request.description) or (
+        storable_request.reference == model.reference
+        and storable_request.description == model.description
+    ):
+        return model
+
+    if storable_request.reference and storable_request.reference != model.reference:
+        if model.storage_status != StorageStatus.STORED:
+            raise __get_error_for_type(storable_request.file_type)(
+                "cannot update the reference cause the path is not yet stored",
+            )
+        __validate_kicad_reference_change(
+            storable_request.file_type, storable_request.cad_type
+        )
+        await __validate_storable_not_exists(
+            db,
+            model.path,
+            storable_request.reference,
+            storable_request.file_type,
+            model.cad_type,
+            model_id=model.id,
+        )
+        # Parse storable object from encoded data and check its content
+        local_path = __get_target_object_path(
+            storable_request.cad_type, storable_request.file_type, model.path
+        )
+        lib = __get_library(
+            local_path,
+            storable_request.cad_type,
+            storable_request.file_type,
+        )
+        # If check that the given reference exists
+        if not lib.is_present(storable_request.reference):
+            raise __get_error_for_type(storable_request.file_type)(
+                "The given reference does not exist in the given library "
+            )
+
+        # Reset storage status
+        model.storage_status = StorageStatus.NOT_STORED
+
+    if (
+        storable_request.description is not None
+        and storable_request.description != model.description
+    ):
+        model.description = storable_request.description
+
+    db.add(model)
+    await db.commit()
+
+    # Signal background process to store the storable object
+    if storable_request.reference != model.reference:
+        background_tasks.add_task(
+            _object_store_task,
+            CreateUpdateDataStorableTask(
+                model_id=model.id,
+                path=model.path,
+                file_type=storable_request.file_type,
+                cad_type=model.cad_type,
+                # NOTICE: References are changed inside the task to ensure reference checks are done with the file lock
+                reference=storable_request.reference,
+            ),
+        )
+    return model
+
+
+def __validate_kicad_reference_change(
+    file_type: StorableLibraryResourceType, cad_type: CadType
+):
+    if cad_type == CadType.KICAD and file_type == StorableLibraryResourceType.FOOTPRINT:
+        raise ApiError(
+            "KiCAD footprints do not support multiple references per file",
+            http_code=400,
+        )
+
+
 async def create_storable_library_object(
     db: AsyncSession,
     background_tasks: BackgroundTasks,
@@ -380,6 +471,117 @@ async def create_storable_library_object(
     return model
 
 
+async def create_storable_library_object_from_existing_file(
+    db: AsyncSession,
+    background_tasks: BackgroundTasks,
+    storable_request: StorableObjectCreateReuseRequest,
+) -> FootprintReference | LibraryReference:
+    __validate_storable_type(storable_request.file_type)
+    __validate_input_path(
+        storable_request.path, storable_request.cad_type, storable_request.file_type
+    )
+    __validate_kicad_reference_change(
+        storable_request.file_type, storable_request.cad_type
+    )
+
+    path_references = list(
+        (
+            await db.scalars(
+                select(
+                    __get_model_for_storable_type(storable_request.file_type)
+                ).filter_by(
+                    cad_type=storable_request.cad_type, path=storable_request.path
+                )
+            )
+        ).fetchall()
+    )
+    if not path_references:
+        raise ApiError(
+            f"the given path {storable_request.path} does not exist", http_code=400
+        )
+
+    if any((ref.reference == storable_request.reference for ref in path_references)):
+        raise ApiError(
+            f"the given reference {storable_request.reference} already exists for {storable_request.path}",
+            http_code=400,
+        )
+
+    if not any((ref.storage_status == StorageStatus.STORED for ref in path_references)):
+        raise ApiError(
+            f"the given path {storable_request.path} is not yet fully stored",
+            http_code=400,
+        )
+
+    # Parse storable object from encoded data and check its content
+    local_path = __get_target_object_path(
+        storable_request.cad_type, storable_request.file_type, storable_request.path
+    )
+    lib = __get_library(
+        local_path,
+        storable_request.cad_type,
+        storable_request.file_type,
+    )
+    # Check the given reference exists
+    if not lib.is_present(storable_request.reference):
+        raise __get_error_for_type(storable_request.file_type)(
+            "The given reference does not exist in the given library "
+        )
+
+    # If no description is provided try to populate it from library data
+    if not storable_request.description:
+        storable_request = dataclasses.replace(
+            storable_request,
+            description=lib.models[storable_request.reference].description,
+        )
+
+    __logger.debug(
+        __l(
+            "Creating a new storable object [file_type={0}, reference_name={1}, storable_path={2}, description={3}]",
+            storable_request.file_type,
+            storable_request.reference,
+            storable_request.path,
+            storable_request.description,
+        )
+    )
+
+    await __validate_storable_not_exists(
+        db,
+        storable_request.path,
+        storable_request.reference,
+        storable_request.file_type,
+        storable_request.cad_type,
+    )
+
+    # Create a model based on the storable object type
+    model = __get_model_for_storable_type(storable_request.file_type)(
+        path=storable_request.path,
+        reference=storable_request.reference,
+        # Ensure that storage status at creation time is set to NOT_STORED
+        storage_status=StorageStatus.NOT_STORED,
+        description=storable_request.description,
+        cad_type=storable_request.cad_type,
+        alias=path_references[0].alias,
+    )
+
+    db.add(model)
+    await db.commit()
+    __logger.debug(__l("Storable object created [id={0}]", model.id))
+
+    # Signal background process to store the object
+    background_tasks.add_task(
+        _object_store_task,
+        CreateUpdateDataStorableTask(
+            model_id=model.id,
+            path=model.path,
+            file_type=storable_request.file_type,
+            cad_type=model.cad_type,
+            reference=model.reference,
+        ),
+    )
+
+    return model
+
+
 async def delete_object(
     db: AsyncSession,
     background_tasks: BackgroundTasks,
@@ -444,7 +646,10 @@ async def _object_store_task(storable_task: BaseStorableTask):
             __logger.debug(err.msg)
         finally:
             # Remove the temporal file
-            if isinstance(storable_task, CreateUpdateDataStorableTask):
+            if (
+                isinstance(storable_task, CreateUpdateDataStorableTask)
+                and storable_task.filename
+            ):
                 os.remove(storable_task.filename)
 
         if error:
@@ -535,8 +740,9 @@ async def __task_store_file(
                 .values(reference=storable_task.reference)
             )
 
-        # Checks done, copy the content
-        shutil.copy(storable_task.filename, target_file)
+        # Checks done, copy the content if available
+        if storable_task.filename:
+            shutil.copy(storable_task.filename, target_file)
 
         # Update the state
         await __store_file_set_state(
@@ -563,6 +769,10 @@ def __get_file_lock(
 async def __store_file_validate(
     session: AsyncSession, storable_task: CreateUpdateDataStorableTask
 ):
+    if not storable_task.filename:
+        # Tasks that don't push a file don't require to validate
+        # that the new payload has all the already existing references
+        return
     if (
         storable_task.cad_type == CadType.KICAD
         and storable_task.file_type == StorableLibraryResourceType.FOOTPRINT

@@ -32,35 +32,36 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import SwitchPushButtonModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class SwitchPushButtonBaseDto(ComponentCommonBaseFields):
+    type: Literal["switch_push_button"]
+    function: str | None = Field(default=None, max_length=50)
+    dc_voltage_rating: str | None = Field(default=None, max_length=30)
+    ac_voltage_rating: str | None = Field(default=None, max_length=30)
+    current_rating: str | None = Field(default=None, max_length=30)
+    circuit_type: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> SwitchPushButtonModel:
+        return self._fill_model(SwitchPushButtonModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return SwitchPushButtonModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class SwitchPushButtonQueryDto(SwitchPushButtonBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class SwitchPushButtonCreateRequestDto(
+    SwitchPushButtonBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class SwitchPushButtonUpdateRequestDto(
+    SwitchPushButtonBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

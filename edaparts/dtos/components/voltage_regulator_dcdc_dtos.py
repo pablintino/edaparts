@@ -32,35 +32,41 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import VoltageRegulatorDCDCModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class VoltageRegulatorDCDCBaseDto(ComponentCommonBaseFields):
+    type: Literal["voltage_regulator_dcdc"]
+    voltage_input_min: str | None = Field(default=None, max_length=30)
+    voltage_output_min_fixed: str | None = Field(default=None, max_length=30)
+    voltage_output_max: str | None = Field(default=None, max_length=30)
+    current_output: str | None = Field(default=None, max_length=30)
+    frequency_switching: str | None = Field(default=None, max_length=30)
+    topology: str | None = Field(default=None, max_length=50)
+    output_type: str | None = Field(default=None, max_length=50)
+    number_of_outputs: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> VoltageRegulatorDCDCModel:
+        return self._fill_model(VoltageRegulatorDCDCModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return VoltageRegulatorDCDCModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
-    pass
-
-
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class VoltageRegulatorDCDCQueryDto(
+    VoltageRegulatorDCDCBaseDto, ComponentQueryRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class VoltageRegulatorDCDCCreateRequestDto(
+    VoltageRegulatorDCDCBaseDto, ComponentCreateRequestBaseDto
+):
+    pass
+
+
+class VoltageRegulatorDCDCUpdateRequestDto(
+    VoltageRegulatorDCDCBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

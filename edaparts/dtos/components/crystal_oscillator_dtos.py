@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
 from typing import Literal
 
 from pydantic import Field
@@ -42,6 +43,10 @@ class CrystalOscillatorBaseDto(ComponentCommonBaseFields):
 
     def to_model(self) -> CrystalOscillatorModel:
         return self._fill_model(CrystalOscillatorModel())
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        return CrystalOscillatorModel
 
 
 class CrystalOscillatorQueryDto(CrystalOscillatorBaseDto, ComponentQueryRequestBaseDto):

@@ -32,35 +32,37 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import OptocouplerLinearModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class OptocouplerLinearBaseDto(ComponentCommonBaseFields):
+    type: Literal["optocoupler_linear"]
+    voltage_isolation: str | None = Field(default=None, max_length=30)
+    transfer_gain: str | None = Field(default=None, max_length=30)
+    input_forward_voltage: str | None = Field(default=None, max_length=30)
+    servo_gain: str | None = Field(default=None, max_length=30)
+    forward_gain: str | None = Field(default=None, max_length=30)
+    non_linearity: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> OptocouplerLinearModel:
+        return self._fill_model(OptocouplerLinearModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return OptocouplerLinearModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
+class OptocouplerLinearQueryDto(OptocouplerLinearBaseDto, ComponentQueryRequestBaseDto):
     pass
 
 
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class OptocouplerLinearCreateRequestDto(
+    OptocouplerLinearBaseDto, ComponentCreateRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class OptocouplerLinearUpdateRequestDto(
+    OptocouplerLinearBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

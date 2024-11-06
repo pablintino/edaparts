@@ -23,6 +23,7 @@
 #
 import typing
 
+
 from edaparts.dtos.components.capacitor_ceramic_dtos import (
     CapacitorCeramicCreateRequestDto,
     CapacitorCeramicUpdateRequestDto,
@@ -78,54 +79,214 @@ from edaparts.dtos.components.fuse_pptc_dtos import (
     FusePPTCUpdateRequestDto,
     FusePPTCQueryDto,
 )
+from edaparts.dtos.components.inductor_choke_dtos import (
+    InductorChokeCreateRequestDto,
+    InductorChokeUpdateRequestDto,
+    InductorChokeQueryDto,
+)
+from edaparts.dtos.components.led_indicator_dtos import (
+    LedIndicatorCreateRequestDto,
+    LedIndicatorUpdateRequestDto,
+    LedIndicatorQueryDto,
+)
+from edaparts.dtos.components.memory_dtos import (
+    MemoryCreateRequestDto,
+    MemoryUpdateRequestDto,
+    MemoryQueryDto,
+)
+from edaparts.dtos.components.microcontroller_dtos import (
+    MicrocontrollerCreateRequestDto,
+    MicrocontrollerUpdateRequestDto,
+    MicrocontrollerQueryDto,
+)
+from edaparts.dtos.components.opamp_dtos import (
+    OpAmpCreateRequestDto,
+    OpAmpUpdateRequestDto,
+    OpAmpQueryDto,
+)
+from edaparts.dtos.components.optocoupler_digital_dtos import (
+    OptocouplerDigitalCreateRequestDto,
+    OptocouplerDigitalUpdateRequestDto,
+    OptocouplerDigitalQueryDto,
+)
+from edaparts.dtos.components.optocoupler_linear_dtos import (
+    OptocouplerLinearCreateRequestDto,
+    OptocouplerLinearUpdateRequestDto,
+    OptocouplerLinearQueryDto,
+)
+from edaparts.dtos.components.oscillator_oscillator_dtos import (
+    OscillatorOscillatorCreateRequestDto,
+    OscillatorOscillatorUpdateRequestDto,
+    OscillatorOscillatorQueryDto,
+)
+from edaparts.dtos.components.potentiometer_dtos import (
+    PotentiometerCreateRequestDto,
+    PotentiometerUpdateRequestDto,
+    PotentiometerQueryDto,
+)
+from edaparts.dtos.components.power_inductor_dtos import (
+    PowerInductorCreateRequestDto,
+    PowerInductorUpdateRequestDto,
+    PowerInductorQueryDto,
+)
 from edaparts.dtos.components.resistor_dtos import (
     ResistorCreateRequestDto,
     ResistorUpdateRequestDto,
     ResistorQueryDto,
 )
+from edaparts.dtos.components.switch_pushbutton_dtos import (
+    SwitchPushButtonCreateRequestDto,
+    SwitchPushButtonUpdateRequestDto,
+    SwitchPushButtonQueryDto,
+)
+from edaparts.dtos.components.transceiver_dtos import (
+    TransceiverCreateRequestDto,
+    TransceiverUpdateRequestDto,
+    TransceiverQueryDto,
+)
+from edaparts.dtos.components.transduder_dtos import (
+    TransducerCreateRequestDto,
+    TransducerUpdateRequestDto,
+    TransducerQueryDto,
+)
+from edaparts.dtos.components.transformer_dtos import (
+    TransformerCreateRequestDto,
+    TransformerUpdateRequestDto,
+    TransformerQueryDto,
+)
+from edaparts.dtos.components.transistor_array_mosfet_dtos import (
+    TransistorArrayMosfetCreateRequestDto,
+    TransistorArrayMosfetUpdateRequestDto,
+    TransistorArrayMosfetQueryDto,
+)
+from edaparts.dtos.components.transistor_bjt_dtos import (
+    TransistorBjtCreateRequestDto,
+    TransistorBjtUpdateRequestDto,
+    TransistorBjtQueryDto,
+)
+from edaparts.dtos.components.transistor_mosfet_dtos import (
+    TransistorMosfetCreateRequestDto,
+    TransistorMosfetUpdateRequestDto,
+    TransistorMosfetQueryDto,
+)
+from edaparts.dtos.components.triac_dtos import (
+    TriacCreateRequestDto,
+    TriacUpdateRequestDto,
+    TriacQueryDto,
+)
+from edaparts.dtos.components.voltage_regulator_dcdc_dtos import (
+    VoltageRegulatorDCDCCreateRequestDto,
+    VoltageRegulatorDCDCUpdateRequestDto,
+    VoltageRegulatorDCDCQueryDto,
+)
+from edaparts.dtos.components.voltage_regulator_linear_dtos import (
+    VoltageRegulatorLinearCreateRequestDto,
+    VoltageRegulatorLinearUpdateRequestDto,
+    VoltageRegulatorLinearQueryDto,
+)
 
 
-ComponentCreateRequestDtoUnionAlias = typing.Union[
-    CapacitorCeramicCreateRequestDto,
-    CapacitorElectrolyticCreateRequestDto,
-    CapacitorTantalumCreateRequestDto,
-    ConnectorPcbCreateRequestDto,
-    CrystalOscillatorCreateRequestDto,
-    DiodeRectifierCreateRequestDto,
-    DiodeTvsCreateRequestDto,
-    DiodeZenerCreateRequestDto,
-    DiscreteLogicCreateRequestDto,
-    FerriteBeadCreateRequestDto,
-    FusePPTCCreateRequestDto,
-    ResistorCreateRequestDto,
-]
+ComponentCreateRequestDtoUnionAlias = (
+    CapacitorCeramicCreateRequestDto
+    | CapacitorElectrolyticCreateRequestDto
+    | CapacitorTantalumCreateRequestDto
+    | ConnectorPcbCreateRequestDto
+    | CrystalOscillatorCreateRequestDto
+    | DiodeRectifierCreateRequestDto
+    | DiodeTvsCreateRequestDto
+    | DiodeZenerCreateRequestDto
+    | DiscreteLogicCreateRequestDto
+    | FerriteBeadCreateRequestDto
+    | FusePPTCCreateRequestDto
+    | InductorChokeCreateRequestDto
+    | LedIndicatorCreateRequestDto
+    | MemoryCreateRequestDto
+    | MicrocontrollerCreateRequestDto
+    | OpAmpCreateRequestDto
+    | OptocouplerDigitalCreateRequestDto
+    | OptocouplerLinearCreateRequestDto
+    | OscillatorOscillatorCreateRequestDto
+    | PotentiometerCreateRequestDto
+    | PowerInductorCreateRequestDto
+    | ResistorCreateRequestDto
+    | SwitchPushButtonCreateRequestDto
+    | TransceiverCreateRequestDto
+    | TransformerCreateRequestDto
+    | TransistorArrayMosfetCreateRequestDto
+    | TransistorBjtCreateRequestDto
+    | TransistorMosfetCreateRequestDto
+    | TriacCreateRequestDto
+    | TransducerCreateRequestDto
+    | VoltageRegulatorDCDCCreateRequestDto
+    | VoltageRegulatorLinearCreateRequestDto
+)
 
-ComponentUpdateRequestDtoUnionAlias = typing.Union[
-    CapacitorCeramicUpdateRequestDto,
-    CapacitorElectrolyticUpdateRequestDto,
-    CapacitorTantalumUpdateRequestDto,
-    ConnectorPcbUpdateRequestDto,
-    CrystalOscillatorUpdateRequestDto,
-    DiodeRectifierUpdateRequestDto,
-    DiodeTvsUpdateRequestDto,
-    DiodeZenerUpdateRequestDto,
-    DiscreteLogicUpdateRequestDto,
-    FerriteBeadUpdateRequestDto,
-    FusePPTCUpdateRequestDto,
-    ResistorUpdateRequestDto,
-]
+ComponentUpdateRequestDtoUnionAlias = (
+    CapacitorCeramicUpdateRequestDto
+    | CapacitorElectrolyticUpdateRequestDto
+    | CapacitorTantalumUpdateRequestDto
+    | ConnectorPcbUpdateRequestDto
+    | CrystalOscillatorUpdateRequestDto
+    | DiodeRectifierUpdateRequestDto
+    | DiodeTvsUpdateRequestDto
+    | DiodeZenerUpdateRequestDto
+    | DiscreteLogicUpdateRequestDto
+    | FerriteBeadUpdateRequestDto
+    | FusePPTCUpdateRequestDto
+    | InductorChokeUpdateRequestDto
+    | LedIndicatorUpdateRequestDto
+    | MemoryUpdateRequestDto
+    | MicrocontrollerUpdateRequestDto
+    | OpAmpUpdateRequestDto
+    | OptocouplerDigitalUpdateRequestDto
+    | OptocouplerLinearUpdateRequestDto
+    | OscillatorOscillatorUpdateRequestDto
+    | PotentiometerUpdateRequestDto
+    | PowerInductorUpdateRequestDto
+    | ResistorUpdateRequestDto
+    | SwitchPushButtonUpdateRequestDto
+    | TransceiverUpdateRequestDto
+    | TransformerUpdateRequestDto
+    | TransistorArrayMosfetUpdateRequestDto
+    | TransistorBjtUpdateRequestDto
+    | TransistorMosfetUpdateRequestDto
+    | TriacUpdateRequestDto
+    | TransducerUpdateRequestDto
+    | VoltageRegulatorDCDCUpdateRequestDto
+    | VoltageRegulatorLinearUpdateRequestDto
+)
 
-ComponentQueryDtoUnionAlias = typing.Union[
-    CapacitorCeramicQueryDto,
-    CapacitorElectrolyticQueryDto,
-    CapacitorTantalumQueryDto,
-    ConnectorPcbQueryDto,
-    CrystalOscillatorQueryDto,
-    DiodeRectifierQueryDto,
-    DiodeTvsQueryDto,
-    DiodeZenerQueryDto,
-    DiscreteLogicQueryDto,
-    FerriteBeadQueryDto,
-    FusePPTCQueryDto,
-    ResistorQueryDto,
-]
+ComponentQueryDtoUnionAlias = (
+    CapacitorCeramicQueryDto
+    | CapacitorElectrolyticQueryDto
+    | CapacitorTantalumQueryDto
+    | ConnectorPcbQueryDto
+    | CrystalOscillatorQueryDto
+    | DiodeRectifierQueryDto
+    | DiodeTvsQueryDto
+    | DiodeZenerQueryDto
+    | DiscreteLogicQueryDto
+    | FerriteBeadQueryDto
+    | FusePPTCQueryDto
+    | InductorChokeQueryDto
+    | LedIndicatorQueryDto
+    | MemoryQueryDto
+    | MicrocontrollerQueryDto
+    | OpAmpQueryDto
+    | OptocouplerDigitalQueryDto
+    | OptocouplerLinearQueryDto
+    | OscillatorOscillatorQueryDto
+    | PotentiometerQueryDto
+    | PowerInductorQueryDto
+    | ResistorQueryDto
+    | SwitchPushButtonQueryDto
+    | TransceiverQueryDto
+    | TransformerQueryDto
+    | TransistorArrayMosfetQueryDto
+    | TransistorBjtQueryDto
+    | TransistorMosfetQueryDto
+    | TriacQueryDto
+    | TransducerQueryDto
+    | VoltageRegulatorDCDCQueryDto
+    | VoltageRegulatorLinearQueryDto
+)

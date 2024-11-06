@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
 from typing import Literal
 
 from pydantic import Field
@@ -46,6 +47,10 @@ class DiscreteLogicBaseDto(ComponentCommonBaseFields):
 
     def to_model(self) -> DiscreteLogicModel:
         return self._fill_model(DiscreteLogicModel())
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        return DiscreteLogicModel
 
 
 class DiscreteLogicQueryDto(DiscreteLogicBaseDto, ComponentQueryRequestBaseDto):

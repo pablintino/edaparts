@@ -26,10 +26,16 @@
 import typing
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 
-from edaparts.models.internal.internal_models import CadType, StorageStatus
 from edaparts.models import FootprintReference, LibraryReference
+from edaparts.models.internal.internal_models import (
+    CadType,
+    StorageStatus,
+    StorableObjectCreateReuseRequest,
+    StorableLibraryResourceType,
+    StorableObjectUpdateRequest,
+)
 
 
 class LibraryTypeEnum(Enum):
@@ -108,3 +114,43 @@ class BaseLibraryQueryDto(BaseModel):
             description=data.description,
             alias=data.alias,
         )
+
+
+class CommonObjectFromExistingCreateDto(BaseModel):
+    path: str
+    reference: str
+    cad_type: LibraryTypeEnum
+    description: typing.Optional[str] = None
+
+    def to_model(
+        self, file_type: StorableLibraryResourceType
+    ) -> StorableObjectCreateReuseRequest:
+        return StorableObjectCreateReuseRequest(
+            path=self.path,
+            reference=self.reference,
+            description=self.description,
+            cad_type=LibraryTypeEnum.to_model(self.cad_type),
+            file_type=file_type,
+        )
+
+
+class CommonObjectUpdateDto(BaseModel):
+    cad_type: typing.Optional[LibraryTypeEnum] = None
+    reference: typing.Optional[str] = None
+    description: typing.Optional[str] = None
+
+    def to_model(
+        self, file_type: StorableLibraryResourceType
+    ) -> StorableObjectUpdateRequest:
+        return StorableObjectUpdateRequest(
+            reference=self.reference,
+            description=self.description,
+            cad_type=LibraryTypeEnum.to_model(self.cad_type) if self.cad_type else None,
+            file_type=file_type,
+        )
+
+    @model_validator(mode="after")
+    def cad_type_present_if_ref(self):
+        if self.reference and not self.cad_type:
+            raise ValueError("if 'reference' is given 'cad_type' is mandatory")
+        return self

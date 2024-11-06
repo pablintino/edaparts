@@ -32,35 +32,39 @@ from edaparts.dtos.components.common_dtos import (
     ComponentCreateRequestBaseDto,
     ComponentUpdateRequestBaseDto,
 )
-from edaparts.models.components import CapacitorTantalumModel
+from edaparts.models.components import OscillatorOscillatorModel
 
 
-class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
-    tolerance: str | None = Field(default=None, max_length=30)
-    voltage: str | None = Field(default=None, max_length=30)
-    esr: str | None = Field(default=None, max_length=30)
-    lifetime_temperature: str | None = Field(default=None, max_length=30)
+class OscillatorOscillatorBaseDto(ComponentCommonBaseFields):
+    type: Literal["oscillator_oscillator"]
+    base_resonator: str | None = Field(default=None, max_length=30)
+    current_supply_max: str | None = Field(default=None, max_length=30)
+    frequency: str | None = Field(default=None, max_length=30)
+    frequency_stability: str | None = Field(default=None, max_length=30)
+    voltage_supply: str | None = Field(default=None, max_length=30)
+    output_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
+    def to_model(self) -> OscillatorOscillatorModel:
+        return self._fill_model(OscillatorOscillatorModel())
 
     @staticmethod
     def model_type() -> typing.Type:
-        return CapacitorTantalumModel
+        return OscillatorOscillatorModel
 
 
-class CapacitorTantalumQueryDto(CapacitorTantalumBaseDto, ComponentQueryRequestBaseDto):
-    pass
-
-
-class CapacitorTantalumCreateRequestDto(
-    CapacitorTantalumBaseDto, ComponentCreateRequestBaseDto
+class OscillatorOscillatorQueryDto(
+    OscillatorOscillatorBaseDto, ComponentQueryRequestBaseDto
 ):
     pass
 
 
-class CapacitorTantalumUpdateRequestDto(
-    CapacitorTantalumBaseDto, ComponentUpdateRequestBaseDto
+class OscillatorOscillatorCreateRequestDto(
+    OscillatorOscillatorBaseDto, ComponentCreateRequestBaseDto
+):
+    pass
+
+
+class OscillatorOscillatorUpdateRequestDto(
+    OscillatorOscillatorBaseDto, ComponentUpdateRequestBaseDto
 ):
     pass

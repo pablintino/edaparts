@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+import typing
 from typing import Literal
 
 from pydantic import Field
@@ -42,6 +43,10 @@ class CapacitorCeramicBaseDto(ComponentCommonBaseFields):
 
     def to_model(self) -> CapacitorCeramicModel:
         return self._fill_model(CapacitorCeramicModel())
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        return CapacitorCeramicModel
 
 
 class CapacitorCeramicQueryDto(CapacitorCeramicBaseDto, ComponentQueryRequestBaseDto):

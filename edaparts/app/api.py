@@ -23,11 +23,22 @@
 #
 import os
 import shutil
+import typing
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
+from starlette.applications import Request
+from starlette.responses import JSONResponse, Response
 
 from edaparts.app.config import config
-from edaparts.services.database import sessionmanager, get_db
+from edaparts.services.database import sessionmanager
+from edaparts.services.exceptions import ApiError
+
+
+def exception_handler_api_error(_: Request, exc: Exception) -> JSONResponse:
+    api_err = typing.cast(ApiError, exc)
+    data, err_code = api_err.format_api_data()
+    return JSONResponse(data, status_code=err_code)
 
 
 def init_app(init_db=True):
@@ -52,4 +63,5 @@ def init_app(init_db=True):
     import edaparts.routers.routers
 
     api.include_router(edaparts.routers.routers.router)
+    api.add_exception_handler(ApiError, exception_handler_api_error)
     return api

@@ -33,6 +33,7 @@ classifiers = [
 ]
 
 dependencies = [
+    "alembic>=1.14.0",
     "annotated-types>=0.7.0",
     "anyio>=4.6.2.post1",
     "certifi>=2024.8.30",
@@ -77,7 +78,17 @@ dependencies = [
 [project.urls]
 "Source" = "https://github.com/pablintino/edaparts/"
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.packages.find]
-exclude = ["tests*"]
+exclude = ["tests*", "alembic*"]
 
+[tool.setuptools.package-data]
+"edaparts.migrations" = ["alembic.ini"]
+"edaparts.migrations.views" = ["**/*.sql"]
 
+[project.scripts]
+edaparts-migrate-current = "edaparts.app.commands:db_current_cmd"
+edaparts-migrate-upgrade = "edaparts.app.commands:db_upgrade_cmd"
+edaparts-migrate-downgrade = "edaparts.app.commands:db_downgrade_cmd"

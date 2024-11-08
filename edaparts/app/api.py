@@ -28,7 +28,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from starlette.applications import Request
-from starlette.responses import JSONResponse, Response
+from starlette.responses import JSONResponse
 
 from edaparts.app.config import config
 from edaparts.services.database import sessionmanager
@@ -41,22 +41,18 @@ def exception_handler_api_error(_: Request, exc: Exception) -> JSONResponse:
     return JSONResponse(data, status_code=err_code)
 
 
-def init_app(init_db=True):
-    lifespan = None
+def init_app():
+    sessionmanager.init(config.DB_CONFIG, echo=config.DB_ECHO)
 
-    if init_db:
-        sessionmanager.init(config.DB_CONFIG)
+    @asynccontextmanager
+    async def lifespan(app: FastAPI):
+        # Remove the existing locks
+        if os.path.exists(config.LOCKS_DIR):
+            shutil.rmtree(config.LOCKS_DIR)
 
-        @asynccontextmanager
-        async def lifespan(app: FastAPI):
-            # Remove the existing locks
-            if os.path.exists(config.LOCKS_DIR):
-                shutil.rmtree(config.LOCKS_DIR)
-
-            await sessionmanager.init_models()
-            yield
-            if sessionmanager._engine is not None:
-                await sessionmanager.close()
+        yield
+        if sessionmanager._engine is not None:
+            await sessionmanager.close()
 
     api = FastAPI(title="FastAPI server", lifespan=lifespan)
 

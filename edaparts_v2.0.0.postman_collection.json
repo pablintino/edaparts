@@ -1,0 +1,2306 @@
+{
+	"info": {
+		"_postman_id": "49f23f56-3976-4709-b251-fdc9c2201875",
+		"name": "edaparts",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3495551"
+	},
+	"item": [
+		{
+			"name": "Footprints",
+			"item": [
+				{
+					"name": "Create footprint",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/run/user/1000/doc/6cf6ff8c/R_0603_1608Metric.kicad_mod"
+								},
+								{
+									"key": "path",
+									"value": "Passives.pretty/test-2.kicad_mod",
+									"type": "text"
+								},
+								{
+									"key": "cad_type",
+									"value": "kicad",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/uploads/create",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"uploads",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update footprint data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/pablo/Desktop/TRANSCEIVERS_FTDI_FT232RL.SCHLIB"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/1/uploads/update",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"1",
+								"uploads",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update footprint metadata",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\": \"OSHW_Logo\",\n    \"cad_type\": \"kicad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/4",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create footprints relation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"footprint_ids\" : [2,3]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/footprints",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1",
+								"footprints"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete footprint relation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"footprint_ids\" : [2065]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/footprints/3",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1",
+								"footprints",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete footprint",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"footprint_ids\" : [2065]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Footprint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Footprints",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints?page_n=1&page_size=50",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints"
+							],
+							"query": [
+								{
+									"key": "page_n",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Footprint Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/footprints/1/data",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"footprints",
+								"1",
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Component Footprint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/footprints",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1",
+								"footprints"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Symbols",
+			"item": [
+				{
+					"name": "Create symbol",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/home/pablintino/Downloads/SparkFun-Aesthetic.kicad_sym"
+								},
+								{
+									"key": "path",
+									"value": "PASSIVES_RESISTOR.kicad_sym",
+									"type": "text"
+								},
+								{
+									"key": "cad_type",
+									"value": "kicad",
+									"type": "text"
+								},
+								{
+									"key": "reference",
+									"value": "SparkPNT_Logo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/uploads/create",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"uploads",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create symbol from existing file",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"path\": \"PASSIVES_RESISTOR.kicad_sym\",\n    \"reference\": \"Fiducial_0.5mm\",\n    \"cad_type\": \"kicad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update symbol data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/run/user/1000/doc/a17b6cf3/74xx.kicad_sym"
+								},
+								{
+									"key": "reference",
+									"value": "74469",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/10/uploads/update",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"10",
+								"uploads",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update symbol metadata",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reference\": \"OSHW_Logo\",\n    \"cad_type\": \"kicad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/8",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create symbol relation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/symbol/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1",
+								"symbol",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete symbol relation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"symbol_id\" : 2041\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/3/symbol",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"3",
+								"symbol"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete symbol",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"symbol_id\" : 2041\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/6",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Symbol",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/7",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Symbol Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/1/data",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols",
+								"1",
+								"data"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Component Symbol",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/3/symbol",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"3",
+								"symbol"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Symbols",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols?page_n=1&page_size=50",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"symbols"
+							],
+							"query": [
+								{
+									"key": "page_n",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "50"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Components",
+			"item": [
+				{
+					"name": "Create Components",
+					"item": [
+						{
+							"name": "Create Capacitor Ceramic",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"16 V\",\n\t\t\"composition\" : \"X7R\",\n\t\t\"tolerance\" : \"10%\",\n\t\t\"description\" : \"MLCC Ceramic 1 uF 16 V 10% Capacitor\",\n\t\t\"value\" : \"1 uF\",\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"capacitor_ceramic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"0603YC105KAT2Aaaaa\",\n\t\t\"manufacturer\" : \"AVX\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Capacitor Electrolytic",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"100 V\",\n\t\t\"material\" : \"aluminium\",\n\t\t\"polarised\" : true,\n\t\t\"esr\" : \"700 mOhms\",\n\t\t\"lifetime_temperature\" : \"2000 Hours @ 105 ºC\",\n\t\t\"tolerance\" : \"20%\",\n\t\t\"temperature_max\" : \"-55 ºC\",\n\t\t\"temperature_min\" : \"105 ºC\",\n\t\t\"description\" : \"Aluminum Electrolytic 33 uF 100 V 20% Capacitor\",\n\t\t\"value\" : \"33 uF\",\n\t\t\"package\": \"SMD\",\n\t\t\"comment\" : {\n            \"kicad\": \"${Value}\",\n            \"altium\": \"=Value\"\n        },\n\t\t\"type\" : \"capacitor_electrolytic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"EEEFK2A330P\",\n\t\t\"manufacturer\" : \"Panasonic\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Capacitor Tantalum",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"component\" : {\n        \"voltage\" : \"6.3 V\",\n        \"esr\" : \"3 Ohms\",\n        \"tolerance\" : \"20%\",\n        \"description\" : \"1 uF 6.3 V 20% Capacitor\",\n        \"value\" : \"4.7 uF\",\n        \"package\": \"0603 (1608 Metric)\",\n        \"comment\" : \"=Value\",\n        \"type\" : \"capacitor_tantalum\",\n        \"is_through_hole\": false,\n        \"mpn\" : \"298D475X06R3M2T\",\n        \"manufacturer\" : \"Vishay\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Connector",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"orientation\" : \"straight\",\n\t\t\"pitch\" : \"50 mil\",\n\t\t\"voltage_rating\" : \"300 V\",\n\t\t\"current_rating\" : \"1 A\",\n\t\t\"number_of_rows\" : \"2\",\n\t\t\"number_of_contacts\" : \"10\",\n\t\t\"description\" : \"Shrouded Terminal Strip, 0.050 pitch\",\n\t\t\"value\" : null,\n\t\t\"package\": \"Through Hole\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"connector_pcb\",\n\t\t\"is_through_hole\": true,\n\t\t\"mpn\" : \"SHF-105-01-L-D-TH\",\n\t\t\"manufacturer\" : \"Samtec\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Crystal Oscillator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"load_capacitance\" : \"8 pF\",\n\t\t\"frequency\" : \"24 MHz\",\n\t\t\"frequency_tolerance\" : \"10 ppm\",\n\t\t\"description\" : \"24MHz 8pF -20C +70C 20ppm Crystal Oscillator\",\n\t\t\"value\" : null,\n\t\t\"package\": \"4-SMD, No Lead\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"crystal_oscillator\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \" ABM8W-24.0000MHZ-8-B1U-T3\",\n\t\t\"manufacturer\" : \"ABRACON\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Diode Rectifier",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"forward_voltage\" : \"1 V\",\n\t\t\"reverse_current_leakage\" : \"25 nA\",\n\t\t\"max_forward_average_current\" : \"250 mA\",\n\t\t\"max_reverse_vrrm\" : \"100 V\",\n\t\t\"diode_type\" : \"rectifier\",\n\t\t\"description\" : \"High Speed Silicon Switching Diode\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOD-323\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"diode_rectifier\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"CMDD4448\",\n\t\t\"manufacturer\" : \"Central Semiconductor Corp.\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Diode TVS",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage_reverse_standoff\" : \"13.3 V\",\n\t\t\"voltage_breakdown_min\" : \"12 V\",\n\t\t\"voltage_clamping_max\" : \"26 V\",\n\t\t\"description\" : \"CAN bus TVS diode\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOT-23\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"diode_tvs\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"CDSOT23-SM712\",\n\t\t\"manufacturer\" : \"Bourns\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Diode Zener",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage_forward\" : \"0.9 V\",\n\t\t\"power_max\" : \"1 W\",\n\t\t\"voltage_zener\" : \"4.7 V\",\n\t\t\"description\" : \"Zener 300 mW 4.7 V\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOD-523\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"diode_zener\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"BZT52C4V7T\",\n\t\t\"manufacturer\" : \"Diodes Incorporated\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Discrete Logic",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"logic_family\" : \"test\",\n\t\t\"logic_type\" : \"test\",\n\t\t\"number_of_bits\" : \"test\",\n\t\t\"propagation_delay\" : \"test\",\n\t\t\"supply_voltage_max\" : \"test\",\n\t\t\"supply_voltage_min\" : \"test\",\n\t\t\"logic_function\" : \"test\",\n\t\t\"description\" : \"74HC795 300-mA, Low-IQ, Low-Dropout Regulator\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOT-23-5\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"discrete_logic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"74HC795\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Ferrite Bead",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"number_of_lines\" : \"1\",\n\t\t\"dc_resistance\" : \"8 mOhms\",\n\t\t\"impedance_freq\" : \"22 Ohms @ 100 MHz\",\n\t\t\"current_rating\" : \"6 A\",\n\t\t\"description\" : \"Ferrite bead 22 Ohms @ 100 MHz\",\n\t\t\"value\" : \"22 Ohms @ 100 MHz\",\n\t\t\"package\": \"0805\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"ferrite_bead\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"7424645882376747541\",\n\t\t\"manufacturer\" : \"Würth Electronik\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Fuse PPTC",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"current_hold\" : \"120 mA\",\n\t\t\"current_trip\" : \"390 mA\",\n\t\t\"voltage_rating\" : \"48 V\",\n\t\t\"resistance_maximum\" : \"1.5 Ohms\",\n\t\t\"resistance_minimum\" : \"6.5 Ohms\",\n\t\t\"power_rating\" : \"500 mW\",\n\t\t\"current_rating\" : \"10 A\",\n\t\t\"temperature_min\" : \"-40 ºC\",\n\t\t\"temperature_max\" : \"85 ºC\",\n\t\t\"description\" : \"PPTC .12A 48V Nano SMD AEC-Q200 \",\n\t\t\"value\" : \"392 Ohms\",\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"fuse_pptc\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"NANOASMDC012F-2\",\n\t\t\"manufacturer\" : \"Littelfuse\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Inductor Choke",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"number_of_lines\" : \"2\",\n\t\t\"dc_resistance\" : \"1 Ohms\",\n\t\t\"impedance_freq\" : \"2800 Ohms @ 10 MHz\",\n\t\t\"current_rating\" : \"200 mA\",\n\t\t\"description\" : \"CAN Bus Common Choke\",\n\t\t\"value\" : \"51 uH\",\n\t\t\"package\": \"ACT45B\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"inductor_choke\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"ACT45B-510-2P-TL003\",\n\t\t\"manufacturer\" : \"TDK\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create LED Indicator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"forward_voltage\" : \"1.9 V\",\n\t\t\"color\" : \"green\",\n\t\t\"lens_style\" : \"dome\",\n\t\t\"lens_transparency\" : \"clear\",\n\t\t\"dominant_wavelength\" : \"515 nm\",\n\t\t\"test_current\" : \"2 mA\",\n\t\t\"lens_size\" : \"0.5 mm x 1 mm\",\n\t\t\"description\" : \"SMD Low Current Green LED\",\n\t\t\"value\" : null,\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"led_indicator\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"APTD1608LZGCK\",\n\t\t\"manufacturer\" : \"Kingbright\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Memory",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"technology\" : \"eeprom\",\n\t\t\"memory_type\" : \"eeprom\",\n\t\t\"size\" : \"512 kbit\",\n\t\t\"interface\" : \"SPI\",\n\t\t\"clock_frequency\" : null,\n\t\t\"description\" : \"512K I2C Serial EEPROM\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOIC-8\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"memory\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"24LC512 \",\n\t\t\"manufacturer\" : \"Microchip\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Microcontroller",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"core\" : \"ARM Cortex-M4\",\n\t\t\"core_size\" : \"32 bits\",\n\t\t\"speed\" : \"170 MHz\",\n\t\t\"flash_size\" : \"128 kB\",\n\t\t\"ram_size\" : \"32 kB\",\n\t\t\"peripherals\" : \"ADC, DAC, Comparator, PGA, Temp, Timers\",\n\t\t\"connectivity\" : \"SPI, I2C, USART, USB, CAN, I2S\",\n\t\t\"voltage_supply\" : \"3.3 V\",\n\t\t\"description\" : \"Thin Film Resistor 47.5 kOhms 1%\",\n\t\t\"value\" : null,\n\t\t\"package\": \"LQFP32\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"microcontroller\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"STM32G431KBT6 \",\n\t\t\"manufacturer\" : \"STMicroelectronics\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Opamp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"gain_bandwith\" : \"3 MHz\",\n\t\t\"output_type\" : \"Rail-to-Rail\",\n\t\t\"input_type\" : \"Rail-to-Rail\",\n\t\t\"amplifier_type\" : \"125 mW\",\n\t\t\"slew_rate\" : \"2.4 V/us\",\n\t\t\"voltage_supplies\" : \"2.7-16 V\",\n\t\t\"voltage_input_offset\" : \"2 mV\",\n\t\t\"current_output\" : \"100 mA\",\n\t\t\"description\" : \"TLV2374 Rail-to-Rail I/O Opamp\",\n\t\t\"value\" : null,\n\t\t\"package\": \"TSSOP-14\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"opamp\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"TLV2374IPWR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Optocoupler Digital",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage_isolation\" : \"5300 V\",\n\t\t\"voltage_saturation_max\" : \"0.4 V\",\n\t\t\"current_transfer_ratio_min\" : \"20%\",\n        \"number_of_channels\": \"1\",\n\t\t\"description\" : \"Optocoupler, Phototransistor Output, with Base Connection, High BVCER Voltage\",\n\t\t\"value\" : null,\n\t\t\"package\": \"DIP-8 Gull Wing\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"optocoupler_digital\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"H11D1\",\n\t\t\"manufacturer\" : \"Vishay\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Optocoupler Linear",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage_isolation\" : \"1414 V\",\n\t\t\"transfer_gain\" : \"1.00\",\n\t\t\"input_forward_voltage\" : \"1.6 V\",\n\t\t\"servo_gain\" : \"0.5\",\n\t\t\"forward_gain\" : \"0.5\",\n\t\t\"non_linearity\" : \"0.01%\",\n\t\t\"description\" : \"HCNR200 High-Linearity Analog Optocoupler\",\n\t\t\"value\" : null,\n\t\t\"package\": \"DIP-8 Gull Wing\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"optocoupler_linear\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"HCNR200-550E\",\n\t\t\"manufacturer\" : \"Broadcom / Avago\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Oscillator Oscillator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"base_resonator\" : \"crystal\",\n\t\t\"current_supply_max\" : \"13 mA\",\n\t\t\"frequency\" : \"25 MHz ppm\",\n\t\t\"frequency_stability\" : \"25 ppm\",\n\t\t\"temperature_min\" : \"-40 C\",\n\t\t\"temperature_max\" : \"85 C\",\n\t\t\"voltage_supply\" : \"3.3 V\",\n\t\t\"output_type\" : \"CMOS\",\n\t\t\"description\" : \"24MHz 8pF -20C +70C 20ppm Crystal Oscillator\",\n\t\t\"value\" : \"=Part Number\",\n\t\t\"package\": \"4-SMD, No Lead\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"oscillator_oscillator\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"ASE-25.000MHZ-L-R-T\",\n\t\t\"manufacturer\" : \"ABRACON\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Potentiometer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"power_max\" : \"500 mW\",\n\t\t\"tolerance\" : \"10%\",\n\t\t\"resistance_min\" : \"0 Ohms\",\n\t\t\"resistance_max\" : \"50 kOhms\",\n\t\t\"number_of_turns\" : \"25\",\n\t\t\"description\" : \"Inline Multitourn 50 kOhms 10% potentiometer\",\n\t\t\"value\" : \"50 kOhms\",\n\t\t\"package\": \"Through Hole\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"potentiometer\",\n\t\t\"is_through_hole\": true,\n\t\t\"mpn\" : \"3296W-1-503ALF\",\n\t\t\"manufacturer\" : \"Bourns\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Power Inductor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"tolerance\" : \"30%\",\n\t\t\"resistance_dcr\" : \"120 mOhms\",\n\t\t\"inductance_freq_test\" : \"100 kHz\",\n\t\t\"current_rating\" : \"1.3 A\",\n\t\t\"current_saturation\" : \"1 A\",\n\t\t\"description\" : \"Tinny Power Inductor 10 uH 1.3 A\",\n\t\t\"value\" : \"10 uH\",\n\t\t\"package\": \"ACT45B\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"power_inductor\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"744042100\",\n\t\t\"manufacturer\" : \"Würth Electronik\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Resistor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"component\": {\n        \"power_max\" : \"100 mW\",\n        \"tolerance\" : \"1%\",\n        \"description\" : \"Thin Film Resistor 60.4 kOhms 1%\",\n        \"value\" : \"60.4 kOhms\",\n        \"package\": \"0603 (1608 Metric)\",\n        \"comment\" : \"=Value\",\n        \"type\" : \"resistor\",\n        \"is_through_hole\": false,\n        \"mpn\" : \" CRCW060360K4FKEAaaaaaaaaaaaaaaaaaaaaaaa\",\n        \"manufacturer\" : \"Vishay / Dale\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Switches Push Buttons",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"function\":\"\",\n\t\t\"dc_voltage_rating\": \"28 V\",\n\t\t\"ac_voltage_rating\": \"28 V\",\n\t\t\"current_rating\": \"0.4VA (AC/DC)\",\n\t\t\"circuit_type\": \"SPST-NO\",\n\t\t\"description\" : \"SWITCH PUSH SPST-NO 0.4VA 28V\",\n\t\t\"package\": \"ACT45B\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"switch_push_button\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"AB11AH-HC\",\n\t\t\"manufacturer\" : \"NKK Switches\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Transceiver",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"duplex\" : \"Full-Duplex\",\n\t\t\"data_rate\" : \"5Mbps\",\n\t\t\"protocol\" : \"CAN\",\n\t\t\"voltage_supply\" : \"5 V\",\n\t\t\"description\" : \"Isolated CAN FD Transceiver\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOIC-16\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transceiver\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"ISO1042DWR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Transducer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"input_magnitude\" : \"temperature\",\n\t\t\"output_type\" : \"I2C\",\n\t\t\"proportional_gain\" : \"0.0625 C\",\n\t\t\"supply_voltage\" : \"1.7 V to 5.5 V\",\n\t\t\"description\" : \"TMP1075 Temperature Sensor With I2C and SMBus Interface\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOIC-8\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transducer\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"TMP1075DR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Transformer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"component\" : {\n\t\t\"number_of_windings\": \"2\",\n\t\t\"primary_dc_resistance\": \"0.31 Ohms\",\n\t\t\"secondary_dc_resistance\": \"0.37 Ohms\",\n\t\t\"primary_inductance\": \"475 uH\",\n\t\t\"secondary_current_rating\": \"0.35 A\",\n\t\t\"primary_voltage_rating\": \"5 V\",\n\t\t\"secondary_voltage_rating\": \"5 V\",\n\t\t\"nps_turns_ratio\": \"1:1.3\",\n\t\t\"operating_temperature_min\" : \"-40 ªC\",\n\t\t\"operating_temperature_max\" : \"125 ªC\",\n\t\t\"description\" : \"MID-PPTI Push-Pull Transformer for TI SN650X\",\n\t\t\"value\" : null,\n\t\t\"package\": \"76039XXXX\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transformer\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"760390014\",\n\t\t\"manufacturer\" : \"Würth Elektronik\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MOSFET Transistor Array",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"number_of_channels\" : \"7\",\n\t\t\"current_total_max\" : \"700 mA\",\n\t\t\"rds_on\" : \"150 mOhms\",\n\t\t\"vgs_max\" : \"5.5 V\",\n\t\t\"vds_max\" : \"8 V\",\n\t\t\"ids_max\" : \"140 mA\",\n\t\t\"power_max\" : \"580 mW\",\n\t\t\"channel_type\" : \"N-Channel\",\n\t\t\"description\" : \"ULN2003LV 7-Channel Relay and Inductive Load Sink Driver\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOIC-16\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transistor_array_mosfet\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"ULN2003LVDR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create BJT Transistor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"vce_sat_max\" : \"250 mW\",\n\t\t\"hfe\" : \"300\",\n\t\t\"vce_max\" : \"40 V\",\n\t\t\"ic_max\" : \"200 mA\",\n\t\t\"power_max\" : \"250 mW\",\n\t\t\"bjt_type\" : \"NPN\",\n\t\t\"description\" : \"NPN BJT Switching transistor\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOT-23\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transistor_bjt\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"MMBT3904,215\",\n\t\t\"manufacturer\" : \"Nexperia\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create MOSFET Transistor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"rds_on\" : \"65mOhm @ 5A, 10V\",\n\t\t\"vgs_max\" : \"20 V\",\n\t\t\"vgs_th\" : \"4 V\",\n\t\t\"vds_max\" : \"100 V\",\n\t\t\"ids_max\" : \"19 A\",\n\t\t\"power_max\" : \"64 W\",\n\t\t\"channel_type\" : \"N-Channel\",\n\t\t\"description\" : \"MOSFET N-CH 100V 19A LFPAK56\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SC-100, SOT-669\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"transistor_mosfet\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"BUK7Y65-100EX\",\n\t\t\"manufacturer\" : \"Nexperia\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Triac",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"power_max\" : \"5 W\",\n\t\t\"vdrm\" : \"800 V\",\n\t\t\"current_rating\" : \"25 A\",\n\t\t\"dl_dt\" : \"28 A/ms\",\n\t\t\"trigger_current\" : \"35 mA\",\n\t\t\"latching_current\" : \"80 mA\",\n\t\t\"holding_current\" : \"35 mA\",\n\t\t\"gate_trigger_voltage\" : \"1 V\",\n\t\t\"emitter_forward_current\" : \"test\",\n    \t\"emitter_forward_voltage\" : \"test\",\n    \t\"triac_type\" : \" Three triggering quadrants\",\n\t\t\"description\" : \"25 A - 800 V - T-series Triac in TO-220AB insulated\",\n\t\t\"value\" : null,\n\t\t\"package\": \"TO-220AB\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"triac\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"T2535T-8I\",\n\t\t\"manufacturer\" : \"STMicroelectronics\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create DC/DC Regulator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage_input_min\" : \"6 V\",\n\t\t\"voltage_output_min_fixed\" : null,\n\t\t\"voltage_output_max\" : \"100 V\",\n\t\t\"current_output\" : \"0.5 A\",\n\t\t\"frequency_switching\" : \"1 MHz\",\n\t\t\"topology\" : \"buck\",\n\t\t\"output_type\" : \"TBD\",\n\t\t\"number_of_outputs\" : \"1\",\n\t\t\"description\" : \"100-V Input, 0.5-A Synchronous Buck DC/DC Converter with Ultra-low IQ\",\n\t\t\"value\" : null,\n\t\t\"package\": \"PowerPAD-8\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"voltage_regulator_dcdc\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"LM5163DDAR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Linear Regulator",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"component\" : {\n\t\t\"output_type\" : \"fixed\",\n\t\t\"voltage_output_min_fixed\" : \"3.3 V\",\n\t\t\"voltage_output_max\" : \"3.3 V\",\n\t\t\"voltage_dropout_max\" : \"375 mV\",\n\t\t\"current_supply_max\" : \"35 uA\",\n\t\t\"current_output\" : \"300 mA\",\n\t\t\"pssr\" : \"68 dB @ 1 kHz\",\n\t\t\"description\" : \"TLV702 300-mA, Low-IQ, Low-Dropout Regulator\",\n\t\t\"value\" : null,\n\t\t\"package\": \"SOT-23-5\",\n\t\t\"comment\" : \"=Part Number\",\n\t\t\"type\" : \"voltage_regulator_linear\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"TLV70233DBVR\",\n\t\t\"manufacturer\" : \"Texas Instruments\"\n\t}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"components"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Component",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Component",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Components",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Component",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"16 V\",\n\t\t\"composition\" : \"X7R\",\n\t\t\"tolerance\" : \"10%\",\n\t\t\"description\" : \"MLCC Ceramic 1 uF 16 V 10% Capacitor\",\n\t\t\"value\" : \"1 uF\",\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Values\",\n\t\t\"type\" : \"capacitor_ceramic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"0603YC105KAT2A\",\n\t\t\"manufacturer\" : \"AVX\"\n\t}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1",
+							"protocol": "http",
+							"host": [
+								"{{HOST_NAME}}"
+							],
+							"port": "{{SERVICE_PORT}}",
+							"path": [
+								"components",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inventory",
+			"item": [
+				{
+					"name": "Locations",
+					"item": [
+						{
+							"name": "Create Location",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test location 14\",\r\n    \"description\" : \"Test location description\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/locations",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete location",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/locations/4",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"locations",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get location",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/locations/18",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"locations",
+										"18"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get locations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/locations?page_n=1",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"locations"
+									],
+									"query": [
+										{
+											"key": "page_n",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Items",
+					"item": [
+						{
+							"name": "Properties",
+							"item": [
+								{
+									"name": "Add property",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"name\" : \"test\",\r\n    \"value\" : \"test-property\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/3/properties",
+											"protocol": "http",
+											"host": [
+												"{{HOST_NAME}}"
+											],
+											"port": "{{SERVICE_PORT}}",
+											"path": [
+												"inventory",
+												"items",
+												"3",
+												"properties"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update property",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"value\" : 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/3/properties/1",
+											"protocol": "http",
+											"host": [
+												"{{HOST_NAME}}"
+											],
+											"port": "{{SERVICE_PORT}}",
+											"path": [
+												"inventory",
+												"items",
+												"3",
+												"properties",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get item properties",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/3/properties",
+											"protocol": "http",
+											"host": [
+												"{{HOST_NAME}}"
+											],
+											"port": "{{SERVICE_PORT}}",
+											"path": [
+												"inventory",
+												"items",
+												"3",
+												"properties"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete item property",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1/properties/2",
+											"protocol": "http",
+											"host": [
+												"{{HOST_NAME}}"
+											],
+											"port": "{{SERVICE_PORT}}",
+											"path": [
+												"inventory",
+												"items",
+												"1",
+												"properties",
+												"2"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Add to Location",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"location_ids\" : [\"LOC-PYJQXZX7NE\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/2/locations",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"2",
+										"locations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Location Stock",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1/locations/1/stock",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"1",
+										"locations",
+										"1",
+										"stock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Edit stock levels",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"stock_min_level\": 10\n\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1/locations/1/stock",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"1",
+										"locations",
+										"1",
+										"stock"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Stock mass update",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"reason\" :\"test\",\r\n    \"movements\": [\r\n        {\r\n            \"item_id\" : \"CAPC-CUC2BIG9SO\",\r\n            \"location_id\" : 1,\r\n            \"quantity\": 10\r\n        },\r\n                {\r\n            \"item_id\" : 1,\r\n            \"location_id\" : 1,\r\n            \"quantity\": 13\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/stocks/updates",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"stocks",
+										"updates"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get item",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/2?include_component=false",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"2"
+									],
+									"query": [
+										{
+											"key": "include_component",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete item",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Standalone Item",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"description\" : \"the description of the standalone item\",\n    \"name\" : \"item\",\n    \"is_through_hole\": false,\n    \"mpn\" : \"test-mpn\",\n    \"manufacturer\" : \"Vishay\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set item category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"category_id\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/2/category",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"2",
+										"category"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete item category",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"category_id\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1/category",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"items",
+										"1",
+										"category"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Categories",
+					"item": [
+						{
+							"name": "Create category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\" :\"Test category 32 end\",\r\n    \"description\" :\"Test description\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get categories",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get category",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories/10",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories",
+										"10"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update category",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Test category 2333\",\r\n    \"description\": \"Test description2222\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories/1",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Set parent category",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"category_id\":2\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories/5/parent",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories",
+										"5",
+										"parent"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete parent category",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories/5/parent",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories",
+										"5",
+										"parent"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get category items",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/categories/2/items?include_component=false",
+									"protocol": "http",
+									"host": [
+										"{{HOST_NAME}}"
+									],
+									"port": "{{SERVICE_PORT}}",
+									"path": [
+										"inventory",
+										"categories",
+										"2",
+										"items"
+									],
+									"query": [
+										{
+											"key": "include_component",
+											"value": "false"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

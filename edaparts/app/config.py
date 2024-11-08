@@ -30,12 +30,13 @@ class Config:
     DB_CONFIG = os.getenv(
         "DB_CONFIG",
         "postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
-            DB_USER=os.getenv("DB_USER", "fastapi"),
-            DB_PASSWORD=os.getenv("DB_PASSWORD", "fastapi-password"),
-            DB_HOST=os.getenv("DB_HOST", "fastapi-postgresql:5432"),
-            DB_NAME=os.getenv("DB_NAME", "fastapi"),
+            DB_USER=os.getenv("DB_USER", "postgres"),
+            DB_PASSWORD=os.getenv("DB_PASSWORD", "postgres"),
+            DB_HOST=os.getenv("DB_HOST", "postgres"),
+            DB_NAME=os.getenv("DB_NAME", "edaparts"),
         ),
     )
+    DB_ECHO = os.getenv("DB_ECHO", "False").lower() in ("true", "1", "t")
 
     MODELS_BASE_DIR = os.getenv("MODELS_BASE_DIR", "/var/lib/edaparts/library")
     LOCKS_DIR = os.getenv(

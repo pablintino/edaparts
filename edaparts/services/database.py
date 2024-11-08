@@ -18,8 +18,8 @@ class DatabaseSessionManager:
         self._engine: AsyncEngine | None = None
         self._sessionmaker: async_sessionmaker | None = None
 
-    def init(self, host: str):
-        self._engine = create_async_engine(host, echo=True)
+    def init(self, host: str, echo=False) -> None:
+        self._engine = create_async_engine(host, echo=echo)
         self._sessionmaker = async_sessionmaker(
             autocommit=False, bind=self._engine, expire_on_commit=False
         )
@@ -62,10 +62,6 @@ class DatabaseSessionManager:
 
     async def drop_all(self, connection: AsyncConnection):
         await connection.run_sync(Base.metadata.drop_all)
-
-    async def init_models(self) -> None:
-        async with self._engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
 
 
 sessionmanager = DatabaseSessionManager()

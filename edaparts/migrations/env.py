@@ -8,18 +8,12 @@ from alembic import context
 from edaparts.models import Base
 from edaparts.app.config import Config
 
-# this is the Alembic Config object, which provides
-# access to the values within the .ini file in use.
 config = context.config
-
-# Interpret the config file for Python logging.
-# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+config.set_main_option("sqlalchemy.url", Config.DB_CONFIG)
 
 target_metadata = Base.metadata
-
-config.set_main_option("sqlalchemy.url", Config.DB_CONFIG)
 
 
 def run_migrations_offline() -> None:

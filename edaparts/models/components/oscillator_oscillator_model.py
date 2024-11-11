@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OscillatorOscillatorModel(ComponentModel):
-    __tablename__ = "oscillator_oscillator"
+    __tablename__ = "comp_oscillator_oscillator"
     __id_prefix__ = "XOSC"
 
     # Primary key

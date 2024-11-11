@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TriacModel(ComponentModel):
-    __tablename__ = "triac"
+    __tablename__ = "comp_triac"
     __id_prefix__ = "TRIA"
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)

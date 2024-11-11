@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransistorMosfetModel(ComponentModel):
-    __tablename__ = "transistor_mosfet"
+    __tablename__ = "comp_transistor_mosfet"
     __id_prefix__ = "QFET"
 
     # Primary key

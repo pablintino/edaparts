@@ -36,7 +36,7 @@ from edaparts.models.components import OptocouplerDigitalModel
 
 
 class OptocouplerDigitalBaseDto(ComponentCommonBaseFields):
-    type: Literal["optocoupler_digital"]
+    component_type: Literal["optocoupler_digital"]
     voltage_isolation: str | None = Field(default=None, max_length=30)
     voltage_saturation_max: str | None = Field(default=None, max_length=30)
     current_transfer_ratio_max: str | None = Field(default=None, max_length=30)

@@ -36,7 +36,7 @@ from edaparts.models.components import TransformerModel
 
 
 class TransformerBaseDto(ComponentCommonBaseFields):
-    type: Literal["transformer"]
+    component_type: Literal["transformer"]
     number_of_windings: str | None = Field(default=None, max_length=30)
     primary_dc_resistance: str | None = Field(default=None, max_length=30)
     secondary_dc_resistance: str | None = Field(default=None, max_length=30)

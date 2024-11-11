@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class FusePPTCModel(ComponentModel):
-    __tablename__ = "fuse_pptc"
+    __tablename__ = "comp_fuse_pptc"
     __id_prefix__ = "PPTC"
 
     # Primary key

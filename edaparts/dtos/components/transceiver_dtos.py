@@ -36,7 +36,7 @@ from edaparts.models.components import TransceiverModel
 
 
 class TransceiverBaseDto(ComponentCommonBaseFields):
-    type: Literal["transceiver"]
+    component_type: Literal["transceiver"]
     duplex: str | None = Field(default=None, max_length=30)
     data_rate: str | None = Field(default=None, max_length=30)
     protocol: str | None = Field(default=None, max_length=30)

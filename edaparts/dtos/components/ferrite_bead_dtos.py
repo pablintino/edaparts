@@ -36,7 +36,7 @@ from edaparts.models.components import FerriteBeadModel
 
 
 class FerriteBeadBaseDto(ComponentCommonBaseFields):
-    type: Literal["ferrite_bead"]
+    component_type: Literal["ferrite_bead"]
     number_of_lines: str | None = Field(default=None, max_length=30)
     dc_resistance: str | None = Field(default=None, max_length=30)
     impedance_freq: str | None = Field(default=None, max_length=30)

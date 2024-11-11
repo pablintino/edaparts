@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class PowerInductorModel(ComponentModel):
-    __tablename__ = "power_inductor"
+    __tablename__ = "comp_power_inductor"
     __id_prefix__ = "PIND"
 
     # Primary key

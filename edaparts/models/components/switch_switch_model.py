@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class SwitchSwitchModel(ComponentModel):
-    __tablename__ = "switch_switch"
+    __tablename__ = "comp_switch_switch"
     __id_prefix__ = "SWIT"
 
     # Primary key

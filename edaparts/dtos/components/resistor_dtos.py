@@ -24,7 +24,7 @@
 import typing
 from typing import Literal
 
-from pydantic import Field, BaseModel
+from pydantic import Field
 
 from edaparts.dtos.components.common_dtos import (
     ComponentCommonBaseFields,
@@ -36,7 +36,7 @@ from edaparts.models.components import ResistorModel
 
 
 class ResistorBaseFieldsDto(ComponentCommonBaseFields):
-    type: Literal["resistor"]
+    component_type: Literal["resistor"]
     power_max: str | None = Field(default=None, max_length=30)
     tolerance: str | None = Field(default=None, max_length=30)
 

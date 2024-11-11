@@ -36,7 +36,7 @@ from edaparts.models.components import FusePPTCModel
 
 
 class FusePPTCBaseDto(ComponentCommonBaseFields):
-    type: Literal["fuse_pptc"]
+    component_type: Literal["fuse_pptc"]
     current_hold: str | None = Field(default=None, max_length=30)
     current_trip: str | None = Field(default=None, max_length=30)
     voltage_rating: str | None = Field(default=None, max_length=30)

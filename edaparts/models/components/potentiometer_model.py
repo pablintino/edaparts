@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class PotentiometerModel(ComponentModel):
-    __tablename__ = "potentiometer"
+    __tablename__ = "comp_potentiometer"
     __id_prefix__ = "RPOT"
 
     # Primary key

@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransducerModel(ComponentModel):
-    __tablename__ = "transducer"
+    __tablename__ = "comp_transducer"
     __id_prefix__ = "XDCR"
 
     # Primary key

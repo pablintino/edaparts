@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class ConnectorPcbModel(ComponentModel):
-    __tablename__ = "connector_pcb"
+    __tablename__ = "comp_connector_pcb"
     __id_prefix__ = "CONP"
 
     # Primary key

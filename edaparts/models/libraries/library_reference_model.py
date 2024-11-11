@@ -23,8 +23,9 @@
 #
 
 
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
+
 from edaparts.models.libraries.storable_library_model import StorableLibraryModel
 
 

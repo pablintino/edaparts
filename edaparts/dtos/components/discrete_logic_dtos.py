@@ -36,7 +36,7 @@ from edaparts.models.components import DiscreteLogicModel
 
 
 class DiscreteLogicBaseDto(ComponentCommonBaseFields):
-    type: Literal["discrete_logic"]
+    component_type: Literal["discrete_logic"]
     logic_family: str | None = Field(default=None, max_length=30)
     logic_type: str | None = Field(default=None, max_length=30)
     number_of_bits: str | None = Field(default=None, max_length=30)

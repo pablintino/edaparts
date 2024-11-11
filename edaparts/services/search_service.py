@@ -25,18 +25,18 @@ import typing
 
 from sqlalchemy import and_, select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload, joinedload
+from sqlalchemy.orm import joinedload
 
 from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.inventory.inventory_item_model import InventoryItemModel
 from edaparts.models.inventory.inventory_item_property import InventoryItemPropertyModel
 from edaparts.models.metadata.metadata_parser import metadata_parser
-from edaparts.services.exceptions import MalformedSearchQueryError, ResourceInvalidQuery
+from edaparts.services.exceptions import MalformedSearchQueryError
 from edaparts.utils import helpers
 from edaparts.utils.helpers import BraceMessage as __l
 
 
-def __generate_aggreate_filter_expression(value_col_condition, key_col_condition=None):
+def __generate_aggregate_filter_expression(value_col_condition, key_col_condition=None):
     return (
         and_(key_col_condition, value_col_condition)
         if key_col_condition
@@ -51,23 +51,23 @@ def __create_numerical_field_filter_expression(
         key_column == field_name if key_column.key != field_name else None
     )
     if operator == "min":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column > filter_v, key_col_condition
         )
     if operator == "max":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column < filter_v, key_col_condition
         )
     if operator == "maxeq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column <= filter_v, key_col_condition
         )
     if operator == "mineq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column >= filter_v, key_col_condition
         )
     if operator == "eq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column == filter_v, key_col_condition
         )
 
@@ -81,15 +81,15 @@ def __create_string_field_filter_expression(
         key_column == field_name if key_column.key != field_name else None
     )
     if operator == "like":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column.like(filter_v), key_col_condition
         )
     if operator == "eq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column == filter_v, key_col_condition
         )
     if operator == "noteq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column != filter_v, key_col_condition
         )
 
@@ -103,11 +103,11 @@ def __create_boolean_field_filter_expression(
         key_column == field_name if key_column.key != field_name else None
     )
     if operator == "noteq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column != filter_v, key_col_condition
         )
     if operator == "eq":
-        return __generate_aggreate_filter_expression(
+        return __generate_aggregate_filter_expression(
             value_column == filter_v, key_col_condition
         )
 

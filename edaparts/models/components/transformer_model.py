@@ -27,7 +27,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransformerModel(ComponentModel):
-    __tablename__ = "transformer"
+    __tablename__ = "comp_transformer"
     __id_prefix__ = "TFRM"
 
     # Primary key

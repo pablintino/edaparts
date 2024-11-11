@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class CapacitorElectrolyticModel(ComponentModel):
-    __tablename__ = "capacitor_electrolytic"
+    __tablename__ = "comp_capacitor_electrolytic"
     __id_prefix__ = "CAPE"
 
     # Primary key

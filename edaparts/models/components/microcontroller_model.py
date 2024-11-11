@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class MicrocontrollerModel(ComponentModel):
-    __tablename__ = "microcontroller"
+    __tablename__ = "comp_microcontroller"
     __id_prefix__ = "MCRO"
 
     # Primary key

@@ -36,7 +36,7 @@ from edaparts.models.components import TransducerModel
 
 
 class TransducerBaseDto(ComponentCommonBaseFields):
-    type: Literal["transducer"]
+    component_type: Literal["transducer"]
     input_magnitude: str | None = Field(default=None, max_length=50)
     output_type: str | None = Field(default=None, max_length=50)
     proportional_gain: str | None = Field(default=None, max_length=50)

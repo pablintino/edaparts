@@ -36,7 +36,7 @@ from edaparts.models.components import CapacitorCeramicModel
 
 
 class CapacitorCeramicBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_ceramic"]
+    component_type: Literal["capacitor_ceramic"]
     tolerance: str | None = Field(default=None, max_length=30)
     voltage: str | None = Field(default=None, max_length=30)
     composition: str | None = Field(default=None, max_length=30)

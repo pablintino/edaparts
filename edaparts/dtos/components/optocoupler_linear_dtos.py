@@ -36,7 +36,7 @@ from edaparts.models.components import OptocouplerLinearModel
 
 
 class OptocouplerLinearBaseDto(ComponentCommonBaseFields):
-    type: Literal["optocoupler_linear"]
+    component_type: Literal["optocoupler_linear"]
     voltage_isolation: str | None = Field(default=None, max_length=30)
     transfer_gain: str | None = Field(default=None, max_length=30)
     input_forward_voltage: str | None = Field(default=None, max_length=30)

@@ -36,7 +36,7 @@ from edaparts.models.components import CapacitorTantalumModel
 
 
 class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_tantalum"]
+    component_type: Literal["capacitor_tantalum"]
     tolerance: str | None = Field(default=None, max_length=30)
     voltage: str | None = Field(default=None, max_length=30)
     esr: str | None = Field(default=None, max_length=30)

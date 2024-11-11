@@ -36,7 +36,7 @@ from edaparts.models.components import TransistorBjtModel
 
 
 class TransistorBjtBaseDto(ComponentCommonBaseFields):
-    type: Literal["transistor_bjt"]
+    component_type: Literal["transistor_bjt"]
     vce_sat_max: str | None = Field(default=None, max_length=30)
     hfe: str | None = Field(default=None, max_length=30)
     vce_max: str | None = Field(default=None, max_length=30)

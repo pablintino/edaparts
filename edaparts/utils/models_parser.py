@@ -35,7 +35,6 @@ from olefile import olefile
 
 from edaparts.models.internal.internal_models import CadType
 from edaparts.services.exceptions import ApiError
-from edaparts.utils.helpers import CaseInsensitiveDict
 from edaparts.models.internal.internal_models import StorableLibraryResourceType
 
 __logger = logging.getLogger(__name__)
@@ -117,8 +116,7 @@ def _parse_kicad_lib(path: pathlib.Path) -> dict[str, FootprintModel | SymbolMod
 
 def _parse_key_value_string(s):
     properties = s.decode("utf-8").strip("|").split("|")
-    result = CaseInsensitiveDict()
-
+    result = {}
     for prop in properties:
         x = prop.split("=")
         key = x[0]
@@ -126,7 +124,7 @@ def _parse_key_value_string(s):
             value = x[1]
         else:
             value = ""
-        result[key] = value
+        result[key.lower() if isinstance(key, str) else key] = value
 
     return result
 
@@ -199,16 +197,16 @@ def _parse_olefile_library(byte_data) -> dict[str, FootprintModel | SymbolModel]
                 buffer = _read_stream(ole, "Library/ComponentParamsTOC/Data")
                 parts = _get_toc_data(buffer)
                 for part in parts:
-                    name = part.get("Name", None)
+                    name = part.get("name", None)
                     lib_parts[name] = FootprintModel(
                         name=name,
-                        description=part.get("Description", None),
+                        description=part.get("description", None),
                     )
             elif b"Schematic Library" in contents:
                 for part_k, part_v in _get_symbols_data(ole).items():
                     lib_parts[part_k] = SymbolModel(
                         name=part_k,
-                        description=part_v.get("ComponentDescription", None),
+                        description=part_v.get("componentdescription", None),
                     )
             else:
                 __logger.warning("Non supported library type")

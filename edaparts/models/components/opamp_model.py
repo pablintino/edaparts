@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OpAmpModel(ComponentModel):
-    __tablename__ = "opamp"
+    __tablename__ = "comp_opamp"
     __id_prefix__ = "OAMP"
 
     # Primary key

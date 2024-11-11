@@ -36,7 +36,7 @@ from edaparts.models.components import OpAmpModel
 
 
 class OpAmpBaseDto(ComponentCommonBaseFields):
-    type: Literal["opamp"]
+    component_type: Literal["opamp"]
     gain_bandwith: str | None = Field(default=None, max_length=30)
     output_type: str | None = Field(default=None, max_length=50)
     input_type: str | None = Field(default=None, max_length=50)

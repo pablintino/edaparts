@@ -36,7 +36,7 @@ from edaparts.models.components import VoltageRegulatorLinearModel
 
 
 class VoltageRegulatorLinearBaseDto(ComponentCommonBaseFields):
-    type: Literal["voltage_regulator_linear"]
+    component_type: Literal["voltage_regulator_linear"]
     gain_bandwith: str | None = Field(default=None, max_length=50)
     output_type: str | None = Field(default=None, max_length=50)
     voltage_output_min_fixed: str | None = Field(default=None, max_length=30)

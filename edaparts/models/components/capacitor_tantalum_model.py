@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class CapacitorTantalumModel(ComponentModel):
-    __tablename__ = "capacitor_tantalum"
+    __tablename__ = "comp_capacitor_tantalum"
     __id_prefix__ = "CAPT"
 
     # Primary key

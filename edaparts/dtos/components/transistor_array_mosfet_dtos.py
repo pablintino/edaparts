@@ -36,7 +36,7 @@ from edaparts.models.components import TransistorArrayMosfetModel
 
 
 class TransistorArrayMosfetBaseDto(ComponentCommonBaseFields):
-    type: Literal["transistor_array_mosfet"]
+    component_type: Literal["transistor_array_mosfet"]
     number_of_channels: str | None = Field(default=None, max_length=30)
     rds_on: str | None = Field(default=None, max_length=30)
     vgs_max: str | None = Field(default=None, max_length=30)

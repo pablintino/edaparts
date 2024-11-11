@@ -36,7 +36,7 @@ from edaparts.models.components import LedIndicatorModel
 
 
 class LedIndicatorBaseDto(ComponentCommonBaseFields):
-    type: Literal["led_indicator"]
+    component_type: Literal["led_indicator"]
     forward_voltage: str | None = Field(default=None, max_length=30)
     color: str | None = Field(default=None, max_length=30)
     lens_style: str | None = Field(default=None, max_length=30)

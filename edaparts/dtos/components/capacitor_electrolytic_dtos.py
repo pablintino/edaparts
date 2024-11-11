@@ -36,7 +36,7 @@ from edaparts.models.components import CapacitorElectrolyticModel
 
 
 class CapacitorElectrolyticBaseDto(ComponentCommonBaseFields):
-    type: Literal["capacitor_electrolytic"]
+    component_type: Literal["capacitor_electrolytic"]
     tolerance: str | None = Field(default=None, max_length=30)
     voltage: str | None = Field(default=None, max_length=30)
     material: str | None = Field(default=None, max_length=30)

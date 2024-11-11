@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransistorArrayMosfetModel(ComponentModel):
-    __tablename__ = "transistor_array_mosfet"
+    __tablename__ = "comp_transistor_array_mosfet"
     __id_prefix__ = "QARR"
 
     # Primary key

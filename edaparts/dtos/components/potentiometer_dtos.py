@@ -36,7 +36,7 @@ from edaparts.models.components import PotentiometerModel
 
 
 class PotentiometerBaseDto(ComponentCommonBaseFields):
-    type: Literal["potentiometer"]
+    component_type: Literal["potentiometer"]
     power_max: str | None = Field(default=None, max_length=30)
     tolerance: str | None = Field(default=None, max_length=30)
     resistance_min: str | None = Field(default=None, max_length=30)

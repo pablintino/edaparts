@@ -36,7 +36,7 @@ from edaparts.models.components import CrystalOscillatorModel
 
 
 class CrystalOscillatorBaseDto(ComponentCommonBaseFields):
-    type: Literal["crystal_oscillator"]
+    component_type: Literal["crystal_oscillator"]
     load_capacitance: str | None = Field(default=None, max_length=30)
     frequency: str | None = Field(default=None, max_length=30)
     frequency_tolerance: str | None = Field(default=None, max_length=30)

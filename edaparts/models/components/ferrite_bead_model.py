@@ -27,7 +27,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class FerriteBeadModel(ComponentModel):
-    __tablename__ = "ferrite_bead"
+    __tablename__ = "comp_ferrite_bead"
     __id_prefix__ = "FEAD"
 
     # Primary key

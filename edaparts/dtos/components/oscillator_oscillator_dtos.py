@@ -36,7 +36,7 @@ from edaparts.models.components import OscillatorOscillatorModel
 
 
 class OscillatorOscillatorBaseDto(ComponentCommonBaseFields):
-    type: Literal["oscillator_oscillator"]
+    component_type: Literal["oscillator_oscillator"]
     base_resonator: str | None = Field(default=None, max_length=30)
     current_supply_max: str | None = Field(default=None, max_length=30)
     frequency: str | None = Field(default=None, max_length=30)

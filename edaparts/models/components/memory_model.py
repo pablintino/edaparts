@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class MemoryModel(ComponentModel):
-    __tablename__ = "memory"
+    __tablename__ = "comp_memory"
 
     # Primary key
     id = Column(ForeignKey("component.id"), primary_key=True)

@@ -36,7 +36,7 @@ from edaparts.models.components import TransistorMosfetModel
 
 
 class TransistorMosfetBaseDto(ComponentCommonBaseFields):
-    type: Literal["transistor_mosfet"]
+    component_type: Literal["transistor_mosfet"]
     rds_on: str | None = Field(default=None, max_length=30)
     vgs_max: str | None = Field(default=None, max_length=30)
     vgs_th: str | None = Field(default=None, max_length=30)

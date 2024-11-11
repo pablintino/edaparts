@@ -36,7 +36,7 @@ from edaparts.models.components import ConnectorPcbModel
 
 
 class ConnectorPcbBaseDto(ComponentCommonBaseFields):
-    type: Literal["connector_pcb"]
+    component_type: Literal["connector_pcb"]
     orientation: str | None = Field(default=None, max_length=50)
     pitch: str | None = Field(default=None, max_length=30)
     voltage_rating: str | None = Field(default=None, max_length=30)

@@ -52,6 +52,8 @@ class ComponentCommonBaseFields:
         for k, v in vars(self).items():
             if k in inspect(type(model)).attrs.keys():
                 setattr(model, k, v)
+        if hasattr(model, "__tablename__"):
+            model.type = model.__tablename__
         return model
 
 

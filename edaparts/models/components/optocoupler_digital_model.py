@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class OptocouplerDigitalModel(ComponentModel):
-    __tablename__ = "optocoupler_digital"
+    __tablename__ = "comp_optocoupler_digital"
     __id_prefix__ = "OPTD"
 
     # Primary key

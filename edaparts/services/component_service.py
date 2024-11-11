@@ -28,7 +28,7 @@ import typing
 
 from sqlalchemy import select, func, inspect, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import selectinload, joinedload
+from sqlalchemy.orm import selectinload
 
 from edaparts.models.components import ComponentModelType
 from edaparts.models.components.component_model import ComponentModel

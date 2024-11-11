@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransistorBjtModel(ComponentModel):
-    __tablename__ = "transistor_bjt"
+    __tablename__ = "comp_transistor_bjt"
     __id_prefix__ = "QBJT"
 
     # Primary key

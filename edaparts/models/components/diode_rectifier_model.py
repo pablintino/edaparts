@@ -27,7 +27,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiodeRectifierModel(ComponentModel):
-    __tablename__ = "diode_rectifier"
+    __tablename__ = "comp_diode_rectifier"
     __id_prefix__ = "DREC"
 
     # Primary key

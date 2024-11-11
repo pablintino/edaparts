@@ -36,7 +36,7 @@ from edaparts.models.components import MicrocontrollerModel
 
 
 class MicrocontrollerBaseDto(ComponentCommonBaseFields):
-    type: Literal["microcontroller"]
+    component_type: Literal["microcontroller"]
     core: str | None = Field(default=None, max_length=50)
     core_size: str | None = Field(default=None, max_length=30)
     speed: str | None = Field(default=None, max_length=30)

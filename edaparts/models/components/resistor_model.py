@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class ResistorModel(ComponentModel):
-    __tablename__ = "resistor"
+    __tablename__ = "comp_resistor"
     __id_prefix__ = "RFIX"
 
     # Primary key

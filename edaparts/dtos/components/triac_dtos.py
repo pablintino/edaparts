@@ -36,7 +36,7 @@ from edaparts.models.components import TriacModel
 
 
 class TriacBaseDto(ComponentCommonBaseFields):
-    type: Literal["triac"]
+    component_type: Literal["triac"]
     power_max: str | None = Field(default=None, max_length=30)
     vdrm: str | None = Field(default=None, max_length=30)
     current_rating: str | None = Field(default=None, max_length=30)

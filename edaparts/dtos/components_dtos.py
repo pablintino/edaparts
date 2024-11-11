@@ -40,15 +40,19 @@ from edaparts.models.components import (
 
 # Generic DTO aliases
 class ComponentCreateRequestDto(BaseModel):
-    component: ComponentCreateRequestDtoUnionAlias = Field(..., discriminator="type")
+    component: ComponentCreateRequestDtoUnionAlias = Field(
+        ..., discriminator="component_type"
+    )
 
 
 class ComponentUpdateRequestDto(BaseModel):
-    component: ComponentUpdateRequestDtoUnionAlias = Field(..., discriminator="type")
+    component: ComponentUpdateRequestDtoUnionAlias = Field(
+        ..., discriminator="component_type"
+    )
 
 
 ComponentSpecificQueryDto = Annotated[
-    ComponentQueryDtoUnionAlias, Field(discriminator="type")
+    ComponentQueryDtoUnionAlias, Field(discriminator="component_type")
 ]
 
 _model_to_query_dto = {
@@ -66,6 +70,10 @@ def map_component_model_to_query_dto(
         for c in inspect(model).mapper.column_attrs
         if c.key in dto_t.model_fields
     }
+    # Fill the component type based on the pydantic discriminator
+    dto_data["component_type"] = typing.get_args(
+        dto_t.model_fields["component_type"].annotation
+    )[0]
     mapped_dto = dto_t(**dto_data)
     return mapped_dto._fill_dto(model)
 

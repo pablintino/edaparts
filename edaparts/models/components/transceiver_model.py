@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class TransceiverModel(ComponentModel):
-    __tablename__ = "transceiver"
+    __tablename__ = "comp_transceiver"
     __id_prefix__ = "XCVR"
 
     # Primary key

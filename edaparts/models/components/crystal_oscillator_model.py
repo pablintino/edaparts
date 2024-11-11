@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class CrystalOscillatorModel(ComponentModel):
-    __tablename__ = "crystal_oscillator"
+    __tablename__ = "comp_crystal_oscillator"
     __id_prefix__ = "XTAL"
 
     # Primary key

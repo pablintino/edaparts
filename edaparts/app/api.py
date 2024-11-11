@@ -45,7 +45,7 @@ def init_app():
     sessionmanager.init(config.DB_CONFIG, echo=config.DB_ECHO)
 
     @asynccontextmanager
-    async def lifespan(app: FastAPI):
+    async def lifespan(_: FastAPI):
         # Remove the existing locks
         if os.path.exists(config.LOCKS_DIR):
             shutil.rmtree(config.LOCKS_DIR)

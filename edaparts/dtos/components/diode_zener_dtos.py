@@ -36,7 +36,7 @@ from edaparts.models.components import DiodeZenerModel
 
 
 class DiodeTvsBaseDto(ComponentCommonBaseFields):
-    type: Literal["diode_zener"]
+    component_type: Literal["diode_zener"]
     tolerance: str | None = Field(default=None, max_length=30)
     power_max: str | None = Field(default=None, max_length=30)
     voltage_forward: str | None = Field(default=None, max_length=30)

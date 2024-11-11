@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiodeZenerModel(ComponentModel):
-    __tablename__ = "diode_zener"
+    __tablename__ = "comp_diode_zener"
     __id_prefix__ = "DZEN"
 
     # Primary key

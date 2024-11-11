@@ -117,7 +117,7 @@ def __validate_input_path(
         )
 
     if (
-        cad_type.KICAD
+        cad_type == CadType.KICAD
         and file_type == StorableLibraryResourceType.FOOTPRINT
         and not os.path.dirname(path).endswith(".pretty")
     ):

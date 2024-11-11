@@ -36,7 +36,7 @@ from edaparts.models.components import VoltageRegulatorDCDCModel
 
 
 class VoltageRegulatorDCDCBaseDto(ComponentCommonBaseFields):
-    type: Literal["voltage_regulator_dcdc"]
+    component_type: Literal["voltage_regulator_dcdc"]
     voltage_input_min: str | None = Field(default=None, max_length=30)
     voltage_output_min_fixed: str | None = Field(default=None, max_length=30)
     voltage_output_max: str | None = Field(default=None, max_length=30)

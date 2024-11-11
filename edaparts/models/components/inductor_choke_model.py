@@ -27,7 +27,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class InductorChokeModel(ComponentModel):
-    __tablename__ = "inductor_choke"
+    __tablename__ = "comp_inductor_choke"
     __id_prefix__ = "ICHK"
 
     # Primary key

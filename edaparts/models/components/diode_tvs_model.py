@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiodeTVSModel(ComponentModel):
-    __tablename__ = "diode_tvs"
+    __tablename__ = "comp_diode_tvs"
     __id_prefix__ = "DTVS"
 
     # Primary key

@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class VoltageRegulatorDCDCModel(ComponentModel):
-    __tablename__ = "voltage_regulator_dcdc"
+    __tablename__ = "comp_voltage_regulator_dcdc"
     __id_prefix__ = "DCDC"
 
     # Primary key

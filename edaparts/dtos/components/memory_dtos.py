@@ -36,7 +36,7 @@ from edaparts.models.components import MemoryModel
 
 
 class MemoryBaseDto(ComponentCommonBaseFields):
-    type: Literal["memory"]
+    component_type: Literal["memory"]
     technology: str | None = Field(default=None, max_length=30)
     memory_type: str | None = Field(default=None, max_length=30)
     size: str | None = Field(default=None, max_length=30)

@@ -36,7 +36,7 @@ from edaparts.models.components import InductorChokeModel
 
 
 class InductorChokeBaseDto(ComponentCommonBaseFields):
-    type: Literal["inductor_choke"]
+    component_type: Literal["inductor_choke"]
     number_of_lines: str | None = Field(default=None, max_length=30)
     dc_resistance: str | None = Field(default=None, max_length=30)
     impedance_freq: str | None = Field(default=None, max_length=30)

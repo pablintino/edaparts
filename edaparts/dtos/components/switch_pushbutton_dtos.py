@@ -36,7 +36,7 @@ from edaparts.models.components import SwitchPushButtonModel
 
 
 class SwitchPushButtonBaseDto(ComponentCommonBaseFields):
-    type: Literal["switch_push_button"]
+    component_type: Literal["switch_push_button"]
     function: str | None = Field(default=None, max_length=50)
     dc_voltage_rating: str | None = Field(default=None, max_length=30)
     ac_voltage_rating: str | None = Field(default=None, max_length=30)

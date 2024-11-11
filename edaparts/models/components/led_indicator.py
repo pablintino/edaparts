@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class LedIndicatorModel(ComponentModel):
-    __tablename__ = "led_indicator"
+    __tablename__ = "comp_led_indicator"
     __id_prefix__ = "LEDI"
 
     # Primary key

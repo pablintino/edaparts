@@ -36,7 +36,7 @@ from edaparts.models.components import PowerInductorModel
 
 
 class PowerInductorBaseDto(ComponentCommonBaseFields):
-    type: Literal["power_inductor"]
+    component_type: Literal["power_inductor"]
     tolerance: str | None = Field(default=None, max_length=30)
     resistance_dcr: str | None = Field(default=None, max_length=30)
     inductance_freq_test: str | None = Field(default=None, max_length=30)

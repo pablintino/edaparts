@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class SwitchPushButtonModel(ComponentModel):
-    __tablename__ = "switch_push_button"
+    __tablename__ = "comp_switch_push_button"
     __id_prefix__ = "SBUT"
 
     # Primary key

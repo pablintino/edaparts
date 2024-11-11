@@ -36,7 +36,7 @@ from edaparts.models.components import DiodeRectifierModel
 
 
 class DiodeRectifierBaseDto(ComponentCommonBaseFields):
-    type: Literal["diode_rectifier"]
+    component_type: Literal["diode_rectifier"]
     forward_voltage: str | None = Field(default=None, max_length=30)
     reverse_current_leakage: str | None = Field(default=None, max_length=30)
     max_forward_average_current: str | None = Field(default=None, max_length=30)

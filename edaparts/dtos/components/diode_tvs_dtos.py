@@ -36,7 +36,7 @@ from edaparts.models.components import DiodeTVSModel
 
 
 class DiodeTvsBaseDto(ComponentCommonBaseFields):
-    type: Literal["diode_tvs"]
+    component_type: Literal["diode_tvs"]
     voltage_reverse_standoff: str | None = Field(default=None, max_length=30)
     voltage_breakdown_min: str | None = Field(default=None, max_length=30)
     voltage_clamping_max: str | None = Field(default=None, max_length=30)

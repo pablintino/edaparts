@@ -28,7 +28,7 @@ from edaparts.models.components.component_model import ComponentModel
 
 
 class DiscreteLogicModel(ComponentModel):
-    __tablename__ = "discrete_logic"
+    __tablename__ = "comp_discrete_logic"
     __id_prefix__ = "LGIC"
 
     # Primary key

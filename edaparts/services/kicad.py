@@ -7,10 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from edaparts.models.components.component_model import ComponentModel
-from edaparts.utils.helpers import BraceMessage as __l
-from edaparts.services.exceptions import ApiError, ResourceNotFoundApiError
 from edaparts.models.internal.kicad_models import KiCadPart, KiCadPartProperty
-from models import LibraryReference
+from edaparts.services.exceptions import ApiError, ResourceNotFoundApiError
+from edaparts.utils.helpers import BraceMessage as __l
 
 __logger = logging.getLogger(__name__)
 
@@ -99,16 +98,19 @@ def __compute_component_properties(
         value = getattr(component, column_prop.key)
         if value is None:
             continue
-        properties[key] = KiCadPartProperty(value=str(value), visible=False)
+        prop = key.replace("_", " ").title()
+        properties[prop] = KiCadPartProperty(value=str(value), visible=False)
     if component.comment_kicad is not None:
-        properties["comment"] = KiCadPartProperty(
+        properties["Comment"] = KiCadPartProperty(
             value=component.comment_kicad, visible=True
         )
-    # for now pickl only one footprint
-    # todo: check if a comma-separated list works
+
+    # At the moment of writing this KiCad integration
+    # it does not support comma/semicolon separated
+    # footprints like in other integrations
     if component.footprint_refs:
-        footprint_ref = next(component.footprint_refs)
-        properties["footprint"] = KiCadPartProperty(
+        footprint_ref = next(iter(component.footprint_refs))
+        properties["Footprint"] = KiCadPartProperty(
             value=f"{footprint_ref.alias}:{footprint_ref.reference}",
             visible=False,
         )

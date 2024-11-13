@@ -35,6 +35,8 @@ from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.internal.kicad_models import KiCadPart, KiCadPartProperty
 from edaparts.services.exceptions import ApiError, ResourceNotFoundApiError
 from edaparts.utils.helpers import BraceMessage as __l
+from edaparts.models import LibraryReference
+from edaparts.models.internal.internal_models import CadType
 
 __logger = logging.getLogger(__name__)
 
@@ -73,7 +75,7 @@ async def get_components_for_category(
     query = (
         select(model)
         .join(ComponentModel.library_ref)
-        .where(ComponentModel.library_ref_id != None)
+        .where(LibraryReference.cad_type == CadType.KICAD)
         .order_by(ComponentModel.id.desc())
     )
     result_page = await db.scalars(query)
@@ -85,9 +87,10 @@ async def get_component(db: AsyncSession, component_id: int) -> KiCadPart:
     component = (
         await db.scalars(
             select(ComponentModel)
+            .join(ComponentModel.library_ref)
             .filter(
                 ComponentModel.id == component_id,
-                ComponentModel.library_ref_id.isnot(None),
+                LibraryReference.cad_type == CadType.KICAD,
             )
             .options(selectinload(ComponentModel.footprint_refs))
             .options(selectinload(ComponentModel.library_ref))

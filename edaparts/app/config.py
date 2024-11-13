@@ -27,8 +27,8 @@ import pathlib
 
 
 class Config:
-    DB_CONFIG = os.getenv(
-        "DB_CONFIG",
+    DB_CONNECTION_STRING = os.getenv(
+        "DB_CONNECTION_STRING",
         "postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}".format(
             DB_USER=os.getenv("DB_USER", "postgres"),
             DB_PASSWORD=os.getenv("DB_PASSWORD", "postgres"),

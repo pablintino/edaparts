@@ -42,7 +42,7 @@ def exception_handler_api_error(_: Request, exc: Exception) -> JSONResponse:
 
 
 def init_app():
-    sessionmanager.init(config.DB_CONFIG, echo=config.DB_ECHO)
+    sessionmanager.init(config.DB_CONNECTION_STRING, echo=config.DB_ECHO)
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):

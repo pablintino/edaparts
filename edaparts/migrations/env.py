@@ -11,7 +11,7 @@ from edaparts.app.config import Config
 config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
-config.set_main_option("sqlalchemy.url", Config.DB_CONFIG)
+config.set_main_option("sqlalchemy.url", Config.DB_CONNECTION_STRING)
 
 target_metadata = Base.metadata
 

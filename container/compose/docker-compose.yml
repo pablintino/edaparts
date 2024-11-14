@@ -23,7 +23,6 @@ services:
     ports:
       - "27079:2049"
   api:
-    container_name: edaparts
     image: pablintino/edaparts:latest
     depends_on:
       postgres:

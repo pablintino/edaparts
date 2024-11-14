@@ -25,6 +25,7 @@
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 
 from edaparts.dtos.kicad_dtos import (
     CategoryQueryDto,
@@ -49,8 +50,11 @@ async def list_categories() -> CategoriesQueryDto:
 
 
 @router.get("/api/v1/")
-async def endpoint_check() -> EndpointsQueryDto:
-    return EndpointsQueryDto.build_default()
+async def endpoint_check(request: Request) -> EndpointsQueryDto:
+    base = str(request.url).rstrip("/")
+    return EndpointsQueryDto.build(
+        categories=f"{base}/categories.json", parts=f"{base}/parts"
+    )
 
 
 @router.get("/api/v1/parts/category/{category_id}.json")

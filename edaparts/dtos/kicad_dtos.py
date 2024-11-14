@@ -1,6 +1,5 @@
 import typing
 
-from anyio.abc import value
 from pydantic import BaseModel
 
 from edaparts.models.components.component_model import ComponentModel
@@ -12,8 +11,8 @@ class EndpointsQueryDto(BaseModel):
     parts: str
 
     @staticmethod
-    def build_default() -> "EndpointsQueryDto":
-        return EndpointsQueryDto(categories="", parts="")
+    def build(categories=None, parts=None) -> "EndpointsQueryDto":
+        return EndpointsQueryDto(categories=categories or "", parts=parts or "")
 
 
 class CategoryQueryDto(BaseModel):

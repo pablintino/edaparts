@@ -44,8 +44,8 @@ router = APIRouter(prefix="/tools/kicad", tags=["kicad"])
 @router.get("/api/v1/categories.json")
 async def list_categories() -> CategoriesQueryDto:
     return [
-        CategoryQueryDto(id=str(idx), name=cat)
-        for idx, cat in enumerate(edaparts.services.kicad.get_components_categories())
+        CategoryQueryDto(id=str(elem.id), name=elem.name)
+        for elem in edaparts.services.kicad.get_components_categories().values()
     ]
 
 

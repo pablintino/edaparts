@@ -23,6 +23,10 @@
 #
 from dataclasses import dataclass
 
+import typing
+
+from edaparts.models.components.component_model import ComponentModel
+
 
 @dataclass(frozen=True)
 class KiCadPartProperty:
@@ -36,3 +40,10 @@ class KiCadPart:
     name: str
     symbolIdStr: str
     fields: dict[str, KiCadPartProperty]
+
+
+@dataclass(frozen=True)
+class KiCadCategoryEntry:
+    id: int
+    name: str
+    component_type: typing.Type[ComponentModel]

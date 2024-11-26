@@ -24,6 +24,7 @@
 
 
 import logging
+import operator
 import re
 import typing
 
@@ -32,7 +33,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from edaparts.models.components.component_model import ComponentModel
-from edaparts.models.internal.kicad_models import KiCadPart, KiCadPartProperty
+from edaparts.models.internal.kicad_models import (
+    KiCadCategoryEntry,
+    KiCadPart,
+    KiCadPartProperty,
+)
 from edaparts.services.exceptions import ApiError, ResourceNotFoundApiError
 from edaparts.utils.helpers import BraceMessage as __l
 from edaparts.models import LibraryReference
@@ -41,39 +46,43 @@ from edaparts.models.internal.internal_models import CadType
 __logger = logging.getLogger(__name__)
 
 
-def __generate_components_types_dict() -> typing.Dict[typing.Type[ComponentModel], str]:
+def __generate_components_types_dict() -> typing.Dict[int, KiCadCategoryEntry]:
     components_list = [
         alchemy_info.entity
         for alchemy_info in inspect(ComponentModel).polymorphic_map.values()
         if alchemy_info.entity != ComponentModel
     ]
     result = {}
-    for component in components_list:
+    for idx, component in enumerate(components_list):
         name = component.__name__.replace("Model", "")
         matches = re.finditer(
             ".+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)", name
         )
+        # Avoid zero based indexes as IDs
+        component_id = idx + 1
+        result[component_id] = KiCadCategoryEntry(
+            id=component_id,
+            name=" ".join([m.group(0) for m in matches]),
+            component_type=component,
+        )
+    return {k: v for k, v in sorted(result.items(), key=lambda item: item[1].name)}
 
-        result[component] = " ".join([m.group(0) for m in matches])
-    return {k: v for k, v in sorted(result.items(), key=lambda item: item[1])}
 
-
-def get_components_categories() -> list[str]:
-    return list(__components_types_dict.values())
+def get_components_categories() -> typing.Dict[int, KiCadCategoryEntry]:
+    return __components_types_dict
 
 
 async def get_components_for_category(
     db: AsyncSession, category_id: int
 ) -> typing.Sequence[ComponentModel]:
-    if category_id >= len(__components_types_dict):
-        raise ApiError(
-            f"Invalid category. ID cannot be greater than {len(__components_types_dict) -1}"
+    if category_id not in __components_types_dict:
+        raise ResourceNotFoundApiError(
+            f"Category {category_id} does not exist", missing_id=category_id
         )
     __logger.debug(__l("Listing components for [category_id={0}]", category_id))
 
-    model = list(__components_types_dict.keys())[category_id]
     query = (
-        select(model)
+        select(__components_types_dict[category_id].component_type)
         .join(ComponentModel.library_refs)
         .where(LibraryReference.cad_type == CadType.KICAD)
         .order_by(ComponentModel.id.desc())

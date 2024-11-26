@@ -27,7 +27,7 @@ from fastapi import APIRouter, Depends, Query, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 import edaparts.services.component_service
-from edaparts.dtos.symbols_dtos import SymbolQueryDto
+from edaparts.dtos.symbols_dtos import SymbolQueryDto, SymbolsComponentReferenceDto
 from edaparts.dtos.components_dtos import (
     ComponentCreateRequestDto,
     ComponentSpecificQueryDto,
@@ -119,7 +119,7 @@ async def create_footprints_relations(
     status_code=204,
     response_class=Response,
 )
-async def delete_footprints_relations(
+async def delete_footprint_relations(
     component_id: int, footprint_id: int, db: AsyncSession = Depends(get_db)
 ) -> None:
     await edaparts.services.component_service.delete_component_footprint_relation(
@@ -140,33 +140,36 @@ async def list_component_footprints(
     return [FootprintQueryDto.from_model(model) for model in footprint_models]
 
 
-@router.post(
-    "/{component_id}/symbol/{symbol_id}", status_code=204, response_class=Response
-)
-async def create_symbol_relation(
-    component_id: int, symbol_id: int, db: AsyncSession = Depends(get_db)
-) -> None:
-    await edaparts.services.component_service.create_symbol_relation(
-        db, component_id, symbol_id
+@router.post("/{component_id}/symbols")
+async def create_symbols_relations(
+    component_id: int,
+    body: SymbolsComponentReferenceDto,
+    db: AsyncSession = Depends(get_db),
+) -> SymbolsComponentReferenceDto:
+    symbol_ids = await edaparts.services.component_service.create_symbol_relation(
+        db, component_id, body.symbol_ids
     )
+    return SymbolsComponentReferenceDto(symbol_ids=symbol_ids)
 
 
-@router.get("/{component_id}/symbol")
-async def create_symbol_relation(
+@router.get("/{component_id}/symbols")
+async def list_component_symbols(
     component_id: int, db: AsyncSession = Depends(get_db)
-) -> SymbolQueryDto:
-    symbol_model = (
-        await edaparts.services.component_service.get_component_symbol_relation(
+) -> list[SymbolQueryDto]:
+    symbol_models = (
+        await edaparts.services.component_service.get_component_symbol_relations(
             db, component_id
         )
     )
-    return SymbolQueryDto.from_model(symbol_model)
+    return [SymbolQueryDto.from_model(model) for model in symbol_models]
 
 
-@router.delete("/{component_id}/symbol", status_code=204, response_class=Response)
-async def delete_symbol_relation(
-    component_id: int, db: AsyncSession = Depends(get_db)
+@router.delete(
+    "/{component_id}/symbols/{symbol_id}", status_code=204, response_class=Response
+)
+async def delete_symbol_relations(
+    component_id: int, symbol_id: int, db: AsyncSession = Depends(get_db)
 ) -> None:
     await edaparts.services.component_service.delete_component_symbol_relation(
-        db, component_id
+        db, component_id, symbol_id
     )

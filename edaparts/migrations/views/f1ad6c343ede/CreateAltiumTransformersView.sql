@@ -24,39 +24,39 @@
  **/
 
 create or replace view "Altium Transformers" as
-select c.mpn                       "Part Number",
-       c.value                     "Value",
-       c.manufacturer              "Manufacturer",
-       c.created_on                "Created On",
-       c.updated_on                "Updated On",
-       c.package                   "Package",
-       c.description               "Description",
-       c.comment_altium            "Comment",
-       c.operating_temperature_min "Minimum Operating Temperature",
-       c.operating_temperature_max "Maximum Operating Temperature",
-       l.path                      "Library Path",
-       l.reference                 "Library Ref",
-       (ftp1).path                 "Footprint Path",
-       (ftp2).path                 "Footprint Path 2",
-       (ftp3).path                 "Footprint Path 3",
-       (ftp4).path                 "Footprint Path 4",
-       (ftp1).reference            "Footprint Ref",
-       (ftp2).reference            "Footprint Ref 2",
-       (ftp3).reference            "Footprint Ref 3",
-       (ftp4).reference            "Footprint Ref 4",
-       t.number_of_windings        "Number of Windings",
-       t.primary_dc_resistance     "Primary DCR",
-       t.secondary_dc_resistance   "Secondary DCR",
-       t.tertiary_dc_resistance    "Tertiary DCR",
-       t.leakage_inductance        "Leakage Inductance",
-       t.primary_inductance        "Primary Inductance",
-       t.secondary_current_rating  "Secondary Current Rating",
-       t.tertiary_current_rating   "Tertiary Current Rating",
-       t.primary_voltage_rating    "Primary Voltage Rating",
-       t.secondary_voltage_rating  "Secondary Voltage Rating",
-       t.tertiary_voltage_rating   "Tertiary Voltage Rating",
-       t.nps_turns_ratio           "NPS Turns Ratio",
-       t.npt_turns_ratio           "NPT Turns Ratio"
+select distinct on (l.id) c.mpn                       "Part Number",
+                          c.value                     "Value",
+                          c.manufacturer              "Manufacturer",
+                          c.created_on                "Created On",
+                          c.updated_on                "Updated On",
+                          c.package                   "Package",
+                          c.description               "Description",
+                          c.comment_altium            "Comment",
+                          c.operating_temperature_min "Minimum Operating Temperature",
+                          c.operating_temperature_max "Maximum Operating Temperature",
+                          l.path                      "Library Path",
+                          l.reference                 "Library Ref",
+                          (ftp1).path                 "Footprint Path",
+                          (ftp2).path                 "Footprint Path 2",
+                          (ftp3).path                 "Footprint Path 3",
+                          (ftp4).path                 "Footprint Path 4",
+                          (ftp1).reference            "Footprint Ref",
+                          (ftp2).reference            "Footprint Ref 2",
+                          (ftp3).reference            "Footprint Ref 3",
+                          (ftp4).reference            "Footprint Ref 4",
+                          t.number_of_windings        "Number of Windings",
+                          t.primary_dc_resistance     "Primary DCR",
+                          t.secondary_dc_resistance   "Secondary DCR",
+                          t.tertiary_dc_resistance    "Tertiary DCR",
+                          t.leakage_inductance        "Leakage Inductance",
+                          t.primary_inductance        "Primary Inductance",
+                          t.secondary_current_rating  "Secondary Current Rating",
+                          t.tertiary_current_rating   "Tertiary Current Rating",
+                          t.primary_voltage_rating    "Primary Voltage Rating",
+                          t.secondary_voltage_rating  "Secondary Voltage Rating",
+                          t.tertiary_voltage_rating   "Tertiary Voltage Rating",
+                          t.nps_turns_ratio           "NPS Turns Ratio",
+                          t.npt_turns_ratio           "NPT Turns Ratio"
 from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, f
     from comp_transformer t
              inner join component c
@@ -69,5 +69,7 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, f
      ) as ct(cid int, ftp1 footprint_ref, ftp2 footprint_ref, ftp3 footprint_ref, ftp4 footprint_ref)
          right outer join component c on c.id = cid
          inner join comp_transformer t on t.id = c.id
-         left outer join library_ref l on c.library_ref_id = l.id
+         inner join component_library_asc cl on cl.component_id = c.id
+         left outer join library_ref l on cl.library_ref_id = l.id
 where l.cad_type = 'ALTIUM'::cadtype
+order by l.id desc;

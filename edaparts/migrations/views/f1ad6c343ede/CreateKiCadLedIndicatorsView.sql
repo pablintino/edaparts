@@ -24,25 +24,25 @@
  **/
 
 create or replace view "KiCad LED Indicators" as
-select c.mpn                                  "Part Number",
-       c.value                                "Value",
-       c.manufacturer                         "Manufacturer",
-       c.created_on                           "Created On",
-       c.updated_on                           "Updated On",
-       c.package                              "Package",
-       c.description                          "Description",
-       c.comment_kicad                        "Comment",
-       c.operating_temperature_min            "Minimum Operating Temperature",
-       c.operating_temperature_max            "Maximum Operating Temperature",
-       CONCAT(l.alias, ':', l.reference)      "Symbol",
-       CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
-       i.forward_voltage                      "Forward Voltage",
-       i.color                                "Color",
-       i.lens_style                           "Lens Type",
-       i.lens_transparency                    "Lens Transparency",
-       i.dominant_wavelength                  "Dominant Wavelength",
-       i.test_current                         "Test Current",
-       i.lens_size                            "Lens Size"
+select distinct on (l.id) c.mpn                                  "Part Number",
+                          c.value                                "Value",
+                          c.manufacturer                         "Manufacturer",
+                          c.created_on                           "Created On",
+                          c.updated_on                           "Updated On",
+                          c.package                              "Package",
+                          c.description                          "Description",
+                          c.comment_kicad                        "Comment",
+                          c.operating_temperature_min            "Minimum Operating Temperature",
+                          c.operating_temperature_max            "Maximum Operating Temperature",
+                          CONCAT(l.alias, ':', l.reference)      "Symbol",
+                          CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
+                          i.forward_voltage                      "Forward Voltage",
+                          i.color                                "Color",
+                          i.lens_style                           "Lens Type",
+                          i.lens_transparency                    "Lens Transparency",
+                          i.dominant_wavelength                  "Dominant Wavelength",
+                          i.test_current                         "Test Current",
+                          i.lens_size                            "Lens Size"
 from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(f.alias, '':'', f.reference)
     from comp_led_indicator i
              inner join component c
@@ -55,5 +55,7 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(
      ) as ct(cid int, ftp1 text, ftp2 text, ftp3 text, ftp4 text)
          right outer join component c on c.id = cid
          inner join comp_led_indicator i on i.id = c.id
-         left outer join library_ref l on c.library_ref_id = l.id
+         inner join component_library_asc cl on cl.component_id = c.id
+         left outer join library_ref l on cl.library_ref_id = l.id
 where l.cad_type = 'KICAD'::cadtype
+order by l.id desc;

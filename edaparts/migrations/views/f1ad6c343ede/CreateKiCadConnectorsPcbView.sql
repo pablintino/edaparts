@@ -24,24 +24,24 @@
  **/
 
 create or replace view "KiCad Connectors PCB" as
-select c.mpn                                  "Part Number",
-       c.value                                "Value",
-       c.manufacturer                         "Manufacturer",
-       c.created_on                           "Created On",
-       c.updated_on                           "Updated On",
-       c.package                              "Package",
-       c.description                          "Description",
-       c.comment_kicad                        "Comment",
-       c.operating_temperature_min            "Minimum Operating Temperature",
-       c.operating_temperature_max            "Maximum Operating Temperature",
-       CONCAT(l.alias, ':', l.reference)      "Symbol",
-       CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
-       p.orientation                          "Orientation",
-       p.pitch                                "Pitch",
-       p.voltage_rating                       "Voltage Rating",
-       p.current_rating                       "Current Rating",
-       p.number_of_rows                       "Number of Rows",
-       p.number_of_contacts                   "Number of Contacts"
+select distinct on (l.id) c.mpn                                  "Part Number",
+                          c.value                                "Value",
+                          c.manufacturer                         "Manufacturer",
+                          c.created_on                           "Created On",
+                          c.updated_on                           "Updated On",
+                          c.package                              "Package",
+                          c.description                          "Description",
+                          c.comment_kicad                        "Comment",
+                          c.operating_temperature_min            "Minimum Operating Temperature",
+                          c.operating_temperature_max            "Maximum Operating Temperature",
+                          CONCAT(l.alias, ':', l.reference)      "Symbol",
+                          CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
+                          p.orientation                          "Orientation",
+                          p.pitch                                "Pitch",
+                          p.voltage_rating                       "Voltage Rating",
+                          p.current_rating                       "Current Rating",
+                          p.number_of_rows                       "Number of Rows",
+                          p.number_of_contacts                   "Number of Contacts"
 from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(f.alias, '':'', f.reference)
     from comp_connector_pcb p
              inner join component c
@@ -54,5 +54,7 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(
      ) as ct(cid int, ftp1 text, ftp2 text, ftp3 text, ftp4 text)
          right outer join component c on c.id = cid
          inner join comp_connector_pcb p on p.id = c.id
-         left outer join library_ref l on c.library_ref_id = l.id
+         inner join component_library_asc cl on cl.component_id = c.id
+         left outer join library_ref l on cl.library_ref_id = l.id
 where l.cad_type = 'KICAD'::cadtype
+order by l.id desc;

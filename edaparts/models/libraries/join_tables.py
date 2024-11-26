@@ -32,3 +32,10 @@ component_footprint_asc_table = Table(
     Column("component_id", Integer, ForeignKey("component.id"), nullable=False),
     Column("footprint_ref_id", Integer, ForeignKey("footprint_ref.id"), nullable=False),
 )
+
+component_library_asc_table = Table(
+    "component_library_asc",
+    Base.metadata,
+    Column("component_id", Integer, ForeignKey("component.id"), nullable=False),
+    Column("library_ref_id", Integer, ForeignKey("library_ref.id"), nullable=False),
+)

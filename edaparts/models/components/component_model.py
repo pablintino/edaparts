@@ -38,7 +38,10 @@ from sqlalchemy.orm import relationship
 from edaparts.models.inventory.inventory_identificable_item_model import (
     InventoryIdentificableItemModel,
 )
-from edaparts.models.libraries.join_tables import component_footprint_asc_table
+from edaparts.models.libraries.join_tables import (
+    component_footprint_asc_table,
+    component_library_asc_table,
+)
 
 
 class ComponentModel(InventoryIdentificableItemModel):
@@ -66,9 +69,11 @@ class ComponentModel(InventoryIdentificableItemModel):
     operating_temperature_max = Column(String(30))
 
     # Relationships
-    library_ref_id = Column(Integer, ForeignKey("library_ref.id"))
-    library_ref = relationship(
-        "LibraryReference", back_populates="library_components", lazy="select"
+    library_refs = relationship(
+        "LibraryReference",
+        secondary=component_library_asc_table,
+        lazy="select",
+        back_populates="components_l",
     )
     footprint_refs = relationship(
         "FootprintReference",

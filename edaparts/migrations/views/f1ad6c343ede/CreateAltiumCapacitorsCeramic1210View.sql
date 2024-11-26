@@ -24,29 +24,29 @@
  **/
 
 create or replace view "Altium Capacitors Ceramic 1210" as
-select c.mpn                       "Part Number",
-       c.value                     "Value",
-       c.manufacturer              "Manufacturer",
-       c.created_on                "Created On",
-       c.updated_on                "Updated On",
-       c.package                   "Package",
-       c.description               "Description",
-       c.comment_altium            "Comment",
-       c.operating_temperature_min "Minimum Operating Temperature",
-       c.operating_temperature_max "Maximum Operating Temperature",
-       l.path                      "Library Path",
-       l.reference                 "Library Ref",
-       (ftp1).path                 "Footprint Path",
-       (ftp2).path                 "Footprint Path 2",
-       (ftp3).path                 "Footprint Path 3",
-       (ftp4).path                 "Footprint Path 4",
-       (ftp1).reference            "Footprint Ref",
-       (ftp2).reference            "Footprint Ref 2",
-       (ftp3).reference            "Footprint Ref 3",
-       (ftp4).reference            "Footprint Ref 4",
-       ca.tolerance                "Tolerance",
-       ca.voltage                  "Voltage",
-       ca.composition              "Composition"
+select distinct on (l.id) c.mpn                       "Part Number",
+                          c.value                     "Value",
+                          c.manufacturer              "Manufacturer",
+                          c.created_on                "Created On",
+                          c.updated_on                "Updated On",
+                          c.package                   "Package",
+                          c.description               "Description",
+                          c.comment_altium            "Comment",
+                          c.operating_temperature_min "Minimum Operating Temperature",
+                          c.operating_temperature_max "Maximum Operating Temperature",
+                          l.path                      "Library Path",
+                          l.reference                 "Library Ref",
+                          (ftp1).path                 "Footprint Path",
+                          (ftp2).path                 "Footprint Path 2",
+                          (ftp3).path                 "Footprint Path 3",
+                          (ftp4).path                 "Footprint Path 4",
+                          (ftp1).reference            "Footprint Ref",
+                          (ftp2).reference            "Footprint Ref 2",
+                          (ftp3).reference            "Footprint Ref 3",
+                          (ftp4).reference            "Footprint Ref 4",
+                          ca.tolerance                "Tolerance",
+                          ca.voltage                  "Voltage",
+                          ca.composition              "Composition"
 from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, f
     from comp_capacitor_ceramic ca
              inner join component c
@@ -59,6 +59,8 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, f
      ) as ct(cid int, ftp1 footprint_ref, ftp2 footprint_ref, ftp3 footprint_ref, ftp4 footprint_ref)
          right outer join component c on c.id = cid
          inner join comp_capacitor_ceramic ca on ca.id = c.id
-         left outer join library_ref l on c.library_ref_id = l.id
+         inner join component_library_asc cl on cl.component_id = c.id
+         left outer join library_ref l on cl.library_ref_id = l.id
 where c.package = '1210 (3225 Metric)'
   and l.cad_type = 'ALTIUM'::cadtype
+order by l.id desc;

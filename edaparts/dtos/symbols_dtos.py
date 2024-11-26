@@ -39,3 +39,7 @@ class SymbolListResultDto(BaseModel):
     page_number: int
     total_elements: int
     elements: list[SymbolQueryDto]
+
+
+class SymbolsComponentReferenceDto(BaseModel):
+    symbol_ids: list[int]

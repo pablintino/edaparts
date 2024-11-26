@@ -24,29 +24,29 @@
  **/
 
 create or replace view "KiCad Triacs" as
-select c.mpn                                  "Part Number",
-       c.value                                "Value",
-       c.manufacturer                         "Manufacturer",
-       c.created_on                           "Created On",
-       c.updated_on                           "Updated On",
-       c.package                              "Package",
-       c.description                          "Description",
-       c.comment_kicad                        "Comment",
-       c.operating_temperature_min            "Minimum Operating Temperature",
-       c.operating_temperature_max            "Maximum Operating Temperature",
-       CONCAT(l.alias, ':', l.reference)      "Symbol",
-       CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
-       t.power_max                            "Maximum Power",
-       t.vdrm                                 "Vdrm",
-       t.current_rating                       "Current Rating",
-       t.dl_dt                                "Rate Rise Off-State Voltage",
-       t.trigger_current                      "Trigger Current",
-       t.latching_current                     "Latching Current",
-       t.holding_current                      "Holding Current",
-       t.gate_trigger_voltage                 "Gate Trigger Voltage",
-       t.emitter_forward_current              "Emitter Forward Current",
-       t.emitter_forward_voltage              "Emitter Forward Voltage",
-       t.triac_type                           "Triac Type"
+select distinct on (l.id) c.mpn                                  "Part Number",
+                          c.value                                "Value",
+                          c.manufacturer                         "Manufacturer",
+                          c.created_on                           "Created On",
+                          c.updated_on                           "Updated On",
+                          c.package                              "Package",
+                          c.description                          "Description",
+                          c.comment_kicad                        "Comment",
+                          c.operating_temperature_min            "Minimum Operating Temperature",
+                          c.operating_temperature_max            "Maximum Operating Temperature",
+                          CONCAT(l.alias, ':', l.reference)      "Symbol",
+                          CONCAT_WS(';', ftp1, ftp2, ftp3, ftp4) "Footprints",
+                          t.power_max                            "Maximum Power",
+                          t.vdrm                                 "Vdrm",
+                          t.current_rating                       "Current Rating",
+                          t.dl_dt                                "Rate Rise Off-State Voltage",
+                          t.trigger_current                      "Trigger Current",
+                          t.latching_current                     "Latching Current",
+                          t.holding_current                      "Holding Current",
+                          t.gate_trigger_voltage                 "Gate Trigger Voltage",
+                          t.emitter_forward_current              "Emitter Forward Current",
+                          t.emitter_forward_voltage              "Emitter Forward Voltage",
+                          t.triac_type                           "Triac Type"
 from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(f.alias, '':'', f.reference)
     from comp_triac t
              inner join component c
@@ -59,5 +59,7 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(
      ) as ct(cid int, ftp1 text, ftp2 text, ftp3 text, ftp4 text)
          right outer join component c on c.id = cid
          inner join comp_triac t on t.id = c.id
-         left outer join library_ref l on c.library_ref_id = l.id
+         inner join component_library_asc cl on cl.component_id = c.id
+         left outer join library_ref l on cl.library_ref_id = l.id
 where l.cad_type = 'KICAD'::cadtype
+order by l.id desc;

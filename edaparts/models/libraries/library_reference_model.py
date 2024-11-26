@@ -27,6 +27,7 @@ from sqlalchemy import Column, Integer
 from sqlalchemy.orm import relationship
 
 from edaparts.models.libraries.storable_library_model import StorableLibraryModel
+from edaparts.models.libraries.join_tables import component_library_asc_table
 
 
 class LibraryReference(StorableLibraryModel):
@@ -34,6 +35,9 @@ class LibraryReference(StorableLibraryModel):
     id = Column(Integer, primary_key=True)
 
     # relationships
-    library_components = relationship(
-        "ComponentModel", back_populates="library_ref", lazy=True
+    components_l = relationship(
+        "ComponentModel",
+        secondary=component_library_asc_table,
+        back_populates="library_refs",
+        lazy="select",
     )

@@ -74,7 +74,7 @@ async def get_components_for_category(
     model = list(__components_types_dict.keys())[category_id]
     query = (
         select(model)
-        .join(ComponentModel.library_ref)
+        .join(ComponentModel.library_refs)
         .where(LibraryReference.cad_type == CadType.KICAD)
         .order_by(ComponentModel.id.desc())
     )
@@ -87,26 +87,30 @@ async def get_component(db: AsyncSession, component_id: int) -> KiCadPart:
     component = (
         await db.scalars(
             select(ComponentModel)
-            .join(ComponentModel.library_ref)
+            .join(ComponentModel.library_refs)
             .filter(
                 ComponentModel.id == component_id,
                 LibraryReference.cad_type == CadType.KICAD,
             )
             .options(selectinload(ComponentModel.footprint_refs))
-            .options(selectinload(ComponentModel.library_ref))
+            .options(selectinload(ComponentModel.library_refs))
             .limit(1)
         )
     ).first()
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
-    symbol_ref = f"{component.library_ref.alias}:{component.library_ref.reference}"
-    properties = __compute_component_properties(component)
+    if not component.library_refs:
+        raise ApiError(
+            f"Component {component_id} has no associated symbol", http_code=404
+        )
+
+    library_ref = component.library_refs[0]
     part = KiCadPart(
         id=component.id,
         name=component.mpn,
-        symbolIdStr=symbol_ref,
-        fields=properties,
+        symbolIdStr=f"{library_ref.alias}:{library_ref.reference}",
+        fields=__compute_component_properties(component),
     )
     return part
 

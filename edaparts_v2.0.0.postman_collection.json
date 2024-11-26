@@ -20,16 +20,16 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/run/user/1000/doc/64f7d2e7/CAPACITOR_MLCC_0805_2012.PCBLIB"
+									"src": "/home/pablintino/Desktop/temp-kicad-lib/Library.pretty/RES 0805_2012.kicad_mod"
 								},
 								{
 									"key": "path",
-									"value": "CAPACITORS/CAPACITOR_MLCC_0805_2012.PCBLIB",
+									"value": "Resistors_SMD.pretty/RES 0805_2012.kicad_mod",
 									"type": "text"
 								},
 								{
 									"key": "cad_type",
-									"value": "altium",
+									"value": "kicad",
 									"type": "text"
 								}
 							]
@@ -118,7 +118,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"footprint_ids\" : [2,3]\n}",
+							"raw": "{\n\t\"footprint_ids\" : [1,2]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -126,7 +126,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/footprints",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/21/footprints",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -134,7 +134,7 @@
 							"port": "{{SERVICE_PORT}}",
 							"path": [
 								"components",
-								"1",
+								"21",
 								"footprints"
 							]
 						}
@@ -308,11 +308,11 @@
 								{
 									"key": "file",
 									"type": "file",
-									"src": "/home/pablintino/Downloads/SparkFun-Aesthetic.kicad_sym"
+									"src": "/run/user/1000/doc/c3363f13/Device.kicad_sym"
 								},
 								{
 									"key": "path",
-									"value": "Crystals_Oscillators/CRYSTAL_OSCILLATORS_4_PIN.kicad_sym",
+									"value": "passives.kicad_sym",
 									"type": "text"
 								},
 								{
@@ -322,7 +322,7 @@
 								},
 								{
 									"key": "reference",
-									"value": "SparkPNT_Logo",
+									"value": "Battery",
 									"type": "text"
 								}
 							]
@@ -444,7 +444,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\n    \"symbol_ids\": [2]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -452,7 +452,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/symbol/1",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/symbols",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -461,8 +461,7 @@
 							"path": [
 								"components",
 								"1",
-								"symbol",
-								"1"
+								"symbols"
 							]
 						}
 					},
@@ -483,7 +482,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/3/symbol",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/symbols/1",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -491,8 +490,9 @@
 							"port": "{{SERVICE_PORT}}",
 							"path": [
 								"components",
-								"3",
-								"symbol"
+								"1",
+								"symbols",
+								"1"
 							]
 						}
 					},
@@ -513,7 +513,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/6",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/1",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -521,7 +521,7 @@
 							"port": "{{SERVICE_PORT}}",
 							"path": [
 								"symbols",
-								"6"
+								"1"
 							]
 						}
 					},
@@ -533,7 +533,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/7",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/symbols/1",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -541,7 +541,7 @@
 							"port": "{{SERVICE_PORT}}",
 							"path": [
 								"symbols",
-								"7"
+								"1"
 							]
 						}
 					},
@@ -569,12 +569,12 @@
 					"response": []
 				},
 				{
-					"name": "Get Component Symbol",
+					"name": "Get Component Symbols",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/3/symbol",
+							"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/components/1/symbols",
 							"protocol": "http",
 							"host": [
 								"{{HOST_NAME}}"
@@ -582,8 +582,8 @@
 							"port": "{{SERVICE_PORT}}",
 							"path": [
 								"components",
-								"3",
-								"symbol"
+								"1",
+								"symbols"
 							]
 						}
 					},
@@ -633,7 +633,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"16 V\",\n\t\t\"composition\" : \"X7R\",\n\t\t\"tolerance\" : \"10%\",\n\t\t\"description\" : \"MLCC Ceramic 1 uF 16 V 10% Capacitor\",\n\t\t\"value\" : \"1 uF\",\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"type\" : \"capacitor_ceramic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"0603YC105KAT2Aaaaa\",\n\t\t\"manufacturer\" : \"AVX\"\n\t}\n}",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"16 V\",\n\t\t\"composition\" : \"X7R\",\n\t\t\"tolerance\" : \"10%\",\n\t\t\"description\" : \"MLCC Ceramic 1 uF 16 V 10% Capacitor\",\n\t\t\"value\" : \"1 uF\",\n\t\t\"package\": \"0603 (1608 Metric)\",\n\t\t\"comment\" : \"=Value\",\n\t\t\"component_type\" : \"capacitor_ceramic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"0603YC105KAT2Aaaaa\",\n\t\t\"manufacturer\" : \"AVX\"\n\t}\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -661,7 +661,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"100 V\",\n\t\t\"material\" : \"aluminium\",\n\t\t\"polarised\" : true,\n\t\t\"esr\" : \"700 mOhms\",\n\t\t\"lifetime_temperature\" : \"2000 Hours @ 105 ºC\",\n\t\t\"tolerance\" : \"20%\",\n\t\t\"temperature_max\" : \"-55 ºC\",\n\t\t\"temperature_min\" : \"105 ºC\",\n\t\t\"description\" : \"Aluminum Electrolytic 33 uF 100 V 20% Capacitor\",\n\t\t\"value\" : \"33 uF\",\n\t\t\"package\": \"SMD\",\n\t\t\"comment\" : {\n            \"kicad\": \"${Value}\",\n            \"altium\": \"=Value\"\n        },\n\t\t\"type\" : \"capacitor_electrolytic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"EEEFK2A330P\",\n\t\t\"manufacturer\" : \"Panasonic\"\n\t}\n}",
+									"raw": "{\n\t\"component\" : {\n\t\t\"voltage\" : \"100 V\",\n\t\t\"material\" : \"aluminium\",\n\t\t\"polarised\" : true,\n\t\t\"esr\" : \"700 mOhms\",\n\t\t\"lifetime_temperature\" : \"2000 Hours @ 105 ºC\",\n\t\t\"tolerance\" : \"20%\",\n\t\t\"temperature_max\" : \"-55 ºC\",\n\t\t\"temperature_min\" : \"105 ºC\",\n\t\t\"description\" : \"Aluminum Electrolytic 33 uF 100 V 20% Capacitor\",\n\t\t\"value\" : \"33 uF\",\n\t\t\"package\": \"SMD\",\n\t\t\"comment\" : {\n            \"kicad\": \"${Value}\",\n            \"altium\": \"=Value\"\n        },\n\t\t\"component_type\" : \"capacitor_electrolytic\",\n\t\t\"is_through_hole\": false,\n\t\t\"mpn\" : \"EEEFK2A330P\",\n\t\t\"manufacturer\" : \"Panasonic\"\n\t}\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2006,7 +2006,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/1",
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/inventory/items/2",
 									"protocol": "http",
 									"host": [
 										"{{HOST_NAME}}"
@@ -2015,7 +2015,7 @@
 									"path": [
 										"inventory",
 										"items",
-										"1"
+										"2"
 									]
 								}
 							},
@@ -2385,7 +2385,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/tools/kicad/api/v1/parts/21.json",
+									"raw": "http://{{HOST_NAME}}:{{SERVICE_PORT}}/tools/kicad/api/v1/parts/1.json",
 									"protocol": "http",
 									"host": [
 										"{{HOST_NAME}}"
@@ -2397,7 +2397,7 @@
 										"api",
 										"v1",
 										"parts",
-										"21.json"
+										"1.json"
 									]
 								}
 							},

@@ -24,7 +24,7 @@
  **/
 
 create or replace view "KiCad LED Indicators" as
-select distinct on (l.id) c.mpn                                  "Part Number",
+select distinct on (c.id) c.mpn                                  "Part Number",
                           c.value                                "Value",
                           c.manufacturer                         "Manufacturer",
                           c.created_on                           "Created On",
@@ -58,4 +58,4 @@ from crosstab('select c.id, ROW_NUMBER() OVER (ORDER BY c.id, f.id) seq, CONCAT(
          inner join component_library_asc cl on cl.component_id = c.id
          left outer join library_ref l on cl.library_ref_id = l.id
 where l.cad_type = 'KICAD'::cadtype
-order by l.id desc;
+order by c.id desc;

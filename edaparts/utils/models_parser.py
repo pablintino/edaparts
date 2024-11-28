@@ -115,7 +115,13 @@ def _parse_kicad_lib(path: pathlib.Path) -> dict[str, FootprintModel | SymbolMod
 
 
 def _parse_key_value_string(s):
-    properties = s.decode("utf-8").strip("|").split("|")
+    try:
+        properties = s.decode("utf-8").strip("|").split("|")
+    except UnicodeDecodeError as e:
+        __logger.warning("Error decoding: %s", e)
+        # Replace the invalid characters with a replacement character or empty string
+        properties = s.decode("utf-8", errors="replace").strip("|").split("|")
+
     result = {}
     for prop in properties:
         x = prop.split("=")

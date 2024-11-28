@@ -35,7 +35,7 @@ from edaparts.utils.helpers import BraceMessage
 class MetadataParser:
 
     @staticmethod
-    def __get_all_alquemy_models():
+    def __get_all_alchemy_models():
         return [
             cls
             for cls in Base.registry._class_registry.values()
@@ -46,30 +46,30 @@ class MetadataParser:
     def model_exists_by_name(model_name):
         return any(
             cls.__tablename__ == model_name
-            for cls in MetadataParser.__get_all_alquemy_models()
+            for cls in MetadataParser.__get_all_alchemy_models()
         )
 
     @staticmethod
-    def __get_model_from_alquemy(name, raise_ex=True):
+    def __get_model_from_alchemy(name, raise_ex=True):
         if not name:
             raise GenericIntenalApiError("SQLAlchemy model name cannot be empty")
 
         models = [
             cls
-            for cls in MetadataParser.__get_all_alquemy_models()
+            for cls in MetadataParser.__get_all_alchemy_models()
             if cls.__tablename__ == name
         ]
         if (not MetadataParser.model_exists_by_name(name)) and raise_ex:
             raise GenericIntenalApiError(
                 BraceMessage(
-                    "SQLAlquemy model parse has failed cause model {0} cannot be found",
+                    "SQLAlchemy model parse has failed cause model {0} cannot be found",
                     name,
                 )
             )
         return models[0]
 
     @staticmethod
-    def __get_alquemy_model_metadata(model):
+    def __get_alchemy_model_metadata(model):
         mapper = inspect(model)
         descriptor = ModelDescriptor(model.__name__)
         for attr in mapper.attrs:
@@ -91,7 +91,7 @@ class MetadataParser:
         if model_name in self.mappers:
             model = self.mappers.get(model_name)
         else:
-            model = MetadataParser.__get_model_from_alquemy(model_name)
+            model = MetadataParser.__get_model_from_alchemy(model_name)
             self.mappers[model_name] = model
 
         return model
@@ -107,20 +107,20 @@ class MetadataParser:
         return [mapper.entity for mapper in children_mappers]
 
     def get_model_metadata_by_name(self, model_name):
-        return MetadataParser.__get_alquemy_model_metadata(
+        return MetadataParser.__get_alchemy_model_metadata(
             self.get_model_by_name(model_name)
         )
 
     @staticmethod
     def get_model_metadata_by_model(model):
         if not issubclass(model, Base):
-            raise GenericIntenalApiError("The given model is not a SQLAlquemy one")
+            raise GenericIntenalApiError("The given model is not a SQLAlchemy one")
 
-        return MetadataParser.__get_alquemy_model_metadata(model)
+        return MetadataParser.__get_alchemy_model_metadata(model)
 
     def get_model_children_by_parent_model(self, model):
         if not issubclass(model, Base):
-            raise GenericIntenalApiError("The given model is not a SQLAlquemy one")
+            raise GenericIntenalApiError("The given model is not a SQLAlchemy one")
 
         return self.get_model_children_by_parent_name(model.__tablename__)
 

@@ -6,10 +6,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 setup_env:
 ifeq (,$(wildcard ${ROOT_DIR}/.venv/bin/python))
 	$(eval $(call vars,$@))
-	rm -rf ${ROOT_DIR}/.venv
-	python -m venv ${ROOT_DIR}/.venv
-	pip install build
-	${ROOT_DIR}/.venv/bin/pip install -e .[dev]
+	${ROOT_DIR}/buildscripts/make_venv.sh "${ROOT_DIR}"
 endif
 
 .PHONY: clean

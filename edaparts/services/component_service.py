@@ -33,7 +33,10 @@ from sqlalchemy.orm import selectinload
 from edaparts.models.components import ComponentModelType
 from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.libraries.footprint_reference_model import FootprintReference
-from edaparts.models.libraries.join_tables import component_footprint_asc_table,component_library_asc_table
+from edaparts.models.libraries.join_tables import (
+    component_footprint_asc_table,
+    component_library_asc_table,
+)
 from edaparts.models.libraries.library_reference_model import LibraryReference
 from edaparts.services import inventory_service
 from edaparts.services.exceptions import (
@@ -43,6 +46,7 @@ from edaparts.services.exceptions import (
     RelationExistsError,
 )
 from edaparts.utils.helpers import BraceMessage as __l
+from edaparts.utils.sqlalchemy import query_page
 
 __logger = logging.getLogger(__name__)
 
@@ -322,9 +326,7 @@ async def get_component_list(
         .offset((page_number - 1) * page_size)
         .order_by(ComponentModel.id.desc())
     )
-    result_page = await db.execute(query)
-    total_count = await db.scalar(select(func.count()).select_from(ComponentModel))
-    return result_page.scalars().all(), total_count
+    return await query_page(db, query)
 
 
 async def delete_component(db: AsyncSession, component_id: int):

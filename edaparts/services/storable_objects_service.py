@@ -65,6 +65,7 @@ from edaparts.services.exceptions import (
 )
 from edaparts.utils.files import hash_sha256
 from edaparts.utils.helpers import BraceMessage as __l
+from edaparts.utils.sqlalchemy import query_page
 
 __logger = logging.getLogger(__name__)
 
@@ -919,19 +920,4 @@ async def get_storable_objects(
             page_size,
         )
     )
-
-    model_type = __get_model_for_storable_type(storable_type)
-    # todo: extract to common place
-    _count_column_name = "__private_edaparts_get_category_items_row_count"
-    new_query = select(model_type).add_columns(
-        func.count().over().label(_count_column_name)
-    )
-    rows_result = (await db.execute(new_query)).fetchall()
-    results = []
-    total = 0
-    for index in range(len(rows_result)):
-        row_data = rows_result[index]
-        if index == 0:
-            total = row_data[1]
-        results.append(row_data[0])
-    return results, total
+    return await query_page(db, select(__get_model_for_storable_type(storable_type)))

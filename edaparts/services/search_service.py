@@ -23,7 +23,7 @@
 #
 import typing
 
-from sqlalchemy import and_, select, func
+from sqlalchemy import and_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
@@ -34,6 +34,7 @@ from edaparts.models.metadata.metadata_parser import metadata_parser
 from edaparts.services.exceptions import MalformedSearchQueryError
 from edaparts.utils import helpers
 from edaparts.utils.helpers import BraceMessage as __l
+from edaparts.utils.sqlalchemy import query_page
 
 
 def __generate_aggregate_filter_expression(value_col_condition, key_col_condition=None):
@@ -295,15 +296,4 @@ async def search_items(
     # todo: apply the same search strategy to other services
     query_build = query_build.filter(*filters).order_by(InventoryItemModel.id.desc())
     query_build = query_build.limit(page_size).offset((page_number - 1) * page_size)
-    _count_column_name = "__private_edaparts_search_items_row_count"
-    new_query = query_build.add_columns(func.count().over().label(_count_column_name))
-    rows_result = (await db.execute(new_query)).fetchall()
-    results = []
-    total = 0
-    for index in range(len(rows_result)):
-        row_data = rows_result[index]
-        if index == 0:
-            total = row_data[1]
-        results.append(row_data[0])
-
-    return results, total
+    return await query_page(db, query_build)

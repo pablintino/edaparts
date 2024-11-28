@@ -24,7 +24,6 @@
 
 
 import logging
-import operator
 import re
 import typing
 
@@ -32,7 +31,9 @@ from sqlalchemy import inspect, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from edaparts.models import LibraryReference
 from edaparts.models.components.component_model import ComponentModel
+from edaparts.models.internal.internal_models import CadType
 from edaparts.models.internal.kicad_models import (
     KiCadCategoryEntry,
     KiCadPart,
@@ -40,8 +41,6 @@ from edaparts.models.internal.kicad_models import (
 )
 from edaparts.services.exceptions import ApiError, ResourceNotFoundApiError
 from edaparts.utils.helpers import BraceMessage as __l
-from edaparts.models import LibraryReference
-from edaparts.models.internal.internal_models import CadType
 
 __logger = logging.getLogger(__name__)
 

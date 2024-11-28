@@ -32,7 +32,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
-from sqlalchemy.sql.functions import func
 
 from edaparts.models.components.component_model import ComponentModel
 from edaparts.models.internal.internal_inventory_models import (
@@ -62,6 +61,7 @@ from edaparts.services.exceptions import (
     InvalidCategoryRelationError,
 )
 from edaparts.utils.helpers import BraceMessage as __l
+from edaparts.utils.sqlalchemy import query_page
 
 __logger = logging.getLogger(__name__)
 
@@ -321,12 +321,7 @@ async def get_locations(
         .offset((page_number - 1) * page_size)
         .order_by(InventoryLocationModel.id.desc())
     )
-    result_page = await db.execute(query)
-    # todo: use one single query
-    total_count = await db.scalar(
-        select(func.count()).select_from(InventoryLocationModel)
-    )
-    return result_page.scalars().all(), total_count
+    return await query_page(db, query)
 
 
 async def get_category_items(
@@ -363,19 +358,7 @@ async def get_category_items(
         .limit(page_size)
         .offset((page_number - 1) * page_size)
     )
-
-    # todo: extract to common place
-    _count_column_name = "__private_edaparts_get_category_items_row_count"
-    new_query = query.add_columns(func.count().over().label(_count_column_name))
-    rows_result = (await db.execute(new_query)).fetchall()
-    results = []
-    total = 0
-    for index in range(len(rows_result)):
-        row_data = rows_result[index]
-        if index == 0:
-            total = row_data[1]
-        results.append(row_data[0])
-    return results, total
+    return await query_page(db, query)
 
 
 async def create_item_stocks_for_locations(
@@ -726,19 +709,7 @@ async def get_categories(
         .limit(page_size)
         .offset((page_number - 1) * page_size)
     )
-
-    # todo: extract to common place
-    _count_column_name = "__private_edaparts_search_items_row_count"
-    new_query = query.add_columns(func.count().over().label(_count_column_name))
-    rows_result = (await db.execute(new_query)).fetchall()
-    results = []
-    total = 0
-    for index in range(len(rows_result)):
-        row_data = rows_result[index]
-        if index == 0:
-            total = row_data[1]
-        results.append(row_data[0])
-    return results, total
+    return await query_page(db, query)
 
 
 async def set_category_parent(

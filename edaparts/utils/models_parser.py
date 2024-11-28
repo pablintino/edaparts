@@ -26,8 +26,10 @@
 import logging
 import pathlib
 import struct
+import typing
 from dataclasses import dataclass
 
+from anyio.abc import value
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
 from kiutils.utils import sexpr
@@ -38,6 +40,7 @@ from edaparts.services.exceptions import ApiError
 from edaparts.models.internal.internal_models import StorableLibraryResourceType
 
 __logger = logging.getLogger(__name__)
+__UNICODE_HINT = "UNICODE=EXISTS"
 
 
 @dataclass(frozen=True)
@@ -114,21 +117,6 @@ def _parse_kicad_lib(path: pathlib.Path) -> dict[str, FootprintModel | SymbolMod
     return models
 
 
-def _parse_key_value_string(s):
-    properties = s.decode("utf-8").strip("|").split("|")
-    result = {}
-    for prop in properties:
-        x = prop.split("=")
-        key = x[0]
-        if len(x) > 1:
-            value = x[1]
-        else:
-            value = ""
-        result[key.lower() if isinstance(key, str) else key] = value
-
-    return result
-
-
 def _get_u32(buffer):
     (word,) = struct.unpack("<I", buffer[:4])
     return word
@@ -158,30 +146,78 @@ def _get_symbols_data(olebj):
             # Part streams not used
             data_path = f"{part[0]}/Data"
             buffer = _read_stream(olebj, data_path)
-
-            # Properties
             length = _get_u32(buffer[:4])
-            props = _parse_key_value_string(buffer[4 : 4 + length])
-            parts[part[0]] = props
+
+            properties = {}
+            properties_buffer = buffer[4 : 4 + length].strip(b"|")
+            while properties_buffer:
+                next_split = (
+                    properties_buffer.index(b"|") if b"|" in properties_buffer else -1
+                )
+                prop_kv = (
+                    properties_buffer[:next_split]
+                    if next_split >= 0
+                    else properties_buffer
+                ).split(b"=")
+                prop_key_raw = prop_kv[0]
+
+                # Prepare the next iteration before early exit
+                # Note: Strip as sometimes there are spurious separators
+                properties_buffer = (
+                    properties_buffer[next_split + 1 :].strip(b"|")
+                    if next_split >= 0
+                    else b""
+                )
+
+                prop_key_raw_utf8 = prop_key_raw.lstrip(b"%UTF-8%")
+                prop_key = prop_key_raw_utf8.decode("utf-8", errors="ignore").lower()
+                if prop_key_raw_utf8 in properties:
+                    # Already parsed, probably the UTF-8 equivalent was parsed before
+                    continue
+
+                properties[prop_key] = (
+                    _try_parse_string(prop_kv[1]) if len(prop_kv) > 1 else None
+                )
+
+            parts[part[0]] = properties
     return parts
 
 
-def _get_toc_data(buffer):
+def _get_toc_data(buffer: bytes):
     # first four bytes are total string length
     # last byte is 0x00
-    footprints = []
-    if _get_u32(buffer) + 4 == len(buffer):
-        buffer = buffer[4:-1]
-        entries = (
-            buffer.replace(b"\x0D\x0A", str.encode("\n"))
-            .strip()
-            .split(str.encode("\n"))
-        )
-        for entry in entries:
-            footprints.append(_parse_key_value_string(entry))
-    else:
+    if _get_u32(buffer) + 4 != len(buffer):
         __logger.warning("Cannot read TOC data from lib. Buffer length mismatch")
+        return []
+
+    buffer = buffer[4:-1]
+    separator = str.encode("\n")
+    entries = buffer.strip(b"|").replace(b"\r\n", separator).strip().split(separator)
+    footprints = []
+    for entry in entries:
+        sanitized_entry = entry.replace(__UNICODE_HINT.encode(), b"").strip(b"|")
+        # If all fields are unicode metadata ignore the entry
+        if not [x for x in sanitized_entry.split(b"|") if b"UNICODE" not in x]:
+            # Skip unicode metadata
+            continue
+        properties = {}
+        for property_data in sanitized_entry.split(b"|"):
+            prop_raw_kw = property_data.split(b"=")
+            prop_key = prop_raw_kw[0].decode("utf-8", errors="ignore").lower()
+            properties[prop_key] = (
+                _try_parse_string(prop_raw_kw[1]) if len(prop_raw_kw) > 1 else None
+            )
+        footprints.append(properties)
     return footprints
+
+
+def _try_parse_string(buffer: bytes) -> str:
+    for encoding in ["utf-8", "unicode_escape"]:
+        try:
+            return buffer.decode(encoding)
+        except UnicodeDecodeError as e:
+            pass
+    return buffer.decode("utf-8", errors="ignore")
 
 
 def _parse_olefile_library(byte_data) -> dict[str, FootprintModel | SymbolModel]:

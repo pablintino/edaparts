@@ -8,7 +8,7 @@ ifeq (,$(wildcard ${ROOT_DIR}/.venv/bin/python))
 	$(eval $(call vars,$@))
 	rm -rf ${ROOT_DIR}/.venv
 	python -m venv ${ROOT_DIR}/.venv
-	pip install build
+	${ROOT_DIR}/.venv/bin/pip install build
 	${ROOT_DIR}/.venv/bin/pip install -e .[dev]
 endif
 

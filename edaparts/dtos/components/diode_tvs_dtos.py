@@ -41,9 +41,6 @@ class DiodeTvsBaseDto(ComponentCommonBaseFields):
     voltage_breakdown_min: str | None = Field(default=None, max_length=30)
     voltage_clamping_max: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> DiodeTVSModel:
-        return self._fill_model(DiodeTVSModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return DiodeTVSModel

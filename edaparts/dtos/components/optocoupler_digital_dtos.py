@@ -45,9 +45,6 @@ class OptocouplerDigitalBaseDto(ComponentCommonBaseFields):
     voltage_output_max: str | None = Field(default=None, max_length=30)
     number_of_channels: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> OptocouplerDigitalModel:
-        return self._fill_model(OptocouplerDigitalModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return OptocouplerDigitalModel

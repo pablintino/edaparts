@@ -45,9 +45,6 @@ class TransistorMosfetBaseDto(ComponentCommonBaseFields):
     power_max: str | None = Field(default=None, max_length=30)
     channel_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TransistorMosfetModel:
-        return self._fill_model(TransistorMosfetModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TransistorMosfetModel

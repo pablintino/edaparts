@@ -51,9 +51,6 @@ class TransformerBaseDto(ComponentCommonBaseFields):
     nps_turns_ratio: str | None = Field(default=None, max_length=30)
     npt_turns_ratio: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TransformerModel:
-        return self._fill_model(TransformerModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TransformerModel

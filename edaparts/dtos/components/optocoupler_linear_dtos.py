@@ -44,9 +44,6 @@ class OptocouplerLinearBaseDto(ComponentCommonBaseFields):
     forward_gain: str | None = Field(default=None, max_length=30)
     non_linearity: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> OptocouplerLinearModel:
-        return self._fill_model(OptocouplerLinearModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return OptocouplerLinearModel

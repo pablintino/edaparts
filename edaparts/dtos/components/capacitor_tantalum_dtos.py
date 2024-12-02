@@ -42,9 +42,6 @@ class CapacitorTantalumBaseDto(ComponentCommonBaseFields):
     esr: str | None = Field(default=None, max_length=30)
     lifetime_temperature: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorTantalumModel:
-        return self._fill_model(CapacitorTantalumModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return CapacitorTantalumModel

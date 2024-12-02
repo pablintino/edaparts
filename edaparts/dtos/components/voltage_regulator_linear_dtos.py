@@ -46,9 +46,6 @@ class VoltageRegulatorLinearBaseDto(ComponentCommonBaseFields):
     current_output: str | None = Field(default=None, max_length=30)
     pssr: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> VoltageRegulatorLinearModel:
-        return self._fill_model(VoltageRegulatorLinearModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return VoltageRegulatorLinearModel

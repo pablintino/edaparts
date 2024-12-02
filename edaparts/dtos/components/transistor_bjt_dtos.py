@@ -44,9 +44,6 @@ class TransistorBjtBaseDto(ComponentCommonBaseFields):
     power_max: str | None = Field(default=None, max_length=30)
     bjt_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TransistorBjtModel:
-        return self._fill_model(TransistorBjtModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TransistorBjtModel

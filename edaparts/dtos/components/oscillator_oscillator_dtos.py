@@ -44,9 +44,6 @@ class OscillatorOscillatorBaseDto(ComponentCommonBaseFields):
     voltage_supply: str | None = Field(default=None, max_length=30)
     output_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> OscillatorOscillatorModel:
-        return self._fill_model(OscillatorOscillatorModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return OscillatorOscillatorModel

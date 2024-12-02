@@ -41,9 +41,6 @@ class CrystalOscillatorBaseDto(ComponentCommonBaseFields):
     frequency: str | None = Field(default=None, max_length=30)
     frequency_tolerance: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CrystalOscillatorModel:
-        return self._fill_model(CrystalOscillatorModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return CrystalOscillatorModel

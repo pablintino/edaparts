@@ -44,9 +44,6 @@ class PowerInductorBaseDto(ComponentCommonBaseFields):
     current_saturation: str | None = Field(default=None, max_length=30)
     core_material: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> PowerInductorModel:
-        return self._fill_model(PowerInductorModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return PowerInductorModel

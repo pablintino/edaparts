@@ -46,9 +46,6 @@ class MicrocontrollerBaseDto(ComponentCommonBaseFields):
     connectivity: str | None = Field(default=None, max_length=250)
     voltage_supply: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> MicrocontrollerModel:
-        return self._fill_model(MicrocontrollerModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return MicrocontrollerModel

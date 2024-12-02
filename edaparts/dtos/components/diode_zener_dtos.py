@@ -42,9 +42,6 @@ class DiodeTvsBaseDto(ComponentCommonBaseFields):
     voltage_forward: str | None = Field(default=None, max_length=30)
     voltage_zener: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> DiodeZenerModel:
-        return self._fill_model(DiodeZenerModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return DiodeZenerModel

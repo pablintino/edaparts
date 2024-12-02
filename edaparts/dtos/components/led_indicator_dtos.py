@@ -45,9 +45,6 @@ class LedIndicatorBaseDto(ComponentCommonBaseFields):
     test_current: str | None = Field(default=None, max_length=30)
     lens_size: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> LedIndicatorModel:
-        return self._fill_model(LedIndicatorModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return LedIndicatorModel

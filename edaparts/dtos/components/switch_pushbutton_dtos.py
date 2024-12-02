@@ -43,9 +43,6 @@ class SwitchPushButtonBaseDto(ComponentCommonBaseFields):
     current_rating: str | None = Field(default=None, max_length=30)
     circuit_type: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> SwitchPushButtonModel:
-        return self._fill_model(SwitchPushButtonModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return SwitchPushButtonModel

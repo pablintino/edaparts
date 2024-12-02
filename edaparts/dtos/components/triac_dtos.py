@@ -49,9 +49,6 @@ class TriacBaseDto(ComponentCommonBaseFields):
     emitter_forward_voltage: str | None = Field(default=None, max_length=30)
     triac_type: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TriacModel:
-        return self._fill_model(TriacModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TriacModel

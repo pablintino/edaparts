@@ -21,6 +21,9 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+
+
+import typing
 from datetime import datetime
 
 from pydantic import BaseModel, Field
@@ -48,18 +51,36 @@ class ComponentCommonBaseFields:
     operating_temperature_min: str | None = Field(default=None, max_length=30)
     operating_temperature_max: str | None = Field(default=None, max_length=30)
 
-    def _fill_model[T](self, model: T):
+    def fill_common_fields[T](self, model: T):
         for k, v in vars(self).items():
             if k in inspect(type(model)).attrs.keys():
                 setattr(model, k, v)
         if hasattr(model, "__tablename__"):
             model.type = model.__tablename__
-        return model
+
+    @staticmethod
+    def model_type() -> typing.Type:
+        raise NotImplementedError()
 
 
 class ComponentProtectedBaseFields:
     mpn: str = Field(max_length=100)
     manufacturer: str = Field(max_length=100)
+
+
+class ComponentCommentBaseFields:
+    comment: str | ComponentCommentToolFields | None = Field(default=None)
+
+    def fill_model_comments[T](self, model: T):
+        if isinstance(self.comment, str):
+            model.comment_altium = self.comment
+            model.comment_kicad = self.comment
+        elif isinstance(self.comment, ComponentCommentToolFields):
+            model.comment_altium = self.comment.altium
+            model.comment_kicad = self.comment.kicad
+
+    def fill_dto_comments(self, model: ComponentModel):
+        self.comment = ComponentCommentToolFields.from_model(model)
 
 
 class ComponentGeneratedBaseFields:
@@ -69,33 +90,35 @@ class ComponentGeneratedBaseFields:
 
 
 class ComponentCreateRequestBaseDto(
-    ComponentCommonBaseFields, ComponentProtectedBaseFields, BaseModel
+    ComponentCommonBaseFields,
+    ComponentProtectedBaseFields,
+    ComponentCommentBaseFields,
+    BaseModel,
 ):
-    comment: str | ComponentCommentToolFields | None = Field(default=None)
-
-    def _fill_model[T](self, model: T) -> T:
-        super()._fill_model(model)
-        if isinstance(self.comment, str):
-            model.comment_altium = self.comment
-            model.comment_kicad = self.comment
-        elif isinstance(self.comment, ComponentCommentToolFields):
-            model.comment_altium = self.comment.altium
-            model.comment_kicad = self.comment.kicad
+    def to_model[T](self) -> T:
+        model = self.model_type()()
+        self.fill_common_fields(model)
+        self.fill_model_comments(model)
         return model
 
 
-class ComponentUpdateRequestBaseDto(ComponentCommonBaseFields, BaseModel):
-    pass
+class ComponentUpdateRequestBaseDto(
+    ComponentCommonBaseFields, ComponentCommentBaseFields, BaseModel
+):
+    def to_model[T](self) -> T:
+        model = self.model_type()()
+        self.fill_common_fields(model)
+        self.fill_model_comments(model)
+        return model
 
 
 class ComponentQueryRequestBaseDto(
     ComponentCommonBaseFields,
     ComponentProtectedBaseFields,
     ComponentGeneratedBaseFields,
+    ComponentCommentBaseFields,
     BaseModel,
 ):
-    comment: ComponentCommentToolFields | None = Field(default=None)
-
-    def _fill_dto[T](self, model: ComponentModel) -> T:
-        self.comment = ComponentCommentToolFields.from_model(model)
+    def fill_dto(self, model: ComponentModel) -> "ComponentQueryRequestBaseDto":
+        self.fill_dto_comments(model)
         return self

@@ -43,9 +43,6 @@ class MemoryBaseDto(ComponentCommonBaseFields):
     interface: str | None = Field(default=None, max_length=30)
     clock_frequency: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> MemoryModel:
-        return self._fill_model(MemoryModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return MemoryModel

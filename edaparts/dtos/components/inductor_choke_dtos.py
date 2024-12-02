@@ -42,9 +42,6 @@ class InductorChokeBaseDto(ComponentCommonBaseFields):
     impedance_freq: str | None = Field(default=None, max_length=30)
     current_rating: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> InductorChokeModel:
-        return self._fill_model(InductorChokeModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return InductorChokeModel

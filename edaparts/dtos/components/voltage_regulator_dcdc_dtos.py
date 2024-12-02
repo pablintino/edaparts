@@ -46,9 +46,6 @@ class VoltageRegulatorDCDCBaseDto(ComponentCommonBaseFields):
     output_type: str | None = Field(default=None, max_length=50)
     number_of_outputs: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> VoltageRegulatorDCDCModel:
-        return self._fill_model(VoltageRegulatorDCDCModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return VoltageRegulatorDCDCModel

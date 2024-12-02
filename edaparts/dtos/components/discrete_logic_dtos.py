@@ -45,9 +45,6 @@ class DiscreteLogicBaseDto(ComponentCommonBaseFields):
     supply_voltage_min: str | None = Field(default=None, max_length=30)
     logic_function: str | None = Field(default=None, max_length=100)
 
-    def to_model(self) -> DiscreteLogicModel:
-        return self._fill_model(DiscreteLogicModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return DiscreteLogicModel

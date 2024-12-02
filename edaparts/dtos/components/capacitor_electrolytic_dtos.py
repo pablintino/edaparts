@@ -44,9 +44,6 @@ class CapacitorElectrolyticBaseDto(ComponentCommonBaseFields):
     esr: str | None = Field(default=None, max_length=30)
     lifetime_temperature: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorElectrolyticModel:
-        return self._fill_model(CapacitorElectrolyticModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return CapacitorElectrolyticModel

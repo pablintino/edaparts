@@ -43,9 +43,6 @@ class DiodeRectifierBaseDto(ComponentCommonBaseFields):
     max_reverse_vrrm: str | None = Field(default=None, max_length=30)
     diode_type: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> DiodeRectifierModel:
-        return self._fill_model(DiodeRectifierModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return DiodeRectifierModel

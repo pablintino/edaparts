@@ -47,9 +47,6 @@ class OpAmpBaseDto(ComponentCommonBaseFields):
     current_output: str | None = Field(default=None, max_length=50)
     number_of_channels: str | None = Field(default=None, max_length=50)
 
-    def to_model(self) -> OpAmpModel:
-        return self._fill_model(OpAmpModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return OpAmpModel

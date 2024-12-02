@@ -43,9 +43,6 @@ class PotentiometerBaseDto(ComponentCommonBaseFields):
     resistance_max: str | None = Field(default=None, max_length=30)
     number_of_turns: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> PotentiometerModel:
-        return self._fill_model(PotentiometerModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return PotentiometerModel

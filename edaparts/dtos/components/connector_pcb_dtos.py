@@ -44,9 +44,6 @@ class ConnectorPcbBaseDto(ComponentCommonBaseFields):
     number_of_rows: str | None = Field(default=None, max_length=30)
     number_of_contacts: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> ConnectorPcbModel:
-        return self._fill_model(ConnectorPcbModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return ConnectorPcbModel

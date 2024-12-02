@@ -42,9 +42,6 @@ class TransceiverBaseDto(ComponentCommonBaseFields):
     protocol: str | None = Field(default=None, max_length=30)
     voltage_supply: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TransceiverModel:
-        return self._fill_model(TransceiverModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TransceiverModel

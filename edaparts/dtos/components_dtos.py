@@ -75,7 +75,8 @@ def map_component_model_to_query_dto(
         dto_t.model_fields["component_type"].annotation
     )[0]
     mapped_dto = dto_t(**dto_data)
-    return mapped_dto._fill_dto(model)
+    mapped_dto.fill_dto(model)
+    return mapped_dto
 
 
 # todo: try to use a generic schema for list operations

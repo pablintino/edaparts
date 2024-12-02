@@ -40,9 +40,6 @@ class ResistorBaseFieldsDto(ComponentCommonBaseFields):
     power_max: str | None = Field(default=None, max_length=30)
     tolerance: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> ResistorModel:
-        return self._fill_model(ResistorModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return ResistorModel

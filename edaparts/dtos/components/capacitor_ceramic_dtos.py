@@ -41,9 +41,6 @@ class CapacitorCeramicBaseDto(ComponentCommonBaseFields):
     voltage: str | None = Field(default=None, max_length=30)
     composition: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> CapacitorCeramicModel:
-        return self._fill_model(CapacitorCeramicModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return CapacitorCeramicModel

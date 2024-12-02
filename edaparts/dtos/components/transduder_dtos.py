@@ -42,9 +42,6 @@ class TransducerBaseDto(ComponentCommonBaseFields):
     proportional_gain: str | None = Field(default=None, max_length=50)
     supply_voltage: str | None = Field(default=None, max_length=30)
 
-    def to_model(self) -> TransducerModel:
-        return self._fill_model(TransducerModel())
-
     @staticmethod
     def model_type() -> typing.Type:
         return TransducerModel

@@ -108,12 +108,19 @@ async def get_component(db: AsyncSession, component_id: int) -> KiCadPart:
     if not component:
         raise ResourceNotFoundApiError("Component not found", missing_id=component_id)
 
-    if not component.library_refs:
+    library_ref = next(
+        (
+            library_ref
+            for library_ref in component.library_refs
+            if library_ref.cad_type == CadType.KICAD
+        ),
+        None,
+    )
+    if not library_ref:
         raise ApiError(
             f"Component {component_id} has no associated symbol", http_code=404
         )
 
-    library_ref = component.library_refs[0]
     part = KiCadPart(
         id=component.id,
         name=component.mpn,

@@ -21,9 +21,12 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
-import typing
 
-
+from edaparts.dtos.components.amplifier_dtos import (
+    AmplifierCreateRequestDto,
+    AmplifierUpdateRequestDto,
+    AmplifierQueryDto,
+)
 from edaparts.dtos.components.capacitor_ceramic_dtos import (
     CapacitorCeramicCreateRequestDto,
     CapacitorCeramicUpdateRequestDto,
@@ -129,6 +132,11 @@ from edaparts.dtos.components.power_inductor_dtos import (
     PowerInductorUpdateRequestDto,
     PowerInductorQueryDto,
 )
+from edaparts.dtos.components.power_management_efuse_hotswap_dtos import (
+    PowerManagementEFuseHotSwapCreateRequestDto,
+    PowerManagementEFuseHotSwapUpdateRequestDto,
+    PowerManagementEFuseHotSwapQueryDto,
+)
 from edaparts.dtos.components.resistor_dtos import (
     ResistorCreateRequestDto,
     ResistorUpdateRequestDto,
@@ -187,7 +195,8 @@ from edaparts.dtos.components.voltage_regulator_linear_dtos import (
 
 
 ComponentCreateRequestDtoUnionAlias = (
-    CapacitorCeramicCreateRequestDto
+    AmplifierCreateRequestDto
+    | CapacitorCeramicCreateRequestDto
     | CapacitorElectrolyticCreateRequestDto
     | CapacitorTantalumCreateRequestDto
     | ConnectorPcbCreateRequestDto
@@ -208,6 +217,7 @@ ComponentCreateRequestDtoUnionAlias = (
     | OscillatorOscillatorCreateRequestDto
     | PotentiometerCreateRequestDto
     | PowerInductorCreateRequestDto
+    | PowerManagementEFuseHotSwapCreateRequestDto
     | ResistorCreateRequestDto
     | SwitchPushButtonCreateRequestDto
     | TransceiverCreateRequestDto
@@ -222,7 +232,8 @@ ComponentCreateRequestDtoUnionAlias = (
 )
 
 ComponentUpdateRequestDtoUnionAlias = (
-    CapacitorCeramicUpdateRequestDto
+    AmplifierUpdateRequestDto
+    | CapacitorCeramicUpdateRequestDto
     | CapacitorElectrolyticUpdateRequestDto
     | CapacitorTantalumUpdateRequestDto
     | ConnectorPcbUpdateRequestDto
@@ -243,6 +254,7 @@ ComponentUpdateRequestDtoUnionAlias = (
     | OscillatorOscillatorUpdateRequestDto
     | PotentiometerUpdateRequestDto
     | PowerInductorUpdateRequestDto
+    | PowerManagementEFuseHotSwapUpdateRequestDto
     | ResistorUpdateRequestDto
     | SwitchPushButtonUpdateRequestDto
     | TransceiverUpdateRequestDto
@@ -257,7 +269,8 @@ ComponentUpdateRequestDtoUnionAlias = (
 )
 
 ComponentQueryDtoUnionAlias = (
-    CapacitorCeramicQueryDto
+    AmplifierQueryDto
+    | CapacitorCeramicQueryDto
     | CapacitorElectrolyticQueryDto
     | CapacitorTantalumQueryDto
     | ConnectorPcbQueryDto
@@ -278,6 +291,7 @@ ComponentQueryDtoUnionAlias = (
     | OscillatorOscillatorQueryDto
     | PotentiometerQueryDto
     | PowerInductorQueryDto
+    | PowerManagementEFuseHotSwapQueryDto
     | ResistorQueryDto
     | SwitchPushButtonQueryDto
     | TransceiverQueryDto

@@ -26,18 +26,16 @@
 import logging
 import pathlib
 import struct
-import typing
 from dataclasses import dataclass
 
-from anyio.abc import value
 from kiutils.footprint import Footprint
 from kiutils.symbol import SymbolLib
 from kiutils.utils import sexpr
 from olefile import olefile
 
 from edaparts.models.internal.internal_models import CadType
-from edaparts.services.exceptions import ApiError
 from edaparts.models.internal.internal_models import StorableLibraryResourceType
+from edaparts.services.exceptions import ApiError
 
 __logger = logging.getLogger(__name__)
 __UNICODE_HINT = "UNICODE=EXISTS"

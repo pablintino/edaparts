@@ -21,6 +21,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+from edaparts.models.components.amplifier_model import AmplifierModel
 from edaparts.models.components.capacitor_ceramic_model import CapacitorCeramicModel
 from edaparts.models.components.capacitor_electrolytic_model import (
     CapacitorElectrolyticModel,
@@ -43,6 +44,9 @@ from edaparts.models.components.optocoupler_digital_model import OptocouplerDigi
 from edaparts.models.components.optocoupler_linear_model import OptocouplerLinearModel
 from edaparts.models.components.potentiometer_model import PotentiometerModel
 from edaparts.models.components.power_inductor_model import PowerInductorModel
+from edaparts.models.components.power_management_efuse_hotswap_model import (
+    PowerManagementEFuseHotSwapModel,
+)
 from edaparts.models.components.resistor_model import ResistorModel
 from edaparts.models.components.switch_pushbutton_model import SwitchPushButtonModel
 from edaparts.models.components.switch_switch_model import SwitchSwitchModel
@@ -66,7 +70,8 @@ from edaparts.models.components.oscillator_oscillator_model import (
 )
 
 ComponentModelType = (
-    CapacitorCeramicModel
+    AmplifierModel
+    | CapacitorCeramicModel
     | CapacitorElectrolyticModel
     | CapacitorTantalumModel
     | ConnectorPcbModel
@@ -87,6 +92,7 @@ ComponentModelType = (
     | OscillatorOscillatorModel
     | PotentiometerModel
     | PowerInductorModel
+    | PowerManagementEFuseHotSwapModel
     | ResistorModel
     | SwitchPushButtonModel
     | SwitchSwitchModel

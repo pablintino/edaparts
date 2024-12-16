@@ -920,4 +920,11 @@ async def get_storable_objects(
             page_size,
         )
     )
-    return await query_page(db, select(__get_model_for_storable_type(storable_type)))
+    query_model_type = __get_model_for_storable_type(storable_type)
+    return await query_page(
+        db,
+        select(query_model_type)
+        .limit(page_size)
+        .offset((page_number - 1) * page_size)
+        .order_by(query_model_type.id.desc()),
+    )
